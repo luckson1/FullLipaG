@@ -11,11 +11,13 @@ export const paymentRouter = createTRPCRouter({
         foreign: z.string(),
         recipientId: z.string(),
         exchangeRateId: z.string(),
+        rateId: z.string(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
       const sentAmount = parseFloat(input.foreign);
       const remittedAmount = parseFloat(input.local);
+
       if (Number.isNaN(sentAmount) || Number.isNaN(remittedAmount))
         throw new TRPCError({
           code: "PARSE_ERROR",
@@ -29,6 +31,7 @@ export const paymentRouter = createTRPCRouter({
           remittedAmount,
           recipientId: input.recipientId,
           exchangeRateId: input.exchangeRateId,
+          rateId: input.rateId,
           usersId,
         },
       });
