@@ -2,6 +2,7 @@ import { accountRouter } from "./router/account";
 import { authRouter } from "./router/auth";
 import { exchangeRouter } from "./router/exchange";
 import { paymentRouter } from "./router/payment";
+import { rateRouter } from "./router/rate";
 import { recipientROuter } from "./router/recipients";
 import { statusRouter } from "./router/status";
 import { transactionRouter } from "./router/transaction";
@@ -14,6 +15,7 @@ export const appRouter = createTRPCRouter({
   recipient: recipientROuter,
   payment: paymentRouter,
   exchange: exchangeRouter,
+  rate: rateRouter,
   account: accountRouter,
 });
 
