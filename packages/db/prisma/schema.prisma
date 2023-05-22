@@ -75,6 +75,10 @@ model users {
   mfa_factors                 mfa_factors[]
   sessions                    sessions[]
   Profile                     Profile[]
+  Recipient                   Recipient[]
+  Payment                     Payment[]
+  Account                     Account[]
+  Transaction                 Transaction[]
 
   @@index([instance_id])
   @@schema("auth")
@@ -267,6 +271,111 @@ model sso_providers {
   saml_providers    saml_providers[]
   saml_relay_states saml_relay_states[]
   sso_domains       sso_domains[]
+
+  @@schema("auth")
+}
+
+model Recipient {
+  id          String    @id @default(cuid())
+  name        String
+  bankName    String
+  bankCountry String
+  swiftCode   String
+  bankAccount String
+  user        users     @relation(fields: [usersId], references: [id])
+  usersId     String    @db.Uuid
+  Payment     Payment[]
+
+  @@schema("auth")
+}
+
+model ExchangeRate {
+  id        String    @id @default(cuid())
+  source    String
+  target    String
+  rate      Float
+  Payment   Payment[]
+  timestamp DateTime  @default(now())
+
+  @@schema("auth")
+}
+
+model Account {
+  id                 String   @id @default(cuid())
+  user               users    @relation(fields: [usersId], references: [id])
+  accountNumber      String
+  mobileWalletNumber String
+  bankName           String
+  accountHolderName  String
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  usersId            String   @db.Uuid
+
+  @@schema("auth")
+}
+
+model Payment {
+  id             String       @id @default(cuid())
+  sentAmount     Float
+  rate           ExchangeRate @relation(fields: [exchangeRateId], references: [id])
+  remittedAmount Float
+  recipient      Recipient    @relation(fields: [recipientId], references: [id])
+  recipientId    String
+
+  user    users  @relation(fields: [usersId], references: [id])
+  usersId String @db.Uuid
+
+  exchangeRateId String
+
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  Transaction Transaction[]
+
+  @@schema("auth")
+}
+
+model Transaction {
+  id                  String   @id @default(cuid())
+  paymentMethod       Method
+  user                users    @relation(fields: [usersId], references: [id])
+  usersId             String   @db.Uuid
+  bankReferenceNumber String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  payment             Payment  @relation(fields: [paymentId], references: [id])
+  paymentId           String
+  Status              Status?
+
+  @@schema("auth")
+}
+
+model Status {
+  id            String      @id @default(cuid())
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  name          StatusName
+  Transaction   Transaction @relation(fields: [transactionId], references: [id])
+  transactionId String      @unique
+
+  @@schema("auth")
+}
+
+enum StatusName {
+  Initiated
+  Canceled
+  Paused
+  Confirmed
+  Processed
+  Sent
+  Received
+
+  @@schema("auth")
+}
+
+enum Method {
+  Wallet
+  PesaLink
+  Manual_wire_transfer
 
   @@schema("auth")
 }
