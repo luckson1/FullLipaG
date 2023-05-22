@@ -7,22 +7,21 @@ export const exchangeRouter = createTRPCRouter({
   add: adminProcedure
     .input(
       z.object({
-        rate: z.number(),
         source: z.string(),
         target: z.string(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const payment = await ctx.prisma.exchangeRate.create({
+      const exchangeRate = await ctx.prisma.exchangeRate.create({
         data: {
           ...input,
         },
       });
-      if (!payment)
+      if (!exchangeRate)
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "An Error occured. Please try again",
         });
-      return payment;
+      return exchangeRate;
     }),
 });
