@@ -289,13 +289,25 @@ model Recipient {
   @@schema("auth")
 }
 
+model Rate {
+  id             String       @id @default(cuid())
+  value          Float
+  ExchangeRate   ExchangeRate @relation(fields: [exchangeRateId], references: [id])
+  timestamp      DateTime     @default(now())
+  exchangeRateId String
+  Payment        Payment[]
+
+  @@schema("auth")
+}
+
 model ExchangeRate {
   id        String    @id @default(cuid())
   source    String
   target    String
-  rate      Float
   Payment   Payment[]
-  timestamp DateTime  @default(now())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Rate      Rate[]
 
   @@schema("auth")
 }
@@ -317,7 +329,7 @@ model Account {
 model Payment {
   id             String       @id @default(cuid())
   sentAmount     Float
-  rate           ExchangeRate @relation(fields: [exchangeRateId], references: [id])
+  ExchangeRate   ExchangeRate @relation(fields: [exchangeRateId], references: [id])
   remittedAmount Float
   recipient      Recipient    @relation(fields: [recipientId], references: [id])
   recipientId    String
@@ -326,10 +338,11 @@ model Payment {
   usersId String @db.Uuid
 
   exchangeRateId String
-
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  Transaction Transaction[]
+  rate           Rate          @relation(fields: [rateId], references: [id])
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  Transaction    Transaction[]
+  rateId         String
 
   @@schema("auth")
 }
@@ -344,7 +357,7 @@ model Transaction {
   updatedAt           DateTime @updatedAt
   payment             Payment  @relation(fields: [paymentId], references: [id])
   paymentId           String
-  Status              Status?
+  Status              Status[]
 
   @@schema("auth")
 }
@@ -355,7 +368,7 @@ model Status {
   updatedAt     DateTime    @updatedAt
   name          StatusName
   Transaction   Transaction @relation(fields: [transactionId], references: [id])
-  transactionId String      @unique
+  transactionId String
 
   @@schema("auth")
 }
