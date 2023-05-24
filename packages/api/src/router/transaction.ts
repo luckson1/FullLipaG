@@ -67,7 +67,7 @@ export const transactionRouter = createTRPCRouter({
     if (!transactions)
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: "Transactions not found. Please try again",
+        message: "Transactions not found.",
       });
     return transactions;
   }),
@@ -100,7 +100,7 @@ export const transactionRouter = createTRPCRouter({
     if (!transactions)
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: "Transactions not found. Please try again",
+        message: "Transactions not found.",
       });
     return transactions;
   }),
