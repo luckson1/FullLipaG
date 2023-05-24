@@ -7,6 +7,7 @@ export const transactionRouter = createTRPCRouter({
   add: protectedProcedure
     .input(
       z.object({
+        recipientId: z.string(),
         paymentMethod: z.enum(["Wallet", "PesaLink", "Manual_wire_transfer"]),
         paymentId: z.string(),
         status: z.enum(["Initiated"]),
@@ -18,6 +19,7 @@ export const transactionRouter = createTRPCRouter({
         data: {
           paymentMethod: input.paymentMethod,
           paymentId: input.paymentId,
+          recipientId: input.recipientId,
           usersId,
           Status: {
             create: {

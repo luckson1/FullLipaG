@@ -10,27 +10,18 @@ datasource db {
   schemas   = ["auth", "public"]
 }
 
-model Post {
-  id        String   @id @default(cuid())
-  title     String
-  content   String
-  published Boolean  @default(false)
-  author    Profile? @relation(fields: [authorId], references: [id])
-  authorId  String?
-
-  @@schema("public")
-}
-
 model Profile {
-  id     String  @id @default(cuid())
-  name   String
-  image  String?
-  email  String?
-  userId String  @db.Uuid
-  user   users   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  posts  Post[]
+  id           String   @id @default(cuid())
+  firstName    String
+  lastName     String
+  governmentId String
+  dateOfBirth  DateTime
+  image        String?
+  email        String
+  userId       String   @db.Uuid
+  user         users    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@schema("public")
+  @@schema("auth")
 }
 
 // 
@@ -276,15 +267,15 @@ model sso_providers {
 }
 
 model Recipient {
-  id          String    @id @default(cuid())
+  id          String        @id @default(cuid())
   name        String
   bankName    String
   bankCountry String
   swiftCode   String
   bankAccount String
-  user        users     @relation(fields: [usersId], references: [id])
-  usersId     String    @db.Uuid
-  Payment     Payment[]
+  user        users         @relation(fields: [usersId], references: [id])
+  usersId     String        @db.Uuid
+  Transaction Transaction[]
 
   @@schema("auth")
 }
@@ -331,8 +322,6 @@ model Payment {
   sentAmount     Float
   ExchangeRate   ExchangeRate @relation(fields: [exchangeRateId], references: [id])
   remittedAmount Float
-  recipient      Recipient    @relation(fields: [recipientId], references: [id])
-  recipientId    String
 
   user    users  @relation(fields: [usersId], references: [id])
   usersId String @db.Uuid
@@ -348,16 +337,18 @@ model Payment {
 }
 
 model Transaction {
-  id                  String   @id @default(cuid())
+  id                  String    @id @default(cuid())
   paymentMethod       Method
-  user                users    @relation(fields: [usersId], references: [id])
-  usersId             String   @db.Uuid
+  user                users     @relation(fields: [usersId], references: [id])
+  usersId             String    @db.Uuid
   bankReferenceNumber String?
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
-  payment             Payment  @relation(fields: [paymentId], references: [id])
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  payment             Payment   @relation(fields: [paymentId], references: [id])
   paymentId           String
   Status              Status[]
+  recipient           Recipient @relation(fields: [recipientId], references: [id])
+  recipientId         String
 
   @@schema("auth")
 }

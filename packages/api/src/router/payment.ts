@@ -9,7 +9,6 @@ export const paymentRouter = createTRPCRouter({
       z.object({
         local: z.string(),
         foreign: z.string(),
-        recipientId: z.string(),
         exchangeRateId: z.string(),
         rateId: z.string(),
       }),
@@ -29,7 +28,6 @@ export const paymentRouter = createTRPCRouter({
         data: {
           sentAmount,
           remittedAmount,
-          recipientId: input.recipientId,
           exchangeRateId: input.exchangeRateId,
           rateId: input.rateId,
           usersId,
