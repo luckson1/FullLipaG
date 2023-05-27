@@ -1,161 +1,137 @@
-import { useState } from "react";
-import {
-  Alert,
-  Pressable,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import * as AppleAuthentication from "expo-apple-authentication";
-import { AntDesign } from "@expo/vector-icons";
-import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
+import {  Platform, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import React from 'react'
+import { z } from 'zod';
+import { Controller, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { KeyboardAvoidingView } from 'react-native';
+import { Stack } from 'expo-router';
+import { DatePickerInput } from 'react-native-paper-dates';
+const profileSchema = z.object({
+    firstName: z.string().min(1, { message: 'First name is required' }),
+    lastName: z.string().min(1, {message: 'Last name is required' }),
+    email: z.string().email().nonempty({message:"Email required"}),
+    governmentId: z
+      .string()
+      .min(1, {message: 'Government ID is required' }),
+    dateOfBirth: z.date(),
+  });
+  type Profile=z.infer<typeof profileSchema>
+  const ProfileCreationScreen = () => {
+    const { control, handleSubmit, formState: { errors } } = useForm<Profile>({
+      resolver: zodResolver(profileSchema),
+    });
+  
+    const onSubmit = (data: Profile) => {
+      // Handle form submission
+      console.log(data);
+    };
+    return (
+<View className="flex-1 bg-teal-500 flex w-full items-center justify-between ">
+       <Stack.Screen options={{title:"Profile", headerTitleStyle: {color: "rgb(226 232 240)"}, headerStyle: {backgroundColor:"rgb(20 184 166) "}}}/>
+        <View className='flex-[15%] flex justify-start items-start w-full'>
+          <Text className='text-slate-200 text-xl mx-5 my-2 text-start font-semibold'>Tell us about yourself</Text>
 
-import { initiateAppleSignIn } from "../utils/auth";
 
-export default function Profile() {
-  const user = useUser();
-  return (
-    <View className="flex-1 bg-zinc-800 p-4">
-      {user ? <SignedInView /> : <SignedOutView />}
-    </View>
-  );
-}
-
-function SignedInView() {
-  const supabase = useSupabaseClient();
-  const user = useUser();
-
-  return (
-    <View className="flex gap-4">
-      <Text className="text-zinc-200">Signed in as {user?.email}</Text>
-      <TouchableOpacity
-        onPress={() => supabase.auth.signOut()}
-        className="flex-row items-center justify-center gap-2 rounded-lg bg-zinc-200 p-2"
-      >
-        <Text className="text-xl font-semibold text-zinc-900">Sign out</Text>
-      </TouchableOpacity>
-    </View>
-  );
-}
-
-function SignedOutView() {
-  const supabase = useSupabaseClient();
-
-  const signInWithApple = async () => {
-    try {
-      const { token, nonce } = await initiateAppleSignIn();
-      const { error } = await supabase.auth.signInWithIdToken({
-        provider: "apple",
-        token,
-        nonce,
-      });
-      if (error) return Alert.alert("Error", error.message);
-    } catch (e) {
-      if (typeof e === "object" && !!e && "code" in e) {
-        if (e.code === "ERR_REQUEST_CANCELED") {
-          // handle that the user canceled the sign-in flow
-        } else {
-          // handle other errors
-        }
-      } else {
-        console.error("Unexpected error from Apple SignIn: ", e);
-      }
-    }
-  };
-
-  return (
-    <View className="space-y-4">
-      <Text className="mb-4 text-2xl font-bold text-zinc-200">Sign In</Text>
-
-      {/* Email Sign In */}
-      <EmailForm />
-
-      <View className="relative mb-2 flex-row items-center justify-center border-b border-zinc-200 py-2">
-        <Text className="absolute top-1/2 bg-zinc-800 px-2 text-lg text-zinc-200">
-          or
-        </Text>
-      </View>
-      {/* Sign in with Apple */}
-      <AppleAuthentication.AppleAuthenticationButton
-        buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
-        buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
-        className="h-14"
-        cornerRadius={8}
-        onPress={signInWithApple}
-      />
-    </View>
-  );
-}
-
-function EmailForm() {
-  const supabase = useSupabaseClient();
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [isSignUp, setIsSignUp] = useState(false);
-
-  const signInWithPassword = async () => {
-    const { error, data } = isSignUp
-      ? await supabase.auth.signUp({
-          email,
-          password,
-        })
-      : await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-    if (error) Alert.alert("Error", error.message);
-    else if (isSignUp && data.user) {
-      Alert.alert("Check your email for a confirmation link.");
-      setIsSignUp(false);
-    }
-  };
-
-  return (
-    <View className="flex-col gap-4">
-      <TextInput
-        className="rounded bg-white/10 p-2 text-zinc-200"
-        placeholderTextColor="#A1A1A9" // zinc-400
-        value={email}
-        autoCapitalize="none"
-        onChangeText={setEmail}
-        placeholder="Email"
-      />
-      <View className="relative space-y-1">
-        <TextInput
-          className="rounded bg-white/10 p-2 text-zinc-200"
-          placeholderTextColor="#A1A1A9" // zinc-400
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry={!showPassword}
-          autoCapitalize="none"
-          placeholder="Password"
+        </View>
+        <View className='w-full flex-[75%] p-2 justify-center items-center bg-white'>
+        <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}  keyboardVerticalOffset={Platform.OS==="ios"? 0: 0} className=' flex w-full bg-white bg-red-5 p-5 rounded-3xl absolute -top-12 shadow'>
+          
+          <Controller
+            control={control}
+            name="firstName"
+            render={({ field }) => (
+              <TextInput
+               onChangeText={field.onChange}
+                onBlur={field.onBlur}
+          className='border rounded-md  border-slate-300 focus:border-teal-500 text-lg py-3 px-4 w-full my-2'
+                placeholder="First Name"
+                autoCapitalize="none"
+              />
+            )}
+          />
+          {errors.firstName && <Text className='text-red-400 mt-2'>{errors.firstName.message}</Text>}
+    
+          <Controller
+            control={control}
+            name="lastName"
+            render={({ field }) => (
+              <TextInput
+               onChangeText={field.onChange}
+                onBlur={field.onBlur}
+          className='border rounded-md  border-slate-300 focus:border-teal-500 text-lg py-3 px-4 w-full my-2'
+                placeholder="Last Name"
+                autoCapitalize="none"
+              />
+            )}
+          />
+             <Controller
+            control={control}
+            name="dateOfBirth"
+            render={({ field }) => (
+              <DatePickerInput
+              className='border rounded-md  border-slate-300 focus:border-teal-500 text-lg  bg-white px-4 w-full my-2'
+          locale="en-GB"
+          label="Date of Birth"
+          value={field.value}
+          onChange={field.onChange}
+          onBlur={field.onBlur}
+          inputMode="start"
         />
-        <Pressable
-          className="absolute right-2"
-          onPress={() => setShowPassword((prev) => !prev)}
-        >
-          {showPassword && <AntDesign name="eye" size={24} color="#A1A1A9" />}
-          {!showPassword && <AntDesign name="eyeo" size={24} color="#A1A1A9" />}
-        </Pressable>
-      </View>
+            )}
+          />
+       
+          {errors.dateOfBirth && <Text className='text-red-400 mt-2'>{errors.dateOfBirth.message}</Text>}
+          {errors.lastName && <Text className='text-red-400 mt-2'>{errors.lastName.message}</Text>}
+          <Controller
+            control={control}
+            name="email"
+            render={({ field }) => (
+              <TextInput
+               onChangeText={field.onChange}
+                onBlur={field.onBlur}
+          className='border rounded-md  border-slate-300 focus:border-teal-500 text-lg py-3 px-4 w-full my-2'
+                placeholder="Email"
+                autoCapitalize="none"
+              />
+            )}
+          />
+          {errors.email && <Text className='text-red-400 mt-2'>{errors.email.message}</Text>}
+    
+          <Controller
+            control={control}
+            name="governmentId"
+            render={({ field }) => (
+              <TextInput
+              keyboardType='numeric'
+               onChangeText={field.onChange}
+                onBlur={field.onBlur}
+                className='border rounded-md  border-slate-300 focus:border-teal-500 text-lg py-3 px-4 w-full my-2'
+                placeholder="Government ID"
+                autoCapitalize="none"
+              />
+            )}
+          />
+          {errors.governmentId && <Text className='text-red-400 mt-2'>{errors.governmentId.message}</Text>}
+    
+   
+    
+        
+        </KeyboardAvoidingView>
+        </View>
+        <View className="w-full bg-white px-7 py-2 flex-[10%] flex justify-end items-center ">
+          <TouchableOpacity
+            className="my-2 flex w-full   items-center justify-center rounded-lg bg-green-400 px-4 py-3 shadow-xl absolute bottom-2"
+            onPress={handleSubmit(onSubmit)}
+          >
+            <Text className="text-xl font-bold text-white">Create Profile</Text>
+          </TouchableOpacity>
+        </View>
+        </View>
+      );
+  };
 
-      <Pressable className="h-4" onPress={() => setIsSignUp((prev) => !prev)}>
-        <Text className="flex-1 text-zinc-200">
-          {isSignUp ? "Already have an account?" : "Don't have an account?"}
-        </Text>
-      </Pressable>
-
-      <TouchableOpacity
-        onPress={signInWithPassword}
-        className="flex-row items-center justify-center rounded-lg bg-emerald-400 p-2"
-      >
-        <Text className="ml-1 text-xl font-medium">
-          {isSignUp ? "Sign Up" : "Sign In"}
-        </Text>
-      </TouchableOpacity>
-    </View>
-  );
-}
+ 
+   
+  
+  export default ProfileCreationScreen;
