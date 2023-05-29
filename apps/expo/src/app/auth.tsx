@@ -4,6 +4,7 @@ import { Stack, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckBox } from "@rneui/themed";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -14,6 +15,7 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 const LoginScreen = () => {
+  const supabase = useSupabaseClient();
   const textInput = useRef<TextInput>(null);
   useEffect(() => {
     textInput.current?.focus();
@@ -29,7 +31,10 @@ const LoginScreen = () => {
     },
   });
   const router = useRouter();
-  const onSubmit = (data: FormData) => {
+  const onSubmit = async (data: FormData) => {
+    await supabase.auth.signInWithOtp({
+      phone: `+254${data.phoneNumber}`,
+    });
     router.push(`/verification?number=${data.phoneNumber}`);
   };
   const [isAgreed, setIsAgreed] = useState(true);
@@ -51,7 +56,7 @@ const LoginScreen = () => {
               errors.phoneNumber ? "border border-red-500" : ""
             }`}
           >
-            <Text className=" text-xl text-slate-400">+254</Text>
+            <Text className=" text-xl text-slate-400">+254(0)</Text>
             <Controller
               control={control}
               name="phoneNumber"
