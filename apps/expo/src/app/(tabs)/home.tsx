@@ -1,79 +1,73 @@
+import React, { useEffect } from "react";
 import {
-  View,
-  Text,
-  SafeAreaView,
-  TouchableOpacity,
   FlatList,
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  TouchableHighlight,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import React from "react";
 import { Tabs, useRouter } from "expo-router";
-import { Avatar, Icon } from "@rneui/themed";
-import { TouchableHighlight } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { ScrollView } from "react-native";
+import { AntDesign } from "@expo/vector-icons";
+import { Avatar, Icon } from "@rneui/themed";
 
-
+import { api } from "~/utils/api";
+import NoContent from "~/components/NoContent";
 
 const Index = () => {
   const router = useRouter();
-  const data = [
-    {
-      id: "1",
-      name: "Foo Fashion",
-      status: "completed",
-      currency: "CYN",
-      amount: 9499,
-      date: "Sun Apr 23, 2023 17:18",
-    },
-    {
-      id: "2",
-      name: "Acorn Ltd",
-      status: "canceled",
-      currency: "USD",
-      amount: 7000,
-      date: "Sun Apr 23, 2023 17:18",
-    },
-    {
-      id: "3",
-      name: "Yee Kung Fu Ltd",
-      status: "pending",
-      amount: 13570,
-      currency: "USD",
-      date: "Sun Apr 23, 2023 17:18",
-    },
-    {
-      id: "4",
-      name: "Ho Lee Sheet Inc",
-      status: "sending",
-      currency: "USD",
-      amount: 10000,
-      date: "Sun Apr 23, 2023 17:18",
-    },
-  ];
+  const {
+    data: userData,
+    isLoading,
+    isError,
+  } = api.profile.getUserProfile.useQuery();
+  const userHasProfile = userData && userData?.Profile.length <= 1;
+  const profile = userData?.Profile?.at(0);
+  const transactionData = userData?.Transaction;
+  const { data: rates } = api.exchange.getLatestRates.useQuery();
+
+  useEffect(() => {
+    if (!userHasProfile && !isLoading && isError) router.push("/profile");
+  }, [router, userHasProfile, isLoading, isError]);
+
+  const maximumList = 4;
+
   return (
     <SafeAreaView className="flex-1 ">
       <Tabs.Screen options={{ headerShown: false }} />
       <StatusBar backgroundColor="rgb(20 184 166)" />
 
       <ScrollView className=" h-1/2 min-h-[270px] w-full bg-teal-500 px-5  pb-5 pt-16">
-        <View className="flex w-full h-full items-center gap-y-8 ">
+        <View className="flex h-full w-full items-center gap-y-8 ">
           <View className="flex w-full max-w-md flex-row items-center  justify-between">
-            <View className="flex w-3/4 flex-row gap-3 items-center justify-center">
-              <View className="w-1/4 flex justify-center items-center ">
+            <View className="flex w-3/4 flex-row items-center justify-center gap-3">
+              <View className="flex w-1/4 items-center justify-center">
                 <Avatar
-                
+                  containerStyle={{
+                    backgroundColor: "rgb(74 222 128 )",
+                    padding: 5,
+                  }}
                   size={64}
                   rounded
                   source={{
-                    uri: "https://randomuser.me/api/portraits/men/36.jpg",
+                    uri:
+                      userData?.Profile.at(0)?.image ??
+                      (userData?.Profile.at(0)?.gender === "Female"
+                        ? "https://res.cloudinary.com/dhciks96e/image/upload/v1685280960/Female-Avatar_h8qvjc.png"
+                        : "https://res.cloudinary.com/dhciks96e/image/upload/v1685280974/Male-Avatar-3_q1g6un.png"),
                   }}
                 />
               </View>
               <View className="flex  h-fit w-3/5">
                 <Text className=" text-white">Welcome Back</Text>
-                <Text className="text-xl font-semibold  text-white">Jack</Text>
                 <Text className="text-xl font-semibold  text-white">
-                  Gathondu
+                  {profile?.firstName}
+                </Text>
+                <Text className="text-xl font-semibold  text-white">
+                  {profile?.lastName}
                 </Text>
               </View>
             </View>
@@ -85,7 +79,6 @@ const Index = () => {
               >
                 <Icon
                   style={{
-                  
                     backgroundColor: "inherit",
                   }}
                   name="help"
@@ -100,7 +93,6 @@ const Index = () => {
               >
                 <Icon
                   style={{
-                   
                     backgroundColor: "inherit",
                     borderRadius: 30,
                   }}
@@ -113,41 +105,26 @@ const Index = () => {
             </View>
           </View>
 
-          <View className="flex w-full max-w-md justify-center items-center">
-            <Text className="text-center text-white my-5">
+          <View className="flex w-full max-w-md items-center justify-center">
+            <Text className="my-5 text-center text-white">
               Todays Exchange Rates
             </Text>
-            <View className=" h-32 w-full  items-center justify-center gap-3 rounded-2xl bg-slate-700 p-5 shadow shadow-yellow-500/100 mx-auto mb-5">
-              <Text className="text-lg font-bold tracking-widest text-white">
-                {" "}
-                1 🇺🇸 USD = 135.7 🇰🇪 KES
-              </Text>
-              <Text className="text-lg font-bold tracking-widest text-white">
-                {" "}
-                1 🇨🇳 CNY = 20.5 🇰🇪 KES
-              </Text>
+            <View className=" mx-auto mb-5  h-32 w-full items-center justify-center rounded-2xl bg-slate-700 p-5 shadow shadow-yellow-500/100">
+              {rates?.map((rate) => (
+                <Text
+                  key={rate.id}
+                  className="my-3 text-lg font-bold tracking-widest text-white"
+                >
+                  1 {rate.target} = {rate?.Rate?.at(0)?.value} 🇰🇪 KES
+                </Text>
+              ))}
             </View>
-            {/* <Button className="gap-x-2 flex flex-row w-full max-w-sm rounded-lg " 
-            title={"Send"}
-            radius={"md"}
-      
-    icon={{
-      name: 'paper-plane',
-      type: 'font-awesome',
-      size: 18,
-      color: 'white',
-    }}
-
- 
-            size="lg"
-    /> */}
-
           </View>
         </View>
       </ScrollView>
 
-      <View className=" flex w-full items-center justify-center bg-white px-5 py-5">
-        <View className="flex w-full max-w-md flex-row justify-between mb-4">
+      <View className=" flex h-1/2 w-full items-center justify-center bg-white px-5 py-5">
+        <View className="mb-4 flex w-full max-w-md flex-row justify-between">
           <Text className="text-xl font-semibold text-slate-600"> History</Text>
           <TouchableOpacity
             className="flex flex-row"
@@ -168,56 +145,95 @@ const Index = () => {
             />
           </TouchableOpacity>
         </View>
-        <View className="w-full max-w-md my-4">
-          <FlatList
-            className=" mt-3 flex gap-3 "
-            data={data}
-            renderItem={({ item }) => (
-              <View className="my-3 flex flex-row  justify-between">
-                <View className="flex w-8/12 flex-row gap-3">
-                  <View className="w-1/4 text-teal-500 ">
-                    <Avatar
-                    
-                      size={44}
-                      rounded
-                  
-                      icon={{ name: `${item.status==="completed"? "check": item.status==="canceled"? "ban" : item.status==="pending"? "exclamation": item.status==="sending"? "arrow-up": ""}`, type: "font-awesome",  color: `${item.status==="completed"? "#4ade80" : item.status==="canceled"? "#ef4444" : item.status==="sending"? "rgb(217 119 6)": item.status==="pending"? "rgb(234 179 8)": ""}` }}
-                      containerStyle={{
-                        backgroundColor: "rgb(20 184 166)",
-                      
-                        
-                   
-                        
-                      }}
-                    />
-                  </View>
+        <View className="h- my-4 h-[80%] w-full max-w-md">
+          {!isLoading && transactionData && transactionData.length <= 0 && (
+            <View className="h-full w-full">
+              <NoContent content="transactions" />
 
-                  <View className="flex">
-                    <Text className="font-medium text-slate-600">{item.name}</Text>
-                    <Text
-                      className={` ${
-                        item.status === "canceled"
-                          ? "text-red-400 "
-                          : item.status === "completed"
-                          ? "text-green-400"
-                          : item.status === "sending"
-                          ? "text-amber-600"
-                          : "text-yellow-500"
-                      }`}
-                    >
-                      {item.status}
+              <TouchableOpacity
+                className="my-5 w-full rounded-xl bg-green-400 py-3"
+                onPress={() => {
+                  router.push("/send");
+                }}
+              >
+                <Text className="text-center text-lg text-white">
+                  Make a payment
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+          {!isLoading && transactionData && (
+            <FlatList
+              className=" mt-3 flex gap-3 "
+              data={transactionData.slice(0, maximumList)}
+              renderItem={({ item }) => (
+                <Pressable
+                  className="my-3 flex flex-row  justify-between"
+                  onPress={() =>
+                    router.push(`transactions/overview/id?id=${item.id}`)
+                  }
+                >
+                  <View className="flex w-8/12 flex-row gap-3">
+                    <View className="flex w-1/4  items-center justify-center">
+                      <AntDesign
+                        size={40}
+                        name={
+                          item.Status?.at(0)?.name === "Received"
+                            ? "checkcircleo"
+                            : item.Status?.at(0)?.name === "Canceled" ||
+                              item.Status?.at(0)?.name === "Declined"
+                            ? "closecircleo"
+                            : item.Status?.at(0)?.name === "Paused"
+                            ? "pausecircleo"
+                            : item.Status?.at(0)?.name === "Sent"
+                            ? "rocket1"
+                            : "infocirlceo"
+                        }
+                        color={
+                          item.Status?.at(0)?.name === "Received"
+                            ? "#4ade80"
+                            : item.Status?.at(0)?.name === "Canceled" ||
+                              item.Status?.at(0)?.name === "Declined"
+                            ? "#ef4444"
+                            : item.Status?.at(0)?.name === "Paused"
+                            ? "rgb(234 179 8)"
+                            : "rgb(14 165 233 )"
+                        }
+                      />
+                    </View>
+
+                    <View className="flex">
+                      <Text className="font-medium text-slate-600">
+                        {item.recipient.name}
+                      </Text>
+                      <Text
+                        className={` ${
+                          item.Status?.at(0)?.name === "Received"
+                            ? "text-[#4ade80]"
+                            : item.Status?.at(0)?.name === "Canceled" ||
+                              item.Status?.at(0)?.name === "Declined"
+                            ? "text-[#ef4444]"
+                            : item.Status?.at(0)?.name === "Paused"
+                            ? "text-amber-500"
+                            : "text-sky-500"
+                        }`}
+                      >
+                        {item.Status.at(0)?.name}
+                      </Text>
+                    </View>
+                  </View>
+                  <View className="flex w-1/5">
+                    <Text className="text-slate-600">
+                      {item.payment.ExchangeRate.target}
+                    </Text>
+                    <Text className="font-bold text-slate-600">
+                      {item.payment.sentAmount.toLocaleString()}
                     </Text>
                   </View>
-                </View>
-                <View className="flex w-1/5">
-                  <Text className="text-slate-600">{item.currency}</Text>
-                  <Text className="font-bold text-slate-600">
-                    {item.amount.toLocaleString()}
-                  </Text>
-                </View>
-              </View>
-            )}
-          />
+                </Pressable>
+              )}
+            />
+          )}
         </View>
       </View>
     </SafeAreaView>

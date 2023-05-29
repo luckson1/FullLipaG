@@ -9,8 +9,10 @@ import {
   type NativeSyntheticEvent,
   type TextInputKeyPressEventData,
 } from "react-native";
+import Toast from "react-native-root-toast";
 import { Stack, useRouter, useSearchParams } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
 const Otp = () => {
   const params = useSearchParams();
@@ -41,6 +43,7 @@ const Otp = () => {
   }, [decrementClock]);
   if (params && typeof params?.number === "string")
     phoneNumber = params?.number;
+
   const [otpCode, setOtpCode] = useState([""]);
   const handleOtpInputChange = (index: number, text: string) => {
     const updatedOtpCode = [...otpCode];
@@ -87,10 +90,37 @@ const Otp = () => {
       setOtpCode(updatedOtpCode);
     }
   };
+  const supabase = useSupabaseClient();
+  const handleResendOtp = async () => {
+    await supabase.auth.signInWithOtp({
+      phone: `+254${phoneNumber}`,
+    });
+  };
+  const handleVerification = async () => {
+    try {
+      const {
+        error,
+        data: { user, session },
+      } = await supabase.auth.verifyOtp({
+        phone: `+254${phoneNumber}`,
+        token: otpCode.join(""),
+        type: "sms",
+        options: { redirectTo: `/home` },
+      });
+      if (session) navigation.push("/home");
+      if (error)
+        Toast.show(error.message, {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.TOP,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          textColor: "red",
+          delay: 0,
+        });
+    } catch (error) {}
+  };
 
-  useEffect(() => {
-    if (otpCode.length === rightOptLength) navigation.push("/profile");
-  }, [navigation, otpCode]);
   return (
     <SafeAreaView className="flex-1  bg-white ">
       <Stack.Screen options={{ headerShown: false }} />
@@ -101,7 +131,7 @@ const Otp = () => {
           Confirm your phone number
         </Text>
         <Text className="mb-5">
-          Please enter the code we have sent to {phoneNumber}
+          Please enter the code we have sent to 0{phoneNumber}
         </Text>
 
         <View className="my-5 flex w-full flex-row gap-x-3">
@@ -124,8 +154,15 @@ const Otp = () => {
               />
             ))}
         </View>
+        <Pressable
+          onPress={handleVerification}
+          className="my-5 w-full rounded-md bg-green-400 py-3 "
+          android_ripple={{ color: "rgb(20 184 166 )", radius: 40 }}
+        >
+          <Text className="text-center text-lg text-white">Verify OTP</Text>
+        </Pressable>
       </View>
-      <View className="absolute  bottom-10 flex w-full flex-[30%]   flex-row items-baseline justify-between p-7">
+      <View className="absolute  bottom-5 flex w-full flex-[30%]   flex-row items-baseline justify-between p-7">
         <Pressable onPress={() => navigation.back()}>
           <Text className="text-lg text-sky-500">Change number</Text>
         </Pressable>

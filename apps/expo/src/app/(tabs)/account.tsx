@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  Button,
   Pressable,
   ScrollView,
   Text,
@@ -8,10 +7,14 @@ import {
   View,
 } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { Stack } from "expo-router";
-import { Avatar, Icon } from "@rneui/themed";
+import { Stack, useRouter } from "expo-router";
+import { AntDesign, Entypo } from "@expo/vector-icons";
+import { Avatar } from "@rneui/themed";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
-const account = () => {
+const Account = () => {
+  const supabase = useSupabaseClient();
+  const router = useRouter();
   return (
     <ScrollView className="flex-1">
       <SafeAreaProvider className="flex h-full w-full items-center justify-center bg-white ">
@@ -48,8 +51,8 @@ const account = () => {
           <TouchableOpacity className=" mt-7 flex w-full items-center justify-center   p-2 ">
             <View className=" w-full">
               <View className="flex w-full flex-row items-center justify-between">
-                <View className=" rounded-full bg-slate-300">
-                  <Icon name="help" type="material" size={32} color={"white"} />
+                <View className="  flex h-10 w-10 items-center justify-center rounded-full bg-teal-500">
+                  <AntDesign name="question" size={32} color={"white"} />
                 </View>
                 <View className="w-2/3">
                   <Text className="w-full text-lg leading-loose tracking-wide  text-slate-600 ">
@@ -58,26 +61,19 @@ const account = () => {
                 </View>
 
                 <View className=" w-1/6 rounded-full">
-                  <Icon
-                    name="arrow-right"
-                    type="font-awesome"
-                    size={24}
-                    color={"#4ade80"}
-                  />
+                  <AntDesign name="right" size={24} color={"#4ade80"} />
                 </View>
               </View>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity className=" mt-7 flex w-full items-center justify-center   p-2 ">
+          <TouchableOpacity
+            className=" mt-7 flex w-full items-center justify-center   p-2 "
+            onPress={() => router.push("/profile")}
+          >
             <View className="w-full">
               <View className="flex w-full flex-row items-center justify-between">
-                <View className="  flex h-10 w-10 items-center justify-center rounded-full bg-slate-300">
-                  <Icon
-                    name="user"
-                    type="font-awesome"
-                    size={24}
-                    color={"white"}
-                  />
+                <View className="  flex h-10 w-10 items-center justify-center rounded-full bg-teal-500">
+                  <AntDesign name="user" size={24} color={"white"} />
                 </View>
                 <View className="w-2/3">
                   <Text className="w-full text-lg leading-loose tracking-wide  text-slate-600 ">
@@ -87,12 +83,7 @@ const account = () => {
                 </View>
                 <View className="w-1/6">
                   <View className="rounded-full">
-                    <Icon
-                      name="arrow-right"
-                      type="font-awesome"
-                      size={24}
-                      color={"#4ade80"}
-                    />
+                    <AntDesign name="right" size={24} color={"#4ade80"} />
                   </View>
                 </View>
               </View>
@@ -101,13 +92,8 @@ const account = () => {
           <TouchableOpacity className=" mt-7 flex w-full items-center justify-center   p-2 ">
             <View className="w-full">
               <View className="flex w-full flex-row items-center justify-between">
-                <View className="  flex h-10 w-10 items-center justify-center rounded-full bg-slate-300">
-                  <Icon
-                    name="shield"
-                    type="font-awesome"
-                    size={24}
-                    color={"white"}
-                  />
+                <View className="  flex h-10 w-10 items-center justify-center rounded-full bg-teal-500">
+                  <Entypo name="shield" size={24} color={"white"} />
                 </View>
                 <View className="w-2/3">
                   <Text className="w-full text-lg leading-loose tracking-wide  text-slate-600 ">
@@ -116,27 +102,20 @@ const account = () => {
                 </View>
                 <View className="w-1/6">
                   <View className="rounded-full">
-                    <Icon
-                      name="arrow-right"
-                      type="font-awesome"
-                      size={24}
-                      color={"#4ade80"}
-                    />
+                    <AntDesign name="right" size={24} color={"#4ade80"} />
                   </View>
                 </View>
               </View>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity className=" mt-7 flex w-full items-center justify-center   p-2 ">
+          <TouchableOpacity
+            className=" mt-7 flex w-full items-center justify-center   p-2 "
+            onPress={() => supabase.auth.signOut()}
+          >
             <View className="w-full">
               <View className="flex w-full flex-row items-center justify-between">
-                <View className="  flex h-10 w-10 items-center justify-center rounded-full bg-slate-300">
-                  <Icon
-                    name="logout"
-                    type="material"
-                    size={24}
-                    color={"white"}
-                  />
+                <View className="  flex h-10 w-10 items-center justify-center rounded-full bg-teal-500">
+                  <AntDesign name="logout" size={24} color={"white"} />
                 </View>
                 <View className="w-2/3">
                   <Text className="w-full text-lg leading-loose tracking-wide  text-slate-600 ">
@@ -145,12 +124,7 @@ const account = () => {
                 </View>
                 <View className="w-1/6">
                   <View className="rounded-full">
-                    <Icon
-                      name="arrow-right"
-                      type="font-awesome"
-                      size={24}
-                      color={"#4ade80"}
-                    />
+                    <AntDesign name="right" size={24} color={"#4ade80"} />
                   </View>
                 </View>
               </View>
@@ -159,13 +133,8 @@ const account = () => {
           <TouchableOpacity className=" mt-7 flex w-full items-center justify-center   p-2 ">
             <View className="w-full">
               <View className="flex flex-row items-center justify-between">
-                <View className="  flex h-10 w-10 items-center justify-center rounded-full bg-slate-300">
-                  <Icon
-                    name="settings"
-                    type="material"
-                    size={24}
-                    color={"white"}
-                  />
+                <View className="  flex h-10 w-10 items-center justify-center rounded-full bg-teal-500">
+                  <AntDesign name="setting" size={24} color={"white"} />
                 </View>
                 <View className="w-2/3">
                   <Text className="w-full text-lg leading-loose tracking-wide  text-slate-600 ">
@@ -174,12 +143,7 @@ const account = () => {
                 </View>
                 <View className="w-1/6">
                   <View className="rounded-full">
-                    <Icon
-                      name="arrow-right"
-                      type="font-awesome"
-                      size={24}
-                      color={"#4ade80"}
-                    />
+                    <AntDesign name="right" size={24} color={"#4ade80"} />
                   </View>
                 </View>
               </View>
@@ -191,4 +155,4 @@ const account = () => {
   );
 };
 
-export default account;
+export default Account;

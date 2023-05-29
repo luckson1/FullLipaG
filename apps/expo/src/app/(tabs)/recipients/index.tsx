@@ -1,56 +1,61 @@
-import { View, Text, SafeAreaView, FlatList } from "react-native";
-
 import React from "react";
+import {
+  FlatList,
+  SafeAreaView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Stack, useRouter, useSearchParams } from "expo-router";
-
 import { StatusBar } from "expo-status-bar";
-import { Avatar, Button, Icon } from "@rneui/themed";
+import { AntDesign, MaterialIcons } from "@expo/vector-icons";
+import { Avatar } from "@rneui/themed";
+
+import { api } from "~/utils/api";
+import useStore from "~/utils/zuztand";
+import NoContent from "~/components/NoContent";
 
 const Index = () => {
-  const data = [
-    {
-      id: "2",
-      name: "Acorn Ltd",
-      account: "1234 5678 9012 3456",
-      bank: "China CITIC Bank",
-      currency: "USD",
-    },
-
-    {
-      id: "4",
-      name: "Ho Lee Sheet Inc",
-      account: "6225 8801 2345 6789",
-      bank: "China Minsheng Bank",
-      currency: "USD",
-    },
-  ];
+  const { data, isLoading } = api.recipient.getUsersAll.useQuery();
   const router = useRouter();
-  const params = useSearchParams();
+  const addRecipient = useStore((state) => state.setNewRecipient);
 
   return (
     <SafeAreaView className="flex-1 bg-white">
       <Stack.Screen options={{ headerShown: false }} />
       <StatusBar />
 
-      <View className="flex  w-full items-center justify-center p-5 ">
-        <View className=" w-full max-w-md">
+      <View className="flex  h-fit w-full items-center justify-center p-5 ">
+        <View className=" h-full w-full max-w-md">
           <View className="flex w-full flex-row items-center justify-between">
             <Text className="my-10 flex items-center  justify-center text-xl font-bold">
               Recipients
             </Text>
-            <Button
-              radius={"sm"}
-              type="solid"
-              className="flex flex-row gap-2"
-              color={"#4ade80"}
-             
+            <TouchableOpacity
+              className="flex w-24 flex-row items-center justify-around  rounded-md bg-green-400 py-3"
               onPress={() => router.push("/recipients/add")}
             >
-              <Icon name="plus" size={24} type="font-awesome" color={"white"} /> Add
-            </Button>
+              <AntDesign name="plus" size={24} color={"white"} />
+              <Text className="text-white">Add</Text>
+            </TouchableOpacity>
           </View>
           <View className="w-full">
+            {!isLoading && data && data.length <= 0 && (
+              <View className="h-full w-full">
+                <NoContent content="recipients" />
+
+                <TouchableOpacity
+                  className="my-5 w-full rounded-xl bg-green-400 py-3"
+                  onPress={() => router.push("/recipients/add")}
+                >
+                  <Text className="text-center text-lg text-white">
+                    Add a Recipient
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
             <FlatList
+              keyExtractor={(item) => item.id}
               className="flex w-full"
               data={data}
               renderItem={({ item }) => (
@@ -68,31 +73,24 @@ const Index = () => {
                     </View>
 
                     <View className="flex">
-                      <Text className="font-medium">
-                        {item.name} {item.currency}
-                      </Text>
+                      <Text className="font-medium">{item.name}</Text>
                       <Text className="text-sm text-slate-600">
                         {" "}
-                        {item.account}
+                        {item.bankAccount}
                       </Text>
                     </View>
                   </View>
-                  <View className="flex w-1/5">
-                    <Button
-                      radius={"sm"}
-                      type="solid"
-                      className="flex flex-row"
-                      color={"#4ade80"}
-                      onPress={() => router.push("transactions/id")}
+                  <View className="flex w-1/4">
+                    <TouchableOpacity
+                      className="flex w-20 flex-row items-center justify-around  rounded-md bg-green-400 py-2"
+                      onPress={() => {
+                        addRecipient(item);
+                        router.push("/recipients/confirmation");
+                      }}
                     >
-                       <Icon name="send" type="font-awesome" color={"white"} />
-                    
-                    </Button>
-                    {/* <TouchableOpacity className="flex items-baseline justify-center   rounded-lg bg-green-400 py-1 shadow-xl shadow-green-400/100">
-                    <Text className="mx-auto text-center text-sm text-white">
-                      Send
-                    </Text>
-                  </TouchableOpacity> */}
+                      <Text className=" text-sm text-white">Send</Text>
+                      <MaterialIcons name="send" size={20} color={"white"} />
+                    </TouchableOpacity>
                   </View>
                 </View>
               )}

@@ -1,14 +1,15 @@
 import React from "react";
 import { Redirect } from "expo-router";
+import { useUser } from "@supabase/auth-helpers-react";
 
-const index = () => {
-  const isAuth = true;
+const Index = () => {
+  const user = useUser();
   return (
     <>
-      {isAuth && <Redirect href={"/home"} />}
-      {!isAuth && <Redirect href={"/onboarding"} />}
+      {user && <Redirect href={"/home"} />}
+      {!user && <Redirect href={"/onboarding"} />}
     </>
   );
 };
 
-export default index;
+export default Index;
