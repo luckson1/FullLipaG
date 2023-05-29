@@ -1,12 +1,20 @@
+import {
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { Tabs, useRouter } from "expo-router";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {  Tabs, useRouter } from "expo-router";
 import { CheckIcon, KeyboardAvoidingView, Select } from "native-base";
 import { Controller, useForm } from "react-hook-form";
-import { TouchableOpacity, View , Text, TextInput} from "react-native";
-import { Platform } from "react-native";
-import { SafeAreaView } from "react-native";
-import { ScrollView } from "react-native";
 import { z } from "zod";
+
+import { api } from "~/utils/api";
+import useStore from "~/utils/zuztand";
 
 const RecipientForm = () => {
   enum Country {
@@ -15,19 +23,19 @@ const RecipientForm = () => {
     HongKong = "Hong Kong",
   }
   const convertionValidator = z.object({
-    company: z
+    name: z
       .string({ errorMap: () => ({ message: "Recipient Bank Required!" }) })
       .nonempty("Recipient's Name Required!"),
-    bank: z
+    bankName: z
       .string({ errorMap: () => ({ message: "Bank Name Required!" }) })
       .nonempty("Recipient's Bank Required!"),
     swiftCode: z
       .string({ errorMap: () => ({ message: "Bank's Swift Code Required!" }) })
       .nonempty("Bank's Swift Code Required!"),
-    account: z
+    bankAccount: z
       .string({ errorMap: () => ({ message: "Account Required!" }) })
       .nonempty("Account Required!"),
-    country: z.nativeEnum(Country, {
+    bankCountry: z.nativeEnum(Country, {
       errorMap: () => ({
         message: "Select valid Country where the bank is located!",
       }),
@@ -42,79 +50,92 @@ const RecipientForm = () => {
     resolver: zodResolver(convertionValidator),
   });
   const router = useRouter();
+  const isPaymentInProgress =
+    useStore((store) => store.currentPayment) !== undefined;
+  const storeRecipient = useStore((store) => store.setNewRecipient);
+  const { mutate: addRecipient } = api.recipient.add.useMutation({
+    onSuccess(recipient) {
+      isPaymentInProgress ? storeRecipient(recipient) : null;
+    },
+  });
   const onSubmit = (data: Values) => {
-    console.log(data); router.push("/recipients/confirmation")
+    addRecipient(data);
+    isPaymentInProgress
+      ? router.push("/recipients/confirmation")
+      : router.push("/recipients");
   };
 
   return (
-    
     <ScrollView className="flex-1 bg-white">
-      <Tabs.Screen     options={{href:null}} />
-    
-  <SafeAreaView className="w-full flex justify-center items-center ">
-  <View className="items-between flex w-full flex-col justify-between gap-y-5 p-5 max-w-md">
-        <View
-          className="flex  flex-row w-full items-center justify-between"
-      
-        >
-          <Text className="text-xl">Recipient&apos;s Bank Details</Text>
-        
-        </View>
+      <Tabs.Screen options={{ href: null }} />
 
-        <View className=" flex w-full items-start justify-between ">
-          <Text className=" mb-2 text-slate-700">Recipient Company Name</Text>
-          {errors.company && (
-            <Text className=" mb-2 text-red-500">
-              {" "}
-              {errors.company.message}
-            </Text>
-          )}
-          <Controller
-            control={control}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                onBlur={onBlur}
-                onChangeText={(value) => onChange(value)}
-                className= {`block w-full rounded-md border  px-4 py-3 ${errors.company? "border-red-500  focus:border-green-500 focus:ring-green-500": " border-gray-300  focus:border-green-500 focus:ring-green-500"}`}
-                value={value}
-              />
-            )}
-            name="company"
-          />
-        </View>
+      <SafeAreaView className="flex w-full items-center justify-center ">
+        <View className="items-between flex w-full max-w-md flex-col justify-between gap-y-5 p-5">
+          <View className="flex  w-full flex-row items-center justify-between">
+            <Text className="text-xl">Recipient&apos;s Bank Details</Text>
+          </View>
 
-        <View className=" flex w-full  items-start justify-between ">
-          <Text className=" mb-2 text-slate-700">
-            Recipient&apos;s Bank Name
-          </Text>
-          {errors.bank && (
-            <Text className=" mb-2 text-red-500">{errors.bank.message}</Text>
-          )}
-          <Controller
-            control={control}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                onBlur={onBlur}
-                onChangeText={onChange}
-                    className= {`block w-full rounded-md border  px-4 py-3 ${errors.bank? "border-red-500  focus:border-green-500 focus:ring-green-500": " border-gray-300  focus:border-green-500 focus:ring-green-500"}`}
-                value={value}
-              />
+          <View className=" flex w-full items-start justify-between ">
+            <Text className=" mb-2 text-slate-700">Recipient Company Name</Text>
+            {errors.name && (
+              <Text className=" mb-2 text-red-500"> {errors.name.message}</Text>
             )}
-            name="bank"
-          />
-  </View>
-          <View className=" mt-4 flex w-full items-start justify-between">
+            <Controller
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  onBlur={onBlur}
+                  onChangeText={(value) => onChange(value)}
+                  className={`block w-full rounded-md border  px-4 py-3 ${
+                    errors.name
+                      ? "border-red-500  focus:border-green-500 focus:ring-green-500"
+                      : " border-gray-300  focus:border-green-500 focus:ring-green-500"
+                  }`}
+                  value={value}
+                />
+              )}
+              name="name"
+            />
+          </View>
+
+          <View className=" flex w-full  items-start justify-between ">
             <Text className=" mb-2 text-slate-700">
-              Country where bank is located
+              Recipient&apos;s Bank Name
             </Text>
-            {errors.country && (
+            {errors.bankName && (
               <Text className=" mb-2 text-red-500">
-                {errors.country.message}
+                {errors.bankName.message}
               </Text>
             )}
             <Controller
               control={control}
-              name="country"
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  className={`block w-full rounded-md border  px-4 py-3 ${
+                    errors.bankName
+                      ? "border-red-500  focus:border-green-500 focus:ring-green-500"
+                      : " border-gray-300  focus:border-green-500 focus:ring-green-500"
+                  }`}
+                  value={value}
+                />
+              )}
+              name="bankName"
+            />
+          </View>
+          <View className=" mt-4 flex w-full items-start justify-between">
+            <Text className=" mb-2 text-slate-700">
+              Country where bank is located
+            </Text>
+            {errors.bankCountry && (
+              <Text className=" mb-2 text-red-500">
+                {errors.bankCountry.message}
+              </Text>
+            )}
+            <Controller
+              control={control}
+              name="bankCountry"
               render={({ field: { onChange, value } }) => (
                 <Select
                   selectedValue={value}
@@ -137,61 +158,86 @@ const RecipientForm = () => {
               )}
             />
           </View>
-      
-        <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'} className=" flex w-full  items-start justify-between " keyboardVerticalOffset={Platform.OS==="ios"? -200: -100} >
-          <Text className=" mb-2 text-slate-700">Banks&apos;s Swift Code</Text>
-          {errors.swiftCode && (
-            <Text className=" mb-2 text-red-500">
-              {errors.swiftCode.message}
-            </Text>
-          )}
-          <Controller
-            control={control}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                onBlur={onBlur}
-                onChangeText={onChange}
-                    className= {`block w-full rounded-md border  px-4 py-3 ${errors.swiftCode? "border-red-500  focus:border-green-500 focus:ring-green-500": " border-gray-300  focus:border-green-500 focus:ring-green-500"}`}
-                value={value}
-              />
-            )}
-            name="swiftCode"
-          />
-        </KeyboardAvoidingView>
-        <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'} className=" flex w-full  items-start justify-between " keyboardVerticalOffset={Platform.OS==="ios"? -64: -32}>
-          <Text className=" mb-2 text-slate-700">Account of Recipient</Text>
-          {errors.account && (
-            <Text className=" mb-2 text-red-500">{errors.account.message}</Text>
-          )}
-          <Controller
-            control={control}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                onBlur={onBlur}
-                onChangeText={onChange}
-                    className= {`block w-full rounded-md border  px-4 py-3 ${errors.account? "border-red-500  focus:border-green-500 focus:ring-green-500": " border-gray-300  focus:border-green-500 focus:ring-green-500"}`}
-                value={value}
-              />
-            )}
-            name="account"
-          />
-        </KeyboardAvoidingView>
 
-        <View className="w-full">
-          <TouchableOpacity
-            className="my-2 flex w-full   items-center justify-center rounded-lg bg-green-400 px-4 py-3 shadow-xl"
-            onPress={handleSubmit(onSubmit)}
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            className=" flex w-full  items-start justify-between "
+            keyboardVerticalOffset={Platform.OS === "ios" ? -200 : -100}
           >
-            <Text className="text-xl font-bold text-white">Add Recipient</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-  </SafeAreaView>
+            <Text className=" mb-2 text-slate-700">
+              Banks&apos;s Swift Code
+            </Text>
+            {errors.swiftCode && (
+              <Text className=" mb-2 text-red-500">
+                {errors.swiftCode.message}
+              </Text>
+            )}
+            <Controller
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  className={`block w-full rounded-md border  px-4 py-3 ${
+                    errors.swiftCode
+                      ? "border-red-500  focus:border-green-500 focus:ring-green-500"
+                      : " border-gray-300  focus:border-green-500 focus:ring-green-500"
+                  }`}
+                  value={value}
+                />
+              )}
+              name="swiftCode"
+            />
+          </KeyboardAvoidingView>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            className=" flex w-full  items-start justify-between "
+            keyboardVerticalOffset={Platform.OS === "ios" ? -64 : -32}
+          >
+            <Text className=" mb-2 text-slate-700">Account of Recipient</Text>
+            {errors.bankAccount && (
+              <Text className=" mb-2 text-red-500">
+                {errors.bankAccount.message}
+              </Text>
+            )}
+            <Controller
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  className={`block w-full rounded-md border  px-4 py-3 ${
+                    errors.bankAccount
+                      ? "border-red-500  focus:border-green-500 focus:ring-green-500"
+                      : " border-gray-300  focus:border-green-500 focus:ring-green-500"
+                  }`}
+                  value={value}
+                />
+              )}
+              name="bankAccount"
+            />
+          </KeyboardAvoidingView>
 
+          <View className="w-full">
+            <TouchableOpacity
+              className="my-5 flex   w-full items-center justify-center rounded-lg bg-green-400 px-4 py-3 shadow-xl"
+              onPress={handleSubmit(onSubmit)}
+            >
+              <Text className="text-xl font-bold text-white">
+                Add Recipient
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              className="my-2 flex w-full   items-center justify-center rounded-lg border border-green-400 bg-white px-4 py-3 shadow-xl focus:bg-green-400"
+              onPress={() => router.back()}
+            >
+              <Text className="text-xl font-bold">Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </SafeAreaView>
     </ScrollView>
   );
 };
 
-export default RecipientForm
+export default RecipientForm;
