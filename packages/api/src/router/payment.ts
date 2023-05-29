@@ -32,6 +32,10 @@ export const paymentRouter = createTRPCRouter({
           rateId: input.rateId,
           usersId,
         },
+        include: {
+          ExchangeRate: true,
+          rate: true,
+        },
       });
       if (!payment)
         throw new TRPCError({
