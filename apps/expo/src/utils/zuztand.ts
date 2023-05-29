@@ -1,58 +1,79 @@
 import { create } from "zustand";
 
-interface Payment {
-  id: string;
-  local: string;
-  foreign: string;
-  exchangeRateId: string;
-  rateId: string;
-} 
-interface Recipient {
-    name: string
-    bankName: string
-    bankCountry: string
-    swiftCode: string
-    bankAccount: string
-    id: string
-}
+import {
+  type ExchangeRate,
+  type Payment,
+  type Rate,
+  type Recipient,
+} from ".prisma/client";
+
 interface TransactionData {
-    payment: Payment,
-    recipient: Recipient
+  payment: Payment & {
+    rate: Rate;
+    ExchangeRate: ExchangeRate;
+  };
+  recipient: Recipient;
 }
 interface PartialTransactionData {
-    payment: Payment,
-    recipient: Omit<Recipient, "id">
-
+  payment: Payment & {
+    rate: Rate;
+    ExchangeRate: ExchangeRate;
+  };
+  recipient: Omit<Recipient, "id">;
 }
-interface Store {
-  currentPayment?: Payment;
-  currentRecipient?:Recipient
-  currentPartialTransactionData?: PartialTransactionData
-  currentTransactionData?: TransactionData
- setNewPayment: (payment: Payment)=> void
- clearPayment: ()=> void
- setNewRecipient: (recipient: Recipient)=> void
- clearRecipient: ()=> void
- setNewTransactionData: (transactionData: TransactionData)=> void
- clearTransactionData: ()=> void
- setNewPartialTransactionData: (partialTransactionData: PartialTransactionData)=> void
- clearPartialTransactionData: ()=> void
+
+export interface Store {
+  currentPayment?: Payment & {
+    rate: Rate;
+    ExchangeRate: ExchangeRate;
+  };
+  currentRecipient?: Recipient;
+  currentPartialTransactionData?: PartialTransactionData;
+  currentTransactionData?: TransactionData;
+  paymentMethod: "M-pesa" | "pesaLink" | "Manual" | undefined;
 }
-const store = create<Store>((set) => ({
-    currentPayment: undefined,
-    currentRecipient: undefined,
-    currentPartialTransactionData: undefined,
-    currentTransactionData: undefined,
-    setNewPayment:  (payment ) => set({ currentPayment: payment }),
-    clearPayment: ()=> set({currentPayment: undefined}),
-    setNewRecipient:  (recipient ) => set({ currentRecipient: recipient }),
-    clearRecipient: ()=> set({currentRecipient: undefined}),
-    setNewTransactionData:  (transactionData ) => set({ currentTransactionData: transactionData }),
-    clearTransactionData: ()=> set({currentTransactionData: undefined}),
-    setNewPartialTransactionData:  (PartialTransactionData ) => set({ currentPartialTransactionData: PartialTransactionData }),
-    clearPartialTransactionData: ()=> set({currentPartialTransactionData: undefined}),
-    
 
+interface Action {
+  setNewPayment: (
+    payment: Payment & {
+      rate: Rate;
+      ExchangeRate: ExchangeRate;
+    },
+  ) => void;
+  clearPayment: () => void;
+  setNewRecipient: (recipient: Recipient) => void;
+  clearRecipient: () => void;
+  setNewPaymentMethod: (
+    paymentMethod: "M-pesa" | "pesaLink" | "Manual" | undefined,
+  ) => void;
+  clearPaymentMethod: () => void;
+  setNewTransactionData: (transactionData: TransactionData) => void;
+  clearTransactionData: () => void;
+  setNewPartialTransactionData: (
+    partialTransactionData: PartialTransactionData,
+  ) => void;
+  clearPartialTransactionData: () => void;
+}
+const useStore = create<Store & Action>((set) => ({
+  currentPayment: undefined,
+  currentRecipient: undefined,
+  paymentMethod: undefined,
+  setNewPaymentMethod: (payment) => set({ paymentMethod: payment }),
+  clearPaymentMethod: () => set({ paymentMethod: undefined }),
 
+  currentPartialTransactionData: undefined,
+  currentTransactionData: undefined,
+  setNewPayment: (payment) => set({ currentPayment: payment }),
+  clearPayment: () => set({ currentPayment: undefined }),
+  setNewRecipient: (recipient) => set({ currentRecipient: recipient }),
+  clearRecipient: () => set({ currentRecipient: undefined }),
+  setNewTransactionData: (transactionData) =>
+    set({ currentTransactionData: transactionData }),
+  clearTransactionData: () => set({ currentTransactionData: undefined }),
+  setNewPartialTransactionData: (PartialTransactionData) =>
+    set({ currentPartialTransactionData: PartialTransactionData }),
+  clearPartialTransactionData: () =>
+    set({ currentPartialTransactionData: undefined }),
 }));
- export default store
+
+export default useStore;
