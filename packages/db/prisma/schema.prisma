@@ -13,6 +13,7 @@ datasource db {
 model Profile {
   id           String   @id @default(cuid())
   firstName    String
+  gender       Gender   @default(Male)
   lastName     String
   governmentId String
   dateOfBirth  DateTime
@@ -26,6 +27,12 @@ model Profile {
 
 // 
 // Supabase Generated
+enum Gender {
+  Male
+  Female
+
+  @@schema("auth")
+}
 
 model users {
   instance_id                 String?       @db.Uuid
@@ -338,7 +345,7 @@ model Payment {
 
 model Transaction {
   id                  String    @id @default(cuid())
-  paymentMethod       Method
+  paymentMethod       Method    @default(Manual_wire_transfer)
   user                users     @relation(fields: [usersId], references: [id])
   usersId             String    @db.Uuid
   bankReferenceNumber String?
@@ -366,12 +373,15 @@ model Status {
 
 enum StatusName {
   Initiated
-  Canceled
-  Paused
+  To_Confirm
   Confirmed
   Processed
+
+  Declined
   Sent
   Received
+  Canceled
+  Paused
 
   @@schema("auth")
 }
