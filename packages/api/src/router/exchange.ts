@@ -29,10 +29,11 @@ export const exchangeRouter = createTRPCRouter({
       include: {
         Rate: {
           select: {
+            id: true,
             value: true,
           },
           orderBy: {
-            timestamp: "asc",
+            timestamp: "desc",
           },
           take: 1,
         },
