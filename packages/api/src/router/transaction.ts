@@ -8,18 +8,18 @@ export const transactionRouter = createTRPCRouter({
     .input(
       z.object({
         recipientId: z.string(),
-        paymentMethod: z.enum(["Wallet", "PesaLink", "Manual_wire_transfer"]),
         paymentId: z.string(),
         status: z.enum(["Initiated"]),
+        paymentMethod: z.enum(["Wallet", "PesaLink", "Manual_wire_transfer"]),
       }),
     )
     .mutation(async ({ ctx, input }) => {
       const usersId = ctx.user.id;
       const payment = await ctx.prisma.transaction.create({
         data: {
-          paymentMethod: input.paymentMethod,
           paymentId: input.paymentId,
           recipientId: input.recipientId,
+          paymentMethod: input.paymentMethod,
           usersId,
           Status: {
             create: {
@@ -41,6 +41,17 @@ export const transactionRouter = createTRPCRouter({
         paymentMethod: z.enum(["Wallet", "PesaLink", "Manual_wire_transfer"]),
         paymentId: z.string(),
         id: z.string(),
+        status: z.enum([
+          "Initiated",
+          "To_Confirm",
+          "Confirmed",
+          "Processed",
+          "Declined",
+          "Sent",
+          "Received",
+          "Canceled",
+          "Paused",
+        ]),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -53,6 +64,12 @@ export const transactionRouter = createTRPCRouter({
           paymentMethod: input.paymentMethod,
           paymentId: input.paymentId,
           usersId,
+
+          Status: {
+            create: {
+              name: input.status,
+            },
+          },
         },
       });
       if (!payment)
@@ -115,6 +132,16 @@ export const transactionRouter = createTRPCRouter({
       const transaction = await ctx.prisma.transaction.findUniqueOrThrow({
         where: {
           id: input.id,
+        },
+        include: {
+          recipient: true,
+          Status: true,
+          payment: {
+            include: {
+              rate: true,
+              ExchangeRate: true,
+            },
+          },
         },
       });
       if (transaction.usersId !== usersId)
