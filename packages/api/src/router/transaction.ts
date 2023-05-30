@@ -44,8 +44,7 @@ export const transactionRouter = createTRPCRouter({
         status: z.enum([
           "Initiated",
           "To_Confirm",
-          "Confirmed",
-          "Processed",
+          "Processing",
           "Declined",
           "Sent",
           "Received",
