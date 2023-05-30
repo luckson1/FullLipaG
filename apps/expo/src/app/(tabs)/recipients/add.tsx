@@ -50,9 +50,12 @@ const RecipientForm = () => {
     resolver: zodResolver(convertionValidator),
   });
   const router = useRouter();
-  const isPaymentInProgress =
-    useStore((store) => store.currentPayment) !== undefined;
-  const storeRecipient = useStore((store) => store.setNewRecipient);
+
+  const [storeRecipient, currentPayment] = useStore((store) => [
+    store.setNewRecipient,
+    store.currentPayment,
+  ]);
+  const isPaymentInProgress = currentPayment !== undefined;
   const { mutate: addRecipient } = api.recipient.add.useMutation({
     onSuccess(recipient) {
       isPaymentInProgress ? storeRecipient(recipient) : null;
