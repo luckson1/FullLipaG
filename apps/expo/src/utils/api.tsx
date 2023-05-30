@@ -30,7 +30,7 @@ const getBaseUrl = () => {
   const localhost = Constants.manifest?.debuggerHost?.split(":")[0];
   if (!localhost) {
     // return "https://your-production-url.com";
-    return "https://full-lipa-g-nextjs.vercel.app/";
+    return "https://sino-pi.vercel.app";
     throw new Error(
       "Failed to get localhost. Please point to your production server.",
     );
