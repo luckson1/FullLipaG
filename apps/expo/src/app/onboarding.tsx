@@ -14,33 +14,30 @@ import { useUser } from "@supabase/auth-helpers-react";
 
 const DATA = [
   {
-    key: "3571572",
-    title: "Multi-lateral intermediate moratorium",
-    description:
-      "I'll back up the multi-byte XSS matrix, that should feed the SCSI application!",
+    key: "1",
+    title: "Affordable Remittances",
+    description: "Send money at better rates FX rates!",
     image:
       "https://res.cloudinary.com/dhciks96e/image/upload/v1684398772/undraw_transfer_money_re_6o1h_ddgpxn.svg",
   },
   {
-    key: "3571747",
-    title: "Automated radical data-warehouse",
-    description:
-      "Use the optical SAS system, then you can navigate the auxiliary alarm!",
+    key: "2",
+    title: "Secure Mobile Payments",
+    description: "Safe and encrypted transactions!",
     image:
       "https://res.cloudinary.com/dhciks96e/image/upload/v1684399133/undraw_online_banking_re_kwqh_v7zyku.svg",
   },
   {
-    key: "3571680",
-    title: "Inverse attitude-oriented system engine",
-    description:
-      "The ADP array is down, compress the online sensor so we can input the HTTP panel!",
+    key: "3",
+    title: "Convenient Transactions",
+    description: "No more long bank queues. Send money with ease,!",
     image:
       "https://res.cloudinary.com/dhciks96e/image/upload/v1684399254/undraw_investment_data_re_sh9x_c3k6kt.svg",
   },
   {
-    key: "3571603",
-    title: "Monitored global data-warehouse",
-    description: "We need to program the open-source IB interface!",
+    key: "4",
+    title: "Fast and Reliable",
+    description: "Same day or next day payments!",
     image:
       "https://res.cloudinary.com/dhciks96e/image/upload/v1684399339/undraw_mobile_pay_re_sjb8_ujccln.svg",
   },
