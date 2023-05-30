@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -27,36 +27,57 @@ const profileSchema = z.object({
 type Profile = z.infer<typeof profileSchema>;
 
 const ProfileCreationScreen = () => {
-  const [defaultValues, setDefaultValues] = useState<Profile>();
   const router = useRouter();
-  const {
-    data: userData,
-    isLoading,
-    isError,
-  } = api.profile.getUserProfile.useQuery(undefined, {
-    onSuccess(data) {
-      setDefaultValues(data.Profile.at(0));
-    },
-  });
-  const userHasProfile = (userData && userData?.Profile.length <= 1) ?? false;
-
   const {
     control,
     handleSubmit,
+    reset,
+    setValue,
     formState: { errors },
   } = useForm<Profile>({
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      governmentId: "",
+      dateOfBirth: undefined,
+      gender: "Female",
+    },
     resolver: zodResolver(profileSchema),
-    defaultValues,
   });
-
+  const {
+    data: profile,
+    isLoading,
+    isError,
+  } = api.profile.getUserProfile.useQuery(undefined, {
+    onSuccess(profile) {
+      // reset(() => ({
+      //   firstName: profile.firstName,
+      //   lastName: profile.lastName,
+      //   email: profile.email,
+      //   governmentId: profile.governmentId,
+      //   dateOfBirth: profile.dateOfBirth,
+      //   gender: profile.gender,
+      // }));
+      setValue("firstName", "hello");
+      setValue("lastName", profile.lastName);
+      setValue("email", profile.email);
+      setValue("governmentId", profile.governmentId);
+      setValue("dateOfBirth", profile.dateOfBirth);
+      setValue("gender", profile.gender);
+    },
+  });
+  useEffect(() => {
+    setValue("firstName", "hello");
+  }, []);
   const { mutate: createProfile, isLoading: isProfileCreationLoading } =
     api.profile.create.useMutation();
   const { mutate: editProfile, isLoading: isProfileEditingLoading } =
     api.profile.edit.useMutation();
   const onSubmit = (data: Profile) => {
     // Handle form submission
-    const id = userData?.Profile?.at(0)?.id;
-    id && userHasProfile ? editProfile({ ...data, id }) : createProfile(data);
+    const id = profile?.id;
+    id && profile ? editProfile({ ...data, id }) : createProfile(data);
     router.push("/home");
   };
   return (

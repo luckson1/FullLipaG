@@ -23,15 +23,15 @@ const Index = () => {
     data: userData,
     isLoading,
     isError,
-  } = api.profile.getUserProfile.useQuery();
-  const userHasProfile = userData && userData?.Profile.length <= 1;
-  const profile = userData?.Profile?.at(0);
+  } = api.profile.getUserData.useQuery();
+
+  const profile = userData?.Profile;
   const transactionData = userData?.Transaction;
   const { data: rates } = api.exchange.getLatestRates.useQuery();
 
   useEffect(() => {
-    if (!userHasProfile && !isLoading && isError) router.push("/profile");
-  }, [router, userHasProfile, isLoading, isError]);
+    if (!profile && !isLoading && isError) router.push("/profile");
+  }, [router, profile, isLoading, isError]);
 
   const maximumList = 4;
 
@@ -54,8 +54,8 @@ const Index = () => {
                   rounded
                   source={{
                     uri:
-                      userData?.Profile.at(0)?.image ??
-                      (userData?.Profile.at(0)?.gender === "Female"
+                      userData?.Profile?.image ??
+                      (userData?.Profile?.gender === "Female"
                         ? "https://res.cloudinary.com/dhciks96e/image/upload/v1685280960/Female-Avatar_h8qvjc.png"
                         : "https://res.cloudinary.com/dhciks96e/image/upload/v1685280974/Male-Avatar-3_q1g6un.png"),
                   }}

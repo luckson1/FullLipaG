@@ -64,7 +64,7 @@ export const profileRouter = createTRPCRouter({
       });
       return editedProfile;
     }),
-  getUserProfile: protectedProcedure.query(async ({ ctx }) => {
+  getUserData: protectedProcedure.query(async ({ ctx }) => {
     const id = ctx.user.id;
     const userProfile = await ctx.prisma.users.findUniqueOrThrow({
       where: {
@@ -110,5 +110,14 @@ export const profileRouter = createTRPCRouter({
         message: " An Error has occurred",
       });
     return userProfile;
+  }),
+  getUserProfile: protectedProcedure.query(async ({ ctx }) => {
+    const userId = ctx.user.id;
+    const profile = await ctx.prisma.profile.findFirstOrThrow({
+      where: {
+        userId,
+      },
+    });
+    return profile;
   }),
 });

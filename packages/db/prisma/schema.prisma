@@ -19,7 +19,7 @@ model Profile {
   dateOfBirth  DateTime
   image        String?
   email        String
-  userId       String   @db.Uuid
+  userId       String   @unique @db.Uuid
   user         users    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@schema("auth")
@@ -72,7 +72,7 @@ model users {
   identities                  identities[]
   mfa_factors                 mfa_factors[]
   sessions                    sessions[]
-  Profile                     Profile[]
+  Profile                     Profile?
   Recipient                   Recipient[]
   Payment                     Payment[]
   Account                     Account[]
@@ -374,7 +374,7 @@ model Status {
 enum StatusName {
   Initiated
   To_Confirm
-  Confirmed
+  Processing
   Processed
 
   Declined
