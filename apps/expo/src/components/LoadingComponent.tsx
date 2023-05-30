@@ -9,7 +9,7 @@ const LoadingComponent = () => {
         <SvgUri
           width="70%"
           height="70%"
-          uri="https://res.cloudinary.com/dhciks96e/image/upload/v1685287033/undraw_no_data_re_kwbl_cys2lm.svg"
+          uri="https://res.cloudinary.com/dhciks96e/image/upload/v1685356475/undraw_loading_re_5axr_yv9xce.svg"
         />
         <Text className=" my-5 text-center text-2xl text-white">
           Loading .....
