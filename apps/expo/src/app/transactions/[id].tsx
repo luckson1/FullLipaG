@@ -382,7 +382,7 @@ const TransactionId = () => {
   return (
     <SafeAreaView className="flex-1 bg-white">
       {isLoading && !isError && (
-        <View className="flex h-full w-full items-center justify-center bg-teal-500">
+        <View className="flex h-full w-full items-center justify-center">
           <LoadingComponent />
         </View>
       )}
