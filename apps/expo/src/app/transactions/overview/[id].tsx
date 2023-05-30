@@ -83,6 +83,8 @@ const PaymentTrackingScreen = ({ statuses }: { statuses: Status[] }) => {
         ? "Payment has been sent to recipient"
         : s.name === "Received"
         ? "Payment has been received by recipient"
+        : s.name === "To_Confirm"
+        ? "Waiting for you to provide bank reference for confirmation"
         : `Payment has been ${s.name}`,
   }));
   return (
