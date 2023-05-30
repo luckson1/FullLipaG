@@ -1,5 +1,6 @@
 import React from "react";
 import { Pressable, Text, View } from "react-native";
+import Toast from "react-native-root-toast";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -7,11 +8,29 @@ import { AntDesign } from "@expo/vector-icons";
 import { FlatList } from "native-base";
 
 import { api } from "~/utils/api";
+import LoadingComponent from "~/components/LoadingComponent";
 
 const Transactions = () => {
-  const { data: userData, isLoading } = api.profile.getUserProfile.useQuery();
+  const {
+    data: userData,
+    isLoading,
+    isError,
+  } = api.profile.getUserData.useQuery(undefined, {
+    onError(error) {
+      Toast.show(error.message, {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.TOP,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        textColor: "red",
+        delay: 0,
+      });
+    },
+  });
   const router = useRouter();
   const transactionData = userData?.Transaction;
+
   return (
     <SafeAreaView className="flex-1 bg-white p-5">
       <Stack.Screen options={{ headerShown: false }} />
@@ -22,6 +41,11 @@ const Transactions = () => {
           <Text className="mb-8 mt-2 text-center text-xl font-bold">
             History
           </Text>
+          {isLoading && !isError && (
+            <View className="flex h-full w-full items-center justify-center">
+              <LoadingComponent />
+            </View>
+          )}
           {!isLoading && transactionData && (
             <FlatList
               className=" mt-3 flex gap-3 "
