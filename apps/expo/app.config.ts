@@ -17,14 +17,20 @@ const defineConfig = (): ExpoConfig => ({
   orientation: "portrait",
   icon: "./assets/app-icon.png",
   userInterfaceStyle: "dark",
+
+  updates: {
+    url: "https://u.expo.dev/11f431cb-7866-41f7-bec3-d04ed1c32c93",
+  },
+  runtimeVersion: {
+    policy: "sdkVersion",
+  },
+
   splash: {
     image: "./assets/app-icon.png",
     resizeMode: "contain",
     backgroundColor: "#18181A",
   },
-  updates: {
-    fallbackToCacheTimeout: 0,
-  },
+
   assetBundlePatterns: ["**/*"],
   ios: {
     supportsTablet: true,
