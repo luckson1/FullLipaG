@@ -30,7 +30,7 @@ const Index = () => {
   const { data: rates } = api.exchange.getLatestRates.useQuery();
 
   useEffect(() => {
-    if (!profile && !isLoading && isError) router.push("/profile");
+    if (!profile?.firstName && !isLoading && isError) router.push("/profile");
   }, [router, profile, isLoading, isError]);
 
   const maximumList = 4;
