@@ -1,4 +1,5 @@
 import { SafeAreaView, ScrollView, Text, TouchableOpacity } from "react-native";
+import Toast from "react-native-root-toast";
 import { useRouter } from "expo-router";
 import { View } from "native-base";
 
@@ -21,6 +22,19 @@ const Confirmation = () => {
       clearRecipient();
       await ctx.transaction.invalidate();
       router.push(`/transactions/id?id=${transaction.id}`);
+    },
+
+    onError(error) {
+      Toast.show(error.message, {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.TOP,
+        shadow: true,
+        animation: true,
+        backgroundColor: "white",
+        hideOnPress: true,
+        textColor: "red",
+        delay: 0,
+      });
     },
   });
   return (

@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import Toast from "react-native-root-toast";
 import { Stack, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -30,8 +31,23 @@ const Form = () => {
   type Values = z.infer<typeof convertionValidator>;
 
   const [activeInput, setActiveInput] = useState<"foreign" | "local">();
-  const { data: exchangeData, isLoading } =
-    api.exchange.getLatestRates.useQuery(undefined, {});
+  const { data: exchangeData } = api.exchange.getLatestRates.useQuery(
+    undefined,
+    {
+      onError(error) {
+        Toast.show(error.message, {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.TOP,
+          shadow: true,
+          animation: true,
+          backgroundColor: "white",
+          hideOnPress: true,
+          textColor: "red",
+          delay: 0,
+        });
+      },
+    },
+  );
   const {
     handleSubmit,
     watch,
@@ -91,6 +107,18 @@ const Form = () => {
       onSuccess(payment) {
         setPayment(payment);
         router.push(`recipients`);
+      },
+      onError(error) {
+        Toast.show(error.message, {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.TOP,
+          shadow: true,
+          animation: true,
+          backgroundColor: "white",
+          hideOnPress: true,
+          textColor: "red",
+          delay: 0,
+        });
       },
     });
   const onSubmit = (data: Values) => {

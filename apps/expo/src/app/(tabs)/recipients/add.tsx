@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import Toast from "react-native-root-toast";
 import { Tabs, useRouter } from "expo-router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckIcon, KeyboardAvoidingView, Select } from "native-base";
@@ -65,6 +66,18 @@ const RecipientForm = () => {
       : () => {
           router.push("/recipients");
         },
+    onError(error) {
+      Toast.show(error.message, {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.TOP,
+        shadow: true,
+        animation: true,
+        backgroundColor: "white",
+        hideOnPress: true,
+        textColor: "red",
+        delay: 0,
+      });
+    },
   });
   const onSubmit = (data: Values) => {
     addRecipient(data);

@@ -8,6 +8,7 @@ import {
   View,
 } from "react-native";
 import { DatePickerInput } from "react-native-paper-dates";
+import Toast from "react-native-root-toast";
 import { Stack, useRouter } from "expo-router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckIcon, Select } from "native-base";
@@ -51,14 +52,6 @@ const ProfileCreationScreen = () => {
     isError,
   } = api.profile.getUserProfile.useQuery(undefined, {
     onSuccess(profile) {
-      // reset(() => ({
-      //   firstName: profile.firstName,
-      //   lastName: profile.lastName,
-      //   email: profile.email,
-      //   governmentId: profile.governmentId,
-      //   dateOfBirth: profile.dateOfBirth,
-      //   gender: profile.gender,
-      // }));
       setValue("firstName", "hello");
       setValue("lastName", profile.lastName);
       setValue("email", profile.email);
@@ -66,14 +59,52 @@ const ProfileCreationScreen = () => {
       setValue("dateOfBirth", profile.dateOfBirth);
       setValue("gender", profile.gender);
     },
+    onError(error) {
+      Toast.show(error.message, {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.TOP,
+        shadow: true,
+        animation: true,
+        backgroundColor: "white",
+        hideOnPress: true,
+        textColor: "red",
+        delay: 0,
+      });
+    },
   });
   useEffect(() => {
     setValue("firstName", "hello");
   }, []);
   const { mutate: createProfile, isLoading: isProfileCreationLoading } =
-    api.profile.create.useMutation();
+    api.profile.create.useMutation({
+      onError(error) {
+        Toast.show(error.message, {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.TOP,
+          shadow: true,
+          animation: true,
+          backgroundColor: "white",
+          hideOnPress: true,
+          textColor: "red",
+          delay: 0,
+        });
+      },
+    });
   const { mutate: editProfile, isLoading: isProfileEditingLoading } =
-    api.profile.edit.useMutation();
+    api.profile.edit.useMutation({
+      onError(error) {
+        Toast.show(error.message, {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.TOP,
+          shadow: true,
+          animation: true,
+          backgroundColor: "white",
+          hideOnPress: true,
+          textColor: "red",
+          delay: 0,
+        });
+      },
+    });
   const onSubmit = (data: Profile) => {
     // Handle form submission
     const id = profile?.id;
