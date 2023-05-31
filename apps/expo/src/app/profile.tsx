@@ -92,7 +92,7 @@ const ProfileCreationScreen = () => {
     router.push("/home");
   };
   return (
-    <ScrollView className="flex-1">
+    <View className="flex-1">
       <Stack.Screen
         options={{
           title: "Profile",
@@ -258,7 +258,7 @@ const ProfileCreationScreen = () => {
           </View>
         </View>
       )}
-    </ScrollView>
+    </View>
   );
 };
 
