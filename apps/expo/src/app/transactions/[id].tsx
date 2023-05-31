@@ -10,7 +10,6 @@ import {
 import Toast from "react-native-root-toast";
 import { Stack, useRouter, useSearchParams } from "expo-router";
 import { AntDesign } from "@expo/vector-icons";
-import { Divider } from "@rneui/base";
 import { Icon } from "@rneui/themed";
 
 import { api } from "~/utils/api";
