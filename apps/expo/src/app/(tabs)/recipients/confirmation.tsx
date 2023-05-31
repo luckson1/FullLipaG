@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { SafeAreaView, ScrollView, Text, TouchableOpacity } from "react-native";
 import Toast from "react-native-root-toast";
 import { useRouter } from "expo-router";
@@ -15,6 +16,9 @@ const Confirmation = () => {
       state.clearRecipient,
       state.clearPayment,
     ]);
+  useEffect(() => {
+    if (!currentPayment || !currentRecipient) router.push("/recipients");
+  }, [currentPayment, currentRecipient]);
   const ctx = api.useContext();
   const { mutate: addTransaction, isLoading } = api.transaction.add.useMutation(
     {
