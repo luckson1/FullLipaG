@@ -48,7 +48,7 @@ const Transactions = () => {
           )}
           {!isLoading && transactionData && (
             <FlatList
-              className=" mt-3 flex gap-3 "
+              className="  mt-3 flex"
               data={transactionData}
               renderItem={({ item }) => (
                 <Pressable
@@ -57,7 +57,7 @@ const Transactions = () => {
                     router.push(`transactions/overview/id?id=${item.id}`)
                   }
                 >
-                  <View className="flex w-8/12 flex-row gap-3">
+                  <View className="flex w-[65%] flex-row ">
                     <View className="flex w-1/4  items-center justify-center">
                       <AntDesign
                         size={40}
@@ -108,13 +108,20 @@ const Transactions = () => {
                       </Text>
                     </View>
                   </View>
-                  <View className="flex w-1/5">
-                    <Text className="text-slate-600">
-                      {item.payment.ExchangeRate.target}
-                    </Text>
-                    <Text className="font-bold text-slate-600">
-                      {item.payment.sentAmount.toLocaleString()}
-                    </Text>
+                  <View className="flex  w-[35%] flex-row items-center justify-center">
+                    <View className="flex w-[70%] items-center justify-center">
+                      <Text className="text-slate-600">
+                        {item.payment.ExchangeRate.target}
+                      </Text>
+                      <Text className="font-bold text-slate-600">
+                        {item.payment.sentAmount.toLocaleString()}
+                      </Text>
+                    </View>
+                    <AntDesign
+                      name="right"
+                      size={32}
+                      color={"rgb(74 222 128)"}
+                    />
                   </View>
                 </Pressable>
               )}
