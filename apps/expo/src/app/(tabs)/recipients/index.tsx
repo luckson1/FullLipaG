@@ -33,7 +33,10 @@ const Index = () => {
     },
   });
   const router = useRouter();
-  const addRecipient = useStore((state) => state.setNewRecipient);
+  const [addRecipient, paymentInProgress] = useStore((state) => [
+    state.setNewRecipient,
+    state.currentPayment,
+  ]);
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -101,16 +104,18 @@ const Index = () => {
                     </View>
                   </View>
                   <View className="flex w-1/4">
-                    <TouchableOpacity
-                      className="flex w-20 flex-row items-center justify-around  rounded-md bg-green-400 py-2"
-                      onPress={() => {
-                        addRecipient(item);
-                        router.push("/recipients/confirmation");
-                      }}
-                    >
-                      <Text className=" text-sm text-white">Send</Text>
-                      <MaterialIcons name="send" size={20} color={"white"} />
-                    </TouchableOpacity>
+                    {paymentInProgress && (
+                      <TouchableOpacity
+                        className="flex w-20 flex-row items-center justify-around  rounded-md bg-green-400 py-2"
+                        onPress={() => {
+                          addRecipient(item);
+                          router.push("/recipients/confirmation");
+                        }}
+                      >
+                        <Text className=" text-sm text-white">Send</Text>
+                        <MaterialIcons name="send" size={20} color={"white"} />
+                      </TouchableOpacity>
+                    )}
                   </View>
                 </View>
               )}
