@@ -57,17 +57,18 @@ const RecipientForm = () => {
   ]);
   const isPaymentInProgress = currentPayment !== undefined;
   const { mutate: addRecipient } = api.recipient.add.useMutation({
-    onSuccess(recipient) {
-      isPaymentInProgress ? storeRecipient(recipient) : null;
-    },
+    onSuccess: isPaymentInProgress
+      ? (recipient) => {
+          storeRecipient(recipient);
+          router.push("/recipients/confirmation");
+        }
+      : () => {
+          router.push("/recipients");
+        },
   });
   const onSubmit = (data: Values) => {
     addRecipient(data);
-    isPaymentInProgress
-      ? router.push("/recipients/confirmation")
-      : router.push("/recipients");
   };
-
   return (
     <ScrollView className="flex-1 bg-white">
       <Tabs.Screen options={{ href: null }} />
