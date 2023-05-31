@@ -40,7 +40,7 @@ export const transactionRouter = createTRPCRouter({
       z.object({
         paymentMethod: z.enum(["Wallet", "PesaLink", "Manual_wire_transfer"]),
         paymentId: z.string(),
-        bankReferenceNumber: z.string(),
+        bankReferenceNumber: z.string().nullable(),
         id: z.string(),
         status: z.enum([
           "Initiated",
@@ -56,7 +56,17 @@ export const transactionRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const usersId = ctx.user.id;
-      const payment = await ctx.prisma.transaction.update({
+      const product = await ctx.prisma.transaction.findUniqueOrThrow({
+        where: {
+          id: input.id,
+        },
+      });
+      if (product.usersId !== usersId)
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "You are not authorised to perform this action",
+        });
+      const editedPayment = await ctx.prisma.transaction.update({
         where: {
           id: input.id,
         },
@@ -74,12 +84,55 @@ export const transactionRouter = createTRPCRouter({
         },
       });
 
-      if (!payment)
+      if (!editedPayment)
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "An Error occured. Please try again",
         });
-      return payment;
+      return editedPayment;
+    }),
+  addBankRef: protectedProcedure
+    .input(
+      z.object({
+        bankReferenceNumber: z.string().nullable(),
+        id: z.string(),
+        status: z.enum(["Processing"]),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const usersId = ctx.user.id;
+      const product = await ctx.prisma.transaction.findUniqueOrThrow({
+        where: {
+          id: input.id,
+        },
+      });
+      if (product.usersId !== usersId)
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "You are not authorised to perform this action",
+        });
+      const editedPayment = await ctx.prisma.transaction.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          bankReferenceNumber: input.bankReferenceNumber,
+          usersId,
+
+          Status: {
+            create: {
+              name: input.status,
+            },
+          },
+        },
+      });
+
+      if (!editedPayment)
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "An Error occured. Please try again",
+        });
+      return editedPayment;
     }),
   getAll: adminProcedure.query(async ({ ctx }) => {
     const transactions = await ctx.prisma.transaction.findMany();

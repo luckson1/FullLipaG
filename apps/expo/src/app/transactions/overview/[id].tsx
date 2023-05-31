@@ -186,7 +186,7 @@ const TransactionsDetails = ({
   });
   const ctx = api.useContext();
   const { mutate: addBankReference, isLoading } =
-    api.transaction.edit.useMutation({
+    api.transaction.addBankRef.useMutation({
       onError(error) {
         Toast.show(error.message, {
           duration: Toast.durations.SHORT,
@@ -207,8 +207,6 @@ const TransactionsDetails = ({
   type FormData = z.infer<typeof schema>;
   const onSubmit = (data: FormData) => {
     addBankReference({
-      paymentId: transaction.paymentId,
-      paymentMethod: transaction.paymentMethod,
       id: transaction.id,
       ...data,
       status: "Processing",
