@@ -258,7 +258,7 @@ const TransactionsDetails = ({
           Recipient&apos;s details
         </Text>
         <View className="mt-3 flex w-full flex-row justify-between">
-          <Text className="text-base"></Text>
+          <Text className="text-base">Recipient Name</Text>
           <Text className="text-base">{transaction.recipient.name}</Text>
         </View>
         <View className="mt-3 flex w-full flex-row justify-between">
