@@ -6,15 +6,32 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import Toast from "react-native-root-toast";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Stack, useRouter } from "expo-router";
 import { AntDesign, Entypo } from "@expo/vector-icons";
 import { Avatar } from "@rneui/themed";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
+import { api } from "~/utils/api";
+
 const Account = () => {
   const supabase = useSupabaseClient();
   const router = useRouter();
+  const { data: profile } = api.profile.getUserProfile.useQuery(undefined, {
+    onError(error) {
+      Toast.show(error.message, {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.TOP,
+        shadow: true,
+        animation: true,
+        backgroundColor: "white",
+        hideOnPress: true,
+        textColor: "red",
+        delay: 0,
+      });
+    },
+  });
   return (
     <ScrollView className="flex-1">
       <SafeAreaProvider className="flex h-full w-full items-center justify-center bg-white ">
@@ -24,20 +41,28 @@ const Account = () => {
             <Text className=" text-lg">You are using the service as</Text>
           </View>
           <View className="flex w-full flex-row items-center justify-center">
-            <View className="flex h-fit w-3/4 flex-row items-center justify-center gap-1">
-              <View className="w-1/4 ">
-                <Avatar
-                  size={64}
-                  rounded
-                  source={{
-                    uri: "https://randomuser.me/api/portraits/men/36.jpg",
-                  }}
-                />
+            {profile && (
+              <View className="flex h-fit w-3/4 flex-row items-center justify-center gap-1">
+                <View className="w-1/4 ">
+                  <Avatar
+                    size={64}
+                    rounded
+                    source={{
+                      uri:
+                        profile.image ??
+                        (profile.gender === "Female"
+                          ? "https://res.cloudinary.com/dhciks96e/image/upload/v1685280960/Female-Avatar_h8qvjc.png"
+                          : "https://res.cloudinary.com/dhciks96e/image/upload/v1685280974/Male-Avatar-3_q1g6un.png"),
+                    }}
+                  />
+                </View>
+                <View className="flex   w-3/4">
+                  <Text className=" text-lg font-semibold">
+                    {profile.firstName} {profile.lastName}
+                  </Text>
+                </View>
               </View>
-              <View className="flex   w-3/4">
-                <Text className=" text-lg font-semibold">Jack Gathondu</Text>
-              </View>
-            </View>
+            )}
 
             <View className="flex h-fit w-1/4 flex-row gap-2">
               <Pressable className="rounded-md bg-green-400 px-5 py-2">
