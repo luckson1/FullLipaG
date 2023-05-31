@@ -217,7 +217,7 @@ const Index = () => {
                               name={
                                 item.Status?.at(0)?.name === "Received"
                                   ? "checkcircleo"
-                                  : item.Status?.at(0)?.name === "Canceled" ||
+                                  : item.Status?.at(0)?.name === "Cancelled" ||
                                     item.Status?.at(0)?.name === "Declined"
                                   ? "closecircleo"
                                   : item.Status?.at(0)?.name === "Paused"
@@ -230,7 +230,7 @@ const Index = () => {
                                 item.Status?.at(0)?.name === "Received" ||
                                 item.Status?.at(0)?.name === "Processed"
                                   ? "#4ade80"
-                                  : item.Status?.at(0)?.name === "Canceled" ||
+                                  : item.Status?.at(0)?.name === "Cancelled" ||
                                     item.Status?.at(0)?.name === "Declined"
                                   ? "#ef4444"
                                   : item.Status?.at(0)?.name === "Paused" ||
@@ -249,7 +249,7 @@ const Index = () => {
                               className={` ${
                                 item.Status?.at(0)?.name === "Received"
                                   ? "text-[#4ade80]"
-                                  : item.Status?.at(0)?.name === "Canceled" ||
+                                  : item.Status?.at(0)?.name === "Cancelled" ||
                                     item.Status?.at(0)?.name === "Declined"
                                   ? "text-[#ef4444]"
                                   : item.Status?.at(0)?.name === "Paused"

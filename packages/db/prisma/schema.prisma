@@ -380,7 +380,7 @@ enum StatusName {
   Declined
   Sent
   Received
-  Canceled
+  Cancelled
   Paused
 
   @@schema("auth")
