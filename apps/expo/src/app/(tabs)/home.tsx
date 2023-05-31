@@ -214,12 +214,14 @@ const Index = () => {
                                 : "infocirlceo"
                             }
                             color={
-                              item.Status?.at(0)?.name === "Received"
+                              item.Status?.at(0)?.name === "Received" ||
+                              item.Status?.at(0)?.name === "Processed"
                                 ? "#4ade80"
                                 : item.Status?.at(0)?.name === "Canceled" ||
                                   item.Status?.at(0)?.name === "Declined"
                                 ? "#ef4444"
-                                : item.Status?.at(0)?.name === "Paused"
+                                : item.Status?.at(0)?.name === "Paused" ||
+                                  item.Status?.at(0)?.name === "To_Confirm"
                                 ? "rgb(234 179 8)"
                                 : "rgb(14 165 233 )"
                             }
