@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Pressable, SafeAreaView, Text, TextInput, View } from "react-native";
+import Toast from "react-native-root-toast";
 import { Stack, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -31,11 +32,29 @@ const LoginScreen = () => {
     },
   });
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   const onSubmit = async (data: FormData) => {
-    await supabase.auth.signInWithOtp({
+    setIsLoading(true);
+    const { data: userSession, error } = await supabase.auth.signInWithOtp({
       phone: `+254${data.phoneNumber}`,
     });
-    router.push(`/verification?number=${data.phoneNumber}`);
+    if (userSession) {
+      router.push(`/verification?number=${data.phoneNumber}`);
+      setIsLoading(false);
+    }
+    if (error) {
+      setIsLoading(false);
+      Toast.show(error.message, {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.TOP,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        textColor: "red",
+        delay: 0,
+      });
+    }
+    return;
   };
   const [isAgreed, setIsAgreed] = useState(true);
   return (
@@ -101,7 +120,7 @@ const LoginScreen = () => {
       <View className="flex w-full flex-[20%] items-center justify-center p-5">
         <Pressable
           android_ripple={{ color: "#4ade80", radius: 40 }}
-          disabled={!isAgreed}
+          disabled={!isAgreed && isLoading}
           onPress={handleSubmit(onSubmit)}
           className={` absolute bottom-10 mb-4 flex w-full flex-row items-center justify-around rounded-lg px-4 py-3 ${
             isAgreed ? " bg-green-400 " : "bg-slate-200"
@@ -109,7 +128,7 @@ const LoginScreen = () => {
         >
           <Text
             className={`${
-              isAgreed
+              isAgreed && !isLoading
                 ? "text-lg font-bold text-gray-50"
                 : "text-lg font-bold text-gray-500"
             }`}

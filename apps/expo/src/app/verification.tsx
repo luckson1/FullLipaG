@@ -96,19 +96,24 @@ const Otp = () => {
       phone: `+254${phoneNumber}`,
     });
   };
+  const [isLoading, setIsLoading] = useState(false);
   const handleVerification = async () => {
     try {
+      setIsLoading(true);
       const {
         error,
-        data: { user, session },
+        data: { session },
       } = await supabase.auth.verifyOtp({
         phone: `+254${phoneNumber}`,
         token: otpCode.join(""),
         type: "sms",
         options: { redirectTo: `/home` },
       });
-      if (session) navigation.push("/home");
-      if (error)
+      if (session) {
+        navigation.push("/home");
+        setIsLoading(false);
+      }
+      if (error) {
         Toast.show(error.message, {
           duration: Toast.durations.SHORT,
           position: Toast.positions.TOP,
@@ -118,6 +123,8 @@ const Otp = () => {
           textColor: "red",
           delay: 0,
         });
+        setIsLoading(false);
+      }
     } catch (error) {}
   };
 
@@ -155,11 +162,14 @@ const Otp = () => {
             ))}
         </View>
         <Pressable
+          disabled={isLoading}
           onPress={handleVerification}
           className="my-5 w-full rounded-md bg-green-400 py-3 "
           android_ripple={{ color: "rgb(20 184 166 )", radius: 40 }}
         >
-          <Text className="text-center text-lg text-white">Verify OTP</Text>
+          <Text className="text-center text-lg text-white">
+            {isLoading ? "Loading ..." : "Verify OTP"}
+          </Text>
         </Pressable>
       </View>
       <View className="absolute  bottom-5 flex w-full flex-[30%]   flex-row items-baseline justify-between p-7">
