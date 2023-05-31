@@ -16,27 +16,29 @@ const Confirmation = () => {
       state.clearPayment,
     ]);
   const ctx = api.useContext();
-  const { mutate: addTransaction } = api.transaction.add.useMutation({
-    async onSuccess(transaction) {
-      clearPayment();
-      clearRecipient();
-      await ctx.transaction.invalidate();
-      router.push(`/transactions/id?id=${transaction.id}`);
-    },
+  const { mutate: addTransaction, isLoading } = api.transaction.add.useMutation(
+    {
+      async onSuccess(transaction) {
+        await ctx.transaction.invalidate();
+        router.push(`/transactions/id?id=${transaction.id}`);
+        clearPayment();
+        clearRecipient();
+      },
 
-    onError(error) {
-      Toast.show(error.message, {
-        duration: Toast.durations.SHORT,
-        position: Toast.positions.TOP,
-        shadow: true,
-        animation: true,
-        backgroundColor: "white",
-        hideOnPress: true,
-        textColor: "red",
-        delay: 0,
-      });
+      onError(error) {
+        Toast.show(error.message, {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.TOP,
+          shadow: true,
+          animation: true,
+          backgroundColor: "white",
+          hideOnPress: true,
+          textColor: "red",
+          delay: 0,
+        });
+      },
     },
-  });
+  );
   return (
     <ScrollView className="flex-1 bg-white">
       <SafeAreaView className="flex w-full flex-col items-center justify-between  p-5">
@@ -90,7 +92,10 @@ const Confirmation = () => {
         </View>
         <View className="my-5 w-full">
           <TouchableOpacity
-            className="my-2 flex w-full   items-center justify-center rounded-lg bg-green-400 px-4 py-3 shadow-xl"
+            disabled={isLoading}
+            className={`my-2 flex w-full   items-center justify-center rounded-lg${
+              isLoading ? "bg-slate-600" : " bg-green-400"
+            } px-4 py-3 shadow-xl`}
             onPress={() =>
               addTransaction({
                 status: "Initiated",
@@ -100,7 +105,13 @@ const Confirmation = () => {
               })
             }
           >
-            <Text className="text-xl font-bold text-white">Confirm</Text>
+            <Text
+              className={`text-xl font-bold  ${
+                isLoading ? "text-slate-900" : "text-white"
+              }`}
+            >
+              {isLoading ? "Creating transactiion ..." : "Confirm"}
+            </Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
