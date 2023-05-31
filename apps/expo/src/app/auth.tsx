@@ -48,6 +48,7 @@ const LoginScreen = () => {
         duration: Toast.durations.SHORT,
         position: Toast.positions.TOP,
         shadow: true,
+        backgroundColor: "white",
         animation: true,
         hideOnPress: true,
         textColor: "red",

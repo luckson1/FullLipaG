@@ -6,17 +6,32 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Stack, useRouter, useSearchParams } from "expo-router";
+import Toast from "react-native-root-toast";
+import { Stack, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { Avatar } from "@rneui/themed";
 
 import { api } from "~/utils/api";
 import useStore from "~/utils/zuztand";
+import LoadingComponent from "~/components/LoadingComponent";
 import NoContent from "~/components/NoContent";
 
 const Index = () => {
-  const { data, isLoading } = api.recipient.getUsersAll.useQuery();
+  const { data, isLoading } = api.recipient.getUsersAll.useQuery(undefined, {
+    onError(error) {
+      Toast.show(error.message, {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.TOP,
+        shadow: true,
+        animation: true,
+        backgroundColor: "white",
+        hideOnPress: true,
+        textColor: "red",
+        delay: 0,
+      });
+    },
+  });
   const router = useRouter();
   const addRecipient = useStore((state) => state.setNewRecipient);
 
@@ -52,6 +67,11 @@ const Index = () => {
                     Add a Recipient
                   </Text>
                 </TouchableOpacity>
+              </View>
+            )}
+            {isLoading && (
+              <View className="h-full w-full">
+                <LoadingComponent />
               </View>
             )}
             <FlatList
