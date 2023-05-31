@@ -168,12 +168,29 @@ const TransactionsDetails = ({
     };
   };
 }) => {
-  const isConfirmed = false;
   const schema = z.object({
     referenceNumber: z.string(),
   });
+  const { mutate: addBankReference, isLoading } =
+    api.transaction.edit.useMutation({
+      onError(error) {
+        Toast.show(error.message, {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.TOP,
+          shadow: true,
+          backgroundColor: "white",
+          animation: true,
+          hideOnPress: true,
+          textColor: "red",
+          delay: 0,
+        });
+      },
+    });
 
   type FormData = z.infer<typeof schema>;
+  const onSubmit = (data: FormData) => {
+    addBankReference({ ...transaction, ...data, status: "Processing" });
+  };
   const {
     control,
     handleSubmit,
@@ -264,8 +281,11 @@ const TransactionsDetails = ({
               />
             </View>
             <Pressable
-              onPress={() => console.log("hi")}
-              className={` mt-3 flex w-full flex-row items-center justify-around rounded-lg bg-green-400 px-4 py-3.5 `}
+              onPress={handleSubmit(onSubmit)}
+              disabled={isLoading}
+              className={` mt-3 flex w-full flex-row items-center justify-around rounded-lg ${
+                isLoading ? "bg-slate-400" : " bg-green-400"
+              } px-4 py-3.5 `}
             >
               <Text className={` "text-lg text-gray-50" font-bold`}>
                 Confirm payment
