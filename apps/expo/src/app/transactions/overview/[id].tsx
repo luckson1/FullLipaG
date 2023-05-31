@@ -75,7 +75,11 @@ const Tab = ({
 const PaymentTrackingScreen = ({ statuses }: { statuses: Status[] }) => {
   const data = statuses.map((s) => ({
     time: s.createdAt.toLocaleString(),
-    title: `Payment ${s.name}`,
+    status: s.name,
+    title:
+      s.name === "To_Confirm"
+        ? "Awaiting your confirmation"
+        : `Payment ${s.name}`,
     description:
       s.name === "Paused"
         ? "Payment needs your action "
@@ -83,6 +87,8 @@ const PaymentTrackingScreen = ({ statuses }: { statuses: Status[] }) => {
         ? "Payment has been sent to recipient"
         : s.name === "Received"
         ? "Payment has been received by recipient"
+        : s.name === "Processing"
+        ? "Payment is being processed"
         : s.name === "To_Confirm"
         ? "Waiting for you to provide bank reference for confirmation"
         : `Payment has been ${s.name}`,
@@ -92,7 +98,9 @@ const PaymentTrackingScreen = ({ statuses }: { statuses: Status[] }) => {
       {data.map((item, index) => (
         <View key={index} style={styles.timelineItem}>
           {index !== data.length - 1 && <View style={styles.line} />}
-          <View style={[styles.circle, { backgroundColor: getColor(index) }]} />
+          <View
+            style={[styles.circle, { backgroundColor: getColor(item.status) }]}
+          />
           <View style={styles.content}>
             <Text style={styles.title}>{item.title}</Text>
             <Text style={styles.time}>{item.time}</Text>
@@ -104,9 +112,14 @@ const PaymentTrackingScreen = ({ statuses }: { statuses: Status[] }) => {
   );
 };
 
-const getColor = (index: number) => {
-  const colors = ["#3f51b5", "#ff4081", "#4caf50", "#fbc02d", "#9c27b0"]; // Array of different colors for circles
-  return colors[index % colors.length];
+const getColor = (status: string) => {
+  return status === "Received" || status === "Processed"
+    ? "#4ade80"
+    : status === "Canceled" || status === "Declined"
+    ? "#ef4444"
+    : status === "Paused" || status === "To_Confirm"
+    ? "rgb(234 179 8)"
+    : "rgb(14 165 233 )";
 };
 
 const styles = StyleSheet.create({
