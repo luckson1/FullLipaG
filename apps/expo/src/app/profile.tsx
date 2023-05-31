@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -32,7 +32,6 @@ const ProfileCreationScreen = () => {
   const {
     control,
     handleSubmit,
-    reset,
     setValue,
     formState: { errors },
   } = useForm<Profile>({
@@ -46,11 +45,7 @@ const ProfileCreationScreen = () => {
     },
     resolver: zodResolver(profileSchema),
   });
-  const {
-    data: profile,
-    isLoading,
-    isError,
-  } = api.profile.getUserProfile.useQuery(undefined, {
+  const { data: profile } = api.profile.getUserProfile.useQuery(undefined, {
     onSuccess(profile) {
       setValue("firstName", "hello");
       setValue("lastName", profile.lastName);
@@ -72,9 +67,6 @@ const ProfileCreationScreen = () => {
       });
     },
   });
-  useEffect(() => {
-    setValue("firstName", "hello");
-  }, []);
   const { mutate: createProfile, isLoading: isProfileCreationLoading } =
     api.profile.create.useMutation({
       onError(error) {
