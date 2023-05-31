@@ -40,6 +40,7 @@ export const transactionRouter = createTRPCRouter({
       z.object({
         paymentMethod: z.enum(["Wallet", "PesaLink", "Manual_wire_transfer"]),
         paymentId: z.string(),
+        bankReferenceNumber: z.string(),
         id: z.string(),
         status: z.enum([
           "Initiated",
@@ -60,6 +61,7 @@ export const transactionRouter = createTRPCRouter({
           id: input.id,
         },
         data: {
+          bankReferenceNumber: input.bankReferenceNumber,
           paymentMethod: input.paymentMethod,
           paymentId: input.paymentId,
           usersId,
@@ -71,6 +73,7 @@ export const transactionRouter = createTRPCRouter({
           },
         },
       });
+      console.log(payment);
       if (!payment)
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",

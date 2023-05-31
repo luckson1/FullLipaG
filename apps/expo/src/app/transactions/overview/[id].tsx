@@ -169,8 +169,9 @@ const TransactionsDetails = ({
   };
 }) => {
   const schema = z.object({
-    referenceNumber: z.string(),
+    bankReferenceNumber: z.string(),
   });
+  const ctx = api.useContext();
   const { mutate: addBankReference, isLoading } =
     api.transaction.edit.useMutation({
       onError(error) {
@@ -185,11 +186,20 @@ const TransactionsDetails = ({
           delay: 0,
         });
       },
+      onSuccess: async () => {
+        await ctx.transaction.getUsersOne.invalidate();
+      },
     });
 
   type FormData = z.infer<typeof schema>;
   const onSubmit = (data: FormData) => {
-    addBankReference({ ...transaction, ...data, status: "Processing" });
+    addBankReference({
+      paymentId: transaction.paymentId,
+      paymentMethod: transaction.paymentMethod,
+      id: transaction.id,
+      ...data,
+      status: "Processing",
+    });
   };
   const {
     control,
@@ -257,9 +267,9 @@ const TransactionsDetails = ({
               <Text className=" mb-2 text-slate-700">
                 Enter the bank reference number
               </Text>
-              {errors.referenceNumber && (
+              {errors.bankReferenceNumber && (
                 <Text className=" mb-2 text-red-500">
-                  {errors.referenceNumber.message}
+                  {errors.bankReferenceNumber.message}
                 </Text>
               )}
               <Controller
@@ -270,14 +280,14 @@ const TransactionsDetails = ({
                     placeholder="Bank reference number"
                     onChangeText={(value) => onChange(value)}
                     className={`block w-full rounded-md border bg-white px-4 py-3 ${
-                      errors.referenceNumber
+                      errors.bankReferenceNumber
                         ? "border-red-500  focus:border-green-500 focus:ring-green-500"
                         : " border-gray-300  focus:border-green-500 focus:ring-green-500"
                     }`}
                     value={value}
                   />
                 )}
-                name="referenceNumber"
+                name="bankReferenceNumber"
               />
             </View>
             <Pressable
