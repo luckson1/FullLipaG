@@ -12,10 +12,10 @@ import LoadingComponent from "~/components/LoadingComponent";
 
 const Transactions = () => {
   const {
-    data: userData,
+    data: transactionData,
     isLoading,
     isError,
-  } = api.profile.getUserData.useQuery(undefined, {
+  } = api.transaction.getUsersAll.useQuery(undefined, {
     onError(error) {
       Toast.show(error.message, {
         duration: Toast.durations.SHORT,
@@ -30,7 +30,6 @@ const Transactions = () => {
     },
   });
   const router = useRouter();
-  const transactionData = userData?.Transaction;
 
   return (
     <SafeAreaView className="flex-1 bg-white p-5">

@@ -22,10 +22,10 @@ import NoContent from "~/components/NoContent";
 const Index = () => {
   const router = useRouter();
   const {
-    data: userData,
+    data: transactionData,
     isLoading,
     isError,
-  } = api.profile.getUserData.useQuery(undefined, {
+  } = api.transaction.getUsersFirstTwo.useQuery(undefined, {
     onError(error) {
       Toast.show(error.message, {
         duration: Toast.durations.SHORT,
@@ -40,26 +40,40 @@ const Index = () => {
     },
   });
 
-  const profile = userData?.Profile;
-  const transactionData = userData?.Transaction;
+  const { data: profile, isLoading: isProfileLoading } =
+    api.profile.getUserProfile.useQuery(undefined, {
+      onError(error) {
+        Toast.show(error.message, {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.TOP,
+          shadow: true,
+          animation: true,
+          backgroundColor: "white",
+          hideOnPress: true,
+          textColor: "red",
+          delay: 0,
+        });
+      },
+    });
+
   const { data: rates } = api.exchange.getLatestRates.useQuery();
 
   useEffect(() => {
-    if (!profile?.firstName && !isLoading && isError) router.push("/profile");
+    if (!profile && !isLoading && isError) router.push("/profile");
   }, [router, profile, isLoading, isError]);
 
   const maximumList = 4;
-
+  if (!profile) return <View />;
   return (
     <SafeAreaView className="flex-1 ">
       <Tabs.Screen options={{ headerShown: false }} />
       <StatusBar backgroundColor="rgb(20 184 166)" />
-      {isLoading && (
+      {(isLoading || isProfileLoading) && (
         <View className="h-full w-full">
           <LoadingComponent />
         </View>
       )}
-      {!isLoading && (
+      {!isLoading && !isProfileLoading && (
         <View className="h-full w-full">
           <ScrollView className=" h-1/2 min-h-[270px] w-full bg-teal-500 px-5  pb-5 pt-16">
             <View className="flex h-full w-full items-center gap-y-8 ">
@@ -75,8 +89,8 @@ const Index = () => {
                       rounded
                       source={{
                         uri:
-                          userData?.Profile?.image ??
-                          (userData?.Profile?.gender === "Female"
+                          profile.image ??
+                          (profile.gender === "Female"
                             ? "https://res.cloudinary.com/dhciks96e/image/upload/v1685280960/Female-Avatar_h8qvjc.png"
                             : "https://res.cloudinary.com/dhciks96e/image/upload/v1685280974/Male-Avatar-3_q1g6un.png"),
                       }}
@@ -85,10 +99,10 @@ const Index = () => {
                   <View className="flex  h-fit w-3/5">
                     <Text className=" text-white">Welcome Back</Text>
                     <Text className="text-xl font-semibold  text-white">
-                      {profile?.firstName}
+                      {profile.firstName}
                     </Text>
                     <Text className="text-xl font-semibold  text-white">
-                      {profile?.lastName}
+                      {profile.lastName}
                     </Text>
                   </View>
                 </View>
