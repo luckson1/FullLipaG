@@ -40,21 +40,20 @@ const Index = () => {
     },
   });
 
-  const { data: profile, isLoading: isProfileLoading } =
-    api.profile.getUserProfile.useQuery(undefined, {
-      onError(error) {
-        Toast.show(error.message, {
-          duration: Toast.durations.SHORT,
-          position: Toast.positions.TOP,
-          shadow: true,
-          animation: true,
-          backgroundColor: "white",
-          hideOnPress: true,
-          textColor: "red",
-          delay: 0,
-        });
-      },
-    });
+  const { data: profile } = api.profile.getUserProfile.useQuery(undefined, {
+    onError(error) {
+      Toast.show(error.message, {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.TOP,
+        shadow: true,
+        animation: true,
+        backgroundColor: "white",
+        hideOnPress: true,
+        textColor: "red",
+        delay: 0,
+      });
+    },
+  });
 
   const { data: rates } = api.exchange.getLatestRates.useQuery();
 
@@ -68,18 +67,18 @@ const Index = () => {
     <SafeAreaView className="flex-1 ">
       <Tabs.Screen options={{ headerShown: false }} />
       <StatusBar backgroundColor="rgb(20 184 166)" />
-      {(isLoading || isProfileLoading) && (
+      {isLoading && (
         <View className="h-full w-full">
           <LoadingComponent />
         </View>
       )}
-      {!isLoading && !isProfileLoading && (
+      {!isLoading && (
         <View className="h-full w-full">
-          <ScrollView className=" h-1/2 min-h-[270px] w-full bg-teal-500 px-5  pb-5 pt-16">
-            <View className="flex h-full w-full items-center gap-y-8 ">
+          <ScrollView className=" h-[55%] min-h-[270px] w-full bg-teal-500 px-5  pb-5 pt-16">
+            <View className="flex h-full w-full items-center ">
               <View className="flex w-full max-w-md flex-row items-center  justify-between">
-                <View className="flex w-3/4 flex-row items-center justify-center gap-3">
-                  <View className="flex w-1/4 items-center justify-center">
+                <View className="flex w-3/4 flex-row items-center justify-center ">
+                  <View className="mr-3 flex w-1/4 items-center justify-center">
                     <Avatar
                       containerStyle={{
                         backgroundColor: "rgb(74 222 128 )",
@@ -107,7 +106,7 @@ const Index = () => {
                   </View>
                 </View>
 
-                <View className="flex h-fit w-1/4 flex-row gap-2 ">
+                <View className="flex h-fit w-1/4 flex-row ">
                   <TouchableHighlight
                     className="w-full flex-1 rounded-full "
                     onPress={() => router.push("/help")}
@@ -144,11 +143,11 @@ const Index = () => {
                 <Text className="my-5 text-center text-white">
                   Todays Exchange Rates
                 </Text>
-                <View className=" mx-auto mb-5  h-32 w-full items-center justify-center rounded-2xl bg-slate-700 p-5 shadow shadow-yellow-500/100">
+                <View className=" mx-auto mb-5  h-40 w-full items-center justify-center rounded-2xl bg-slate-700 p-5 shadow shadow-yellow-500/100">
                   {rates?.map((rate) => (
                     <Text
                       key={rate.id}
-                      className="my-3 text-lg font-bold tracking-widest text-white"
+                      className="my-3 text-xl font-bold tracking-widest text-white"
                     >
                       1 {rate.target} = {rate?.Rate?.at(0)?.value} 🇰🇪 KES
                     </Text>
@@ -158,10 +157,9 @@ const Index = () => {
             </View>
           </ScrollView>
 
-          <View className=" flex h-1/2 w-full items-center justify-center bg-white px-5 py-5">
-            <View className="mb-4 flex w-full max-w-md flex-row justify-between">
+          <View className=" flex h-[45%] w-full items-center justify-center bg-white px-5 py-5">
+            <View className=" mt-3 flex w-full max-w-md flex-row justify-between">
               <Text className="text-xl font-semibold text-slate-600">
-                {" "}
                 History
               </Text>
               <TouchableOpacity
@@ -183,7 +181,7 @@ const Index = () => {
                 />
               </TouchableOpacity>
             </View>
-            <View className="h- my-4 h-[80%] w-full max-w-md">
+            <View className=" h-full w-full max-w-md">
               {!isLoading && transactionData && transactionData.length <= 0 && (
                 <View className="h-full w-full">
                   <NoContent content="transactions" />
@@ -201,78 +199,97 @@ const Index = () => {
                 </View>
               )}
               {!isLoading && transactionData && (
-                <FlatList
-                  className=" mt-3 flex gap-3 "
-                  data={transactionData.slice(0, maximumList)}
-                  renderItem={({ item }) => (
-                    <Pressable
-                      className="my-3 flex flex-row  justify-between"
-                      onPress={() =>
-                        router.push(`transactions/overview/id?id=${item.id}`)
-                      }
-                    >
-                      <View className="flex w-8/12 flex-row gap-3">
-                        <View className="flex w-1/4  items-center justify-center">
+                <View className="flex h-full w-full items-center justify-center ">
+                  <FlatList
+                    className="  mt-3 flex"
+                    data={transactionData}
+                    renderItem={({ item }) => (
+                      <Pressable
+                        className="mt-3 flex flex-row  justify-between"
+                        onPress={() =>
+                          router.push(`transactions/overview/id?id=${item.id}`)
+                        }
+                      >
+                        <View className="flex w-[65%] flex-row ">
+                          <View className="flex w-1/4  items-center justify-center">
+                            <AntDesign
+                              size={40}
+                              name={
+                                item.Status?.at(0)?.name === "Received"
+                                  ? "checkcircleo"
+                                  : item.Status?.at(0)?.name === "Canceled" ||
+                                    item.Status?.at(0)?.name === "Declined"
+                                  ? "closecircleo"
+                                  : item.Status?.at(0)?.name === "Paused"
+                                  ? "pausecircleo"
+                                  : item.Status?.at(0)?.name === "Sent"
+                                  ? "rocket1"
+                                  : "infocirlceo"
+                              }
+                              color={
+                                item.Status?.at(0)?.name === "Received" ||
+                                item.Status?.at(0)?.name === "Processed"
+                                  ? "#4ade80"
+                                  : item.Status?.at(0)?.name === "Canceled" ||
+                                    item.Status?.at(0)?.name === "Declined"
+                                  ? "#ef4444"
+                                  : item.Status?.at(0)?.name === "Paused" ||
+                                    item.Status?.at(0)?.name === "To_Confirm"
+                                  ? "rgb(234 179 8)"
+                                  : "rgb(14 165 233 )"
+                              }
+                            />
+                          </View>
+
+                          <View className="flex">
+                            <Text className="font-medium text-slate-600">
+                              {item.recipient.name}
+                            </Text>
+                            <Text
+                              className={` ${
+                                item.Status?.at(0)?.name === "Received"
+                                  ? "text-[#4ade80]"
+                                  : item.Status?.at(0)?.name === "Canceled" ||
+                                    item.Status?.at(0)?.name === "Declined"
+                                  ? "text-[#ef4444]"
+                                  : item.Status?.at(0)?.name === "Paused"
+                                  ? "text-amber-500"
+                                  : "text-sky-500"
+                              }`}
+                            >
+                              {item.Status.at(0)?.name}
+                            </Text>
+                          </View>
+                        </View>
+                        <View className="flex  w-[35%] flex-row items-center justify-center">
+                          <View className="flex w-[70%] items-center justify-center">
+                            <Text className="text-slate-600">
+                              {item.payment.ExchangeRate.target}
+                            </Text>
+                            <Text className="font-bold text-slate-600">
+                              {item.payment.sentAmount.toLocaleString()}
+                            </Text>
+                          </View>
                           <AntDesign
-                            size={40}
-                            name={
-                              item.Status?.at(0)?.name === "Received"
-                                ? "checkcircleo"
-                                : item.Status?.at(0)?.name === "Canceled" ||
-                                  item.Status?.at(0)?.name === "Declined"
-                                ? "closecircleo"
-                                : item.Status?.at(0)?.name === "Paused"
-                                ? "pausecircleo"
-                                : item.Status?.at(0)?.name === "Sent"
-                                ? "rocket1"
-                                : "infocirlceo"
-                            }
-                            color={
-                              item.Status?.at(0)?.name === "Received" ||
-                              item.Status?.at(0)?.name === "Processed"
-                                ? "#4ade80"
-                                : item.Status?.at(0)?.name === "Canceled" ||
-                                  item.Status?.at(0)?.name === "Declined"
-                                ? "#ef4444"
-                                : item.Status?.at(0)?.name === "Paused" ||
-                                  item.Status?.at(0)?.name === "To_Confirm"
-                                ? "rgb(234 179 8)"
-                                : "rgb(14 165 233 )"
-                            }
+                            name="right"
+                            size={32}
+                            color={"rgb(74 222 128)"}
                           />
                         </View>
-
-                        <View className="flex">
-                          <Text className="font-medium text-slate-600">
-                            {item.recipient.name}
-                          </Text>
-                          <Text
-                            className={` ${
-                              item.Status?.at(0)?.name === "Received"
-                                ? "text-[#4ade80]"
-                                : item.Status?.at(0)?.name === "Canceled" ||
-                                  item.Status?.at(0)?.name === "Declined"
-                                ? "text-[#ef4444]"
-                                : item.Status?.at(0)?.name === "Paused"
-                                ? "text-amber-500"
-                                : "text-sky-500"
-                            }`}
-                          >
-                            {item.Status.at(0)?.name}
-                          </Text>
-                        </View>
-                      </View>
-                      <View className="flex w-1/5">
-                        <Text className="text-slate-600">
-                          {item.payment.ExchangeRate.target}
-                        </Text>
-                        <Text className="font-bold text-slate-600">
-                          {item.payment.sentAmount.toLocaleString()}
-                        </Text>
-                      </View>
-                    </Pressable>
-                  )}
-                />
+                      </Pressable>
+                    )}
+                  />
+                  <TouchableOpacity
+                    className=" mb-7 mt-3 w-full rounded-full bg-green-400 py-4"
+                    onPress={() => {
+                      router.push("/send");
+                    }}
+                  >
+                    <Text className="text-center text-xl text-white">
+                      Make a Payment
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               )}
             </View>
           </View>
