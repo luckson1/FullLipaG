@@ -57,7 +57,7 @@ const RecipientForm = () => {
     store.currentPayment,
   ]);
   const isPaymentInProgress = currentPayment !== undefined;
-  const { mutate: addRecipient } = api.recipient.add.useMutation({
+  const { mutate: addRecipient, isLoading } = api.recipient.add.useMutation({
     onSuccess: isPaymentInProgress
       ? (recipient) => {
           storeRecipient(recipient);
@@ -237,14 +237,18 @@ const RecipientForm = () => {
 
           <View className="w-full">
             <TouchableOpacity
-              className="my-5 flex   w-full items-center justify-center rounded-lg bg-green-400 px-4 py-3 shadow-xl"
+              disabled={isLoading}
+              className={`my-5 flex   w-full items-center justify-center rounded-lg ${
+                isLoading ? "bg-slate-300" : " bg-green-400"
+              } px-4 py-3 shadow-xl`}
               onPress={handleSubmit(onSubmit)}
             >
               <Text className="text-xl font-bold text-white">
-                Add Recipient
+                {isLoading ? "Loading...." : "Add Recipient"}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
+              disabled={isLoading}
               className="my-2 flex w-full   items-center justify-center rounded-lg border border-green-400 bg-white px-4 py-3 shadow-xl focus:bg-green-400"
               onPress={() => router.back()}
             >
