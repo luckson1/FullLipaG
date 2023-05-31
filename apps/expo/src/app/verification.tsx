@@ -91,11 +91,11 @@ const Otp = () => {
     }
   };
   const supabase = useSupabaseClient();
-  const handleResendOtp = async () => {
-    await supabase.auth.signInWithOtp({
-      phone: `+254${phoneNumber}`,
-    });
-  };
+  // const handleResendOtp = async () => {
+  //   await supabase.auth.signInWithOtp({
+  //     phone: `+254${phoneNumber}`,
+  //   });
+  // };
   const [isLoading, setIsLoading] = useState(false);
   const handleVerification = async () => {
     try {
