@@ -73,7 +73,7 @@ export const transactionRouter = createTRPCRouter({
           },
         },
       });
-      console.log(payment);
+
       if (!payment)
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
