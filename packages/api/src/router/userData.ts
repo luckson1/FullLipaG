@@ -64,53 +64,7 @@ export const profileRouter = createTRPCRouter({
       });
       return editedProfile;
     }),
-  getUserData: protectedProcedure.query(async ({ ctx }) => {
-    const id = ctx.user.id;
-    const userProfile = await ctx.prisma.users.findUniqueOrThrow({
-      where: {
-        id,
-      },
-      select: {
-        id: true,
 
-        Profile: true,
-        Transaction: {
-          orderBy: {
-            createdAt: "desc",
-          },
-          select: {
-            id: true,
-            Status: {
-              orderBy: {
-                createdAt: "desc",
-              },
-            },
-            recipient: {
-              select: {
-                name: true,
-              },
-            },
-            payment: {
-              select: {
-                sentAmount: true,
-                ExchangeRate: {
-                  select: {
-                    target: true,
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    });
-    if (!userProfile)
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: " An Error has occurred",
-      });
-    return userProfile;
-  }),
   getUserProfile: protectedProcedure.query(async ({ ctx }) => {
     const userId = ctx.user.id;
     const profile = await ctx.prisma.profile.findFirstOrThrow({
