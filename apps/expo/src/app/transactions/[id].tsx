@@ -237,7 +237,6 @@ const PaymentMethod = ({
           className={`mt-5 flex w-full items-center justify-center   py-5 shadow-lg shadow-green-400/100 `}
         >
           <View className=" w-full gap-y-3">
-            <Divider />
             <Text className="  text-xl">Mpesa (coming soon)</Text>
 
             <View className="flex w-full flex-row items-center justify-between">
@@ -282,7 +281,6 @@ const PaymentMethod = ({
           }}
         >
           <View className="w-full gap-y-3">
-            <Divider />
             <Text className="  text-xl">PesaLink</Text>
 
             <View className="flex w-full flex-row items-center justify-between">
@@ -322,7 +320,6 @@ const PaymentMethod = ({
           }}
         >
           <View className="w-full gap-y-3">
-            <Divider />
             <Text className="  text-xl">Manual Bank Transfer</Text>
 
             <View className="flex flex-row items-center justify-between">
