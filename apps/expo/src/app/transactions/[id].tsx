@@ -201,8 +201,11 @@ const PaymentMethod = ({
   const [isSelected, setIsSelected] = useState<
     "M-pesa" | "pesaLink" | "Manual"
   >();
+  const ctx = api.useContext();
   const { mutate: editTransaction } = api.transaction.edit.useMutation({
-    onSuccess: () => setIsShowModal("bankPolicy"),
+    onSuccess: async () => {
+      setIsShowModal("bankPolicy"), await ctx.transaction.invalidate();
+    },
     onError(error) {
       Toast.show(`An Error Occured: ${error.message}`, {
         duration: Toast.durations.SHORT,

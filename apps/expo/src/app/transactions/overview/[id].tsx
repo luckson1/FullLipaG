@@ -200,7 +200,7 @@ const TransactionsDetails = ({
         });
       },
       onSuccess: async () => {
-        await ctx.transaction.getUsersOne.invalidate();
+        await ctx.transaction.invalidate();
       },
     });
 

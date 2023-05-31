@@ -56,14 +56,17 @@ const RecipientForm = () => {
     store.setNewRecipient,
     store.currentPayment,
   ]);
+  const ctx = api.useContext();
   const isPaymentInProgress = currentPayment !== undefined;
   const { mutate: addRecipient, isLoading } = api.recipient.add.useMutation({
     onSuccess: isPaymentInProgress
-      ? (recipient) => {
+      ? async (recipient) => {
+          await ctx.recipient.invalidate();
           storeRecipient(recipient);
           router.push("/recipients/confirmation");
         }
-      : () => {
+      : async () => {
+          await ctx.recipient.invalidate();
           router.push("/recipients");
         },
     onError(error) {
