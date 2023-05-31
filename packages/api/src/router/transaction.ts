@@ -168,6 +168,75 @@ export const transactionRouter = createTRPCRouter({
       where: {
         usersId,
       },
+
+      orderBy: {
+        createdAt: "desc",
+      },
+      select: {
+        id: true,
+        Status: {
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
+        recipient: {
+          select: {
+            name: true,
+          },
+        },
+        payment: {
+          select: {
+            sentAmount: true,
+            ExchangeRate: {
+              select: {
+                target: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    if (!transactions)
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Transactions not found.",
+      });
+    return transactions;
+  }),
+  getUsersFirstTwo: protectedProcedure.query(async ({ ctx }) => {
+    const usersId = ctx.user.id;
+    const transactions = await ctx.prisma.transaction.findMany({
+      where: {
+        usersId,
+      },
+
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: 2,
+      select: {
+        id: true,
+        Status: {
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
+        recipient: {
+          select: {
+            name: true,
+          },
+        },
+        payment: {
+          select: {
+            sentAmount: true,
+            ExchangeRate: {
+              select: {
+                target: true,
+              },
+            },
+          },
+        },
+      },
     });
     if (!transactions)
       throw new TRPCError({
