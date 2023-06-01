@@ -205,7 +205,7 @@ const Index = () => {
                     data={transactionData}
                     renderItem={({ item }) => (
                       <Pressable
-                        className="mt-3 flex flex-row  justify-between"
+                        className="my-5 flex flex-row  justify-between"
                         onPress={() =>
                           router.push(`transactions/overview/id?id=${item.id}`)
                         }
