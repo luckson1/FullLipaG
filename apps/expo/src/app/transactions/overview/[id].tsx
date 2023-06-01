@@ -158,7 +158,7 @@ const PaymentTrackingScreen = ({
         <View className="my-5 flex items-center justify-center">
           <TouchableOpacity
             onPress={() => cancel({ ...transaction, status: "Cancelled" })}
-            className={` flex  items-center justify-center rounded-xl px-3 py-2 ${
+            className={` flex  items-center justify-center rounded-xl px-3 py-3 ${
               isLoading ? "bg-slate-400" : "bg-red-400"
             }`}
           >
