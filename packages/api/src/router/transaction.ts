@@ -49,7 +49,7 @@ export const transactionRouter = createTRPCRouter({
           "Declined",
           "Sent",
           "Received",
-          "Canceled",
+          "Cancelled",
           "Paused",
         ]),
       }),
