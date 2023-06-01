@@ -342,7 +342,7 @@ const TransactionsDetails = ({
           <Text className="text-base">{transaction.recipient.bankAccount}</Text>
         </View>
       </View>
-      {(!transaction.bankReferenceNumber || isNewBankReferenceNeeded) && (
+      {(!transaction.bankReferenceNumber || isDeclined) && (
         <View className="mt-7 h-fit w-full rounded-md border border-slate-300 bg-slate-50 bg-opacity-50 p-3 shadow-xl">
           <Text className="mt-3 text-xl font-semibold text-slate-700">
             Payment confirmation
