@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Toast from "react-native-root-toast";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack, useSearchParams } from "expo-router";
@@ -72,7 +79,19 @@ const Tab = ({
   );
 };
 
-const PaymentTrackingScreen = ({ statuses }: { statuses: Status[] }) => {
+const PaymentTrackingScreen = ({
+  transaction,
+}: {
+  transaction: Transaction & {
+    recipient: Recipient;
+    payment: Payment & {
+      rate: Rate;
+      ExchangeRate: ExchangeRate;
+    };
+    Status: Status[];
+  };
+}) => {
+  const statuses = transaction.Status;
   const data = statuses.map((s) => ({
     time: s.createdAt.toLocaleString(),
     status: s.name,
@@ -89,12 +108,39 @@ const PaymentTrackingScreen = ({ statuses }: { statuses: Status[] }) => {
         ? "Payment has been received by recipient"
         : s.name === "Processing"
         ? "Payment is being processed"
+        : s.name === "Declined"
+        ? "Transaction cancelled due to invalid reference number"
         : s.name === "To_Confirm"
         ? "Waiting for you to provide bank reference for confirmation"
         : `Payment has been ${s.name}`,
   }));
+  const ctx = api.useContext();
+  const lastIndexStatus = statuses.length - 1;
+  const isCancelled = statuses.at(lastIndexStatus)?.name === "Cancelled";
+  const isDeclined = statuses.at(lastIndexStatus)?.name === "Declined";
+  const isSent = statuses.at(lastIndexStatus)?.name === "Sent";
+  const isProcessed = statuses.at(lastIndexStatus)?.name === "Processed";
+  const isReceived = statuses.at(lastIndexStatus)?.name === "Received";
+  const cannotCancel =
+    isCancelled || isDeclined || isSent || isProcessed || isReceived;
+  const { mutate: cancel, isLoading } = api.transaction.edit.useMutation({
+    onError(error) {
+      Toast.show(`An Error Occured: ${error.message}`, {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.TOP,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        textColor: "red",
+        delay: 0,
+      });
+    },
+    onSuccess: async () => {
+      await ctx.transaction.invalidate();
+    },
+  });
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       {data.map((item, index) => (
         <View key={index} style={styles.timelineItem}>
           {index !== data.length - 1 && <View style={styles.line} />}
@@ -108,14 +154,32 @@ const PaymentTrackingScreen = ({ statuses }: { statuses: Status[] }) => {
           </View>
         </View>
       ))}
-    </View>
+      {!cannotCancel && (
+        <View className="my-5 flex items-center justify-center">
+          <TouchableOpacity
+            onPress={() => cancel({ ...transaction, status: "Cancelled" })}
+            className={` flex  items-center justify-center rounded-xl px-3 py-2 ${
+              isLoading ? "bg-slate-400" : "bg-red-400"
+            }`}
+          >
+            <Text
+              className={`text-sm text-white ${
+                isLoading ? "text-slate-700" : "text-white"
+              }`}
+            >
+              Cancel Transaction
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
+    </ScrollView>
   );
 };
 
 const getColor = (status: string) => {
   return status === "Received" || status === "Processed"
     ? "#4ade80"
-    : status === "Canceled" || status === "Declined"
+    : status === "Cancelled" || status === "Declined"
     ? "#ef4444"
     : status === "Paused" || status === "To_Confirm"
     ? "rgb(234 179 8)"
@@ -125,6 +189,7 @@ const getColor = (status: string) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    display: "flex",
     backgroundColor: "#fff",
     paddingHorizontal: 16,
     paddingTop: 32,
@@ -179,6 +244,7 @@ const TransactionsDetails = ({
       rate: Rate;
       ExchangeRate: ExchangeRate;
     };
+    Status: Status[];
   };
 }) => {
   const schema = z.object({
@@ -203,7 +269,11 @@ const TransactionsDetails = ({
         await ctx.transaction.invalidate();
       },
     });
-
+  const statuses = transaction.Status;
+  const lastIndexStatus = statuses.length - 1;
+  const isCancelled = statuses.at(lastIndexStatus)?.name === "Cancelled";
+  const isDeclined = statuses.at(lastIndexStatus)?.name === "Declined";
+  const isNewBankReferenceNeeded = isCancelled || isDeclined;
   type FormData = z.infer<typeof schema>;
   const onSubmit = (data: FormData) => {
     addBankReference({
@@ -228,7 +298,8 @@ const TransactionsDetails = ({
         <View className="mt-3 flex w-full flex-row justify-between">
           <Text className="text-base">Amount Remitted</Text>
           <Text className="text-base">
-            {transaction.payment.remittedAmount}
+            {transaction.payment.ExchangeRate.source}{" "}
+            {transaction.payment.remittedAmount.toLocaleString()}
           </Text>
         </View>
         <View className="mt-3 flex w-full flex-row justify-between">
@@ -237,10 +308,13 @@ const TransactionsDetails = ({
         </View>
         <View className="mt-3 flex w-full flex-row justify-between">
           <Text className="text-base">Recipient receives</Text>
-          <Text className="text-base">{transaction.payment.sentAmount}</Text>
+          <Text className="text-base">
+            {transaction.payment.ExchangeRate.target}{" "}
+            {transaction.payment.sentAmount.toLocaleString()}
+          </Text>
         </View>
       </View>
-      {transaction.bankReferenceNumber && (
+      {transaction.bankReferenceNumber && !isNewBankReferenceNeeded && (
         <View className="mt-7 h-fit w-full rounded-md border border-slate-300 bg-slate-50 bg-opacity-50 p-3 shadow-xl">
           <Text className="mt-3 text-xl font-semibold text-slate-700">
             Payment Confirmation
@@ -268,7 +342,7 @@ const TransactionsDetails = ({
           <Text className="text-base">{transaction.recipient.bankAccount}</Text>
         </View>
       </View>
-      {!transaction.bankReferenceNumber && (
+      {(!transaction.bankReferenceNumber || isNewBankReferenceNeeded) && (
         <View className="mt-7 h-fit w-full rounded-md border border-slate-300 bg-slate-50 bg-opacity-50 p-3 shadow-xl">
           <Text className="mt-3 text-xl font-semibold text-slate-700">
             Payment confirmation
@@ -358,7 +432,7 @@ const PaymentId = () => {
           <View className="h-full w-full p-5">
             <Tab view={view} setView={setView} />
             {view === "timeline" && (
-              <PaymentTrackingScreen statuses={transaction.Status} />
+              <PaymentTrackingScreen transaction={transaction} />
             )}
             {view === "overview" && (
               <TransactionsDetails transaction={transaction} />
