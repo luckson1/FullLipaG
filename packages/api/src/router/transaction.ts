@@ -91,12 +91,63 @@ export const transactionRouter = createTRPCRouter({
         });
       return editedPayment;
     }),
+  cancel: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const usersId = ctx.user.id;
+      const product = await ctx.prisma.transaction.findUniqueOrThrow({
+        where: {
+          id: input.id,
+        },
+        include: {
+          Status: true,
+        },
+      });
+      if (product.usersId !== usersId)
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "You are not authorised to perform this action",
+        });
+      const isLateCancellation = product.Status.some(
+        (status) =>
+          status.name === "Processed" ||
+          status.name === "Sent" ||
+          status.name === "Received",
+      );
+      if (isLateCancellation)
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Too late! Transaction cannot be cancelled at this stage.",
+        });
+      const editedPayment = await ctx.prisma.transaction.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          Status: {
+            create: {
+              name: "Cancelled",
+            },
+          },
+        },
+      });
+
+      if (!editedPayment)
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "An Error occured. Please try again",
+        });
+      return editedPayment;
+    }),
   addBankRef: protectedProcedure
     .input(
       z.object({
         bankReferenceNumber: z.string().nullable(),
         id: z.string(),
-        status: z.enum(["Processing"]),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -121,7 +172,7 @@ export const transactionRouter = createTRPCRouter({
 
           Status: {
             create: {
-              name: input.status,
+              name: "Processing",
             },
           },
         },

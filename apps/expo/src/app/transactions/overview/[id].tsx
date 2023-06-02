@@ -123,7 +123,7 @@ const PaymentTrackingScreen = ({
   const isReceived = statuses.at(lastIndexStatus)?.name === "Received";
   const cannotCancel =
     isCancelled || isDeclined || isSent || isProcessed || isReceived;
-  const { mutate: cancel, isLoading } = api.transaction.edit.useMutation({
+  const { mutate: cancel, isLoading } = api.transaction.cancel.useMutation({
     onError(error) {
       Toast.show(`An Error Occured: ${error.message}`, {
         duration: Toast.durations.SHORT,
@@ -157,7 +157,7 @@ const PaymentTrackingScreen = ({
       {!cannotCancel && (
         <View className="my-5 flex items-center justify-center">
           <TouchableOpacity
-            onPress={() => cancel({ ...transaction, status: "Cancelled" })}
+            onPress={() => cancel({ id: transaction.id })}
             className={` flex  items-center justify-center rounded-xl px-3 py-3 ${
               isLoading ? "bg-slate-400" : "bg-red-400"
             }`}
@@ -279,7 +279,6 @@ const TransactionsDetails = ({
     addBankReference({
       id: transaction.id,
       ...data,
-      status: "Processing",
     });
   };
   const {
