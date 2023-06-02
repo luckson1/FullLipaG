@@ -61,8 +61,7 @@ const Index = () => {
     if (!profile && !isLoading && isError) router.push("/profile");
   }, [router, profile, isLoading, isError]);
 
-  const maximumList = 4;
-  if (!profile) return <View />;
+  if (!profile && !isLoading) return <View />;
   return (
     <SafeAreaView className="flex-1 ">
       <Tabs.Screen options={{ headerShown: false }} />
@@ -72,7 +71,7 @@ const Index = () => {
           <LoadingComponent />
         </View>
       )}
-      {!isLoading && (
+      {!isLoading && profile && (
         <View className="h-full w-full">
           <ScrollView className=" h-[55%] min-h-[270px] w-full bg-teal-500 px-5  pb-5 pt-16">
             <View className="flex h-full w-full items-center ">
@@ -123,7 +122,7 @@ const Index = () => {
                   </TouchableHighlight>
                   <TouchableHighlight
                     className="flex-1 rounded-full"
-                    onPress={() => router.push("/profile")}
+                    onPress={() => router.push("/editProfile")}
                   >
                     <Icon
                       style={{
