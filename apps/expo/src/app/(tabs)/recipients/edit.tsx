@@ -16,8 +16,9 @@ import { z } from "zod";
 
 import { api } from "~/utils/api";
 import useStore from "~/utils/zuztand";
+import NoContent from "~/components/NoContent";
 
-const RecipientForm = () => {
+const EditRecipientForm = ({ id }: { id: string }) => {
   const convertionValidator = z.object({
     name: z
       .string({ errorMap: () => ({ message: "Recipient Bank Required!" }) })
@@ -52,10 +53,6 @@ const RecipientForm = () => {
     },
   });
   const router = useRouter();
-  const params = useSearchParams();
-
-  const id = params.id as string;
-
   const { data: recipient } = api.recipient.getUsersOne.useQuery(
     { id },
     {
@@ -107,7 +104,7 @@ const RecipientForm = () => {
     },
   });
   const onSubmit = (data: Values) => {
-    editRecipient({ ...data, id: recipient?.id ?? "" });
+    editRecipient({ ...data, id });
   };
   return (
     <ScrollView className="flex-1 bg-white">
@@ -289,4 +286,22 @@ const RecipientForm = () => {
   );
 };
 
-export default RecipientForm;
+const Edit = () => {
+  const params = useSearchParams();
+
+  const id = params.id;
+
+  return (
+    <View className="flex-1">
+      {id && typeof id === "string" && <EditRecipientForm id={id} />}
+      {!id ||
+        (typeof id !== "string" && (
+          <View className="flex items-center justify-center">
+            <NoContent content="recipient" />
+          </View>
+        ))}
+    </View>
+  );
+};
+
+export default Edit;

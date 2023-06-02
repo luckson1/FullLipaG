@@ -17,11 +17,20 @@ import { z } from "zod";
 
 import { api } from "~/utils/api";
 import useStore from "~/utils/zuztand";
+import NoContent from "~/components/NoContent";
+import type { ExchangeRate, Payment, Rate } from ".prisma/client";
 
 const ZeCurrencies = z.string();
 export type Currencies = z.infer<typeof ZeCurrencies>;
 
-const Form = () => {
+const Form = ({
+  paymentToEdit,
+}: {
+  paymentToEdit: Payment & {
+    rate: Rate;
+    ExchangeRate: ExchangeRate;
+  };
+}) => {
   const convertionValidator = z.object({
     local: z.string(),
     foreign: z.string(),
@@ -48,7 +57,7 @@ const Form = () => {
       },
     },
   );
-  const paymentToEdit = useStore((state) => state.currentPayment);
+
   const {
     handleSubmit,
     watch,
@@ -60,8 +69,8 @@ const Form = () => {
     resolver: zodResolver(convertionValidator),
     defaultValues: {
       exchangeRateId: paymentToEdit?.exchangeRateId,
-      local: paymentToEdit?.remittedAmount.toString(),
-      foreign: paymentToEdit?.sentAmount.toString(),
+      local: paymentToEdit.remittedAmount.toString(),
+      foreign: paymentToEdit.sentAmount.toString(),
     },
   });
 
@@ -129,7 +138,7 @@ const Form = () => {
         editPayment({
           ...data,
           rateId: selectedExchangeRateId,
-          id: paymentToEdit?.id ?? "",
+          id: paymentToEdit.id,
         });
     }
   };
@@ -250,6 +259,7 @@ const Form = () => {
 };
 
 const Index = () => {
+  const paymentToEdit = useStore((state) => state.currentPayment);
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar />
@@ -258,7 +268,8 @@ const Index = () => {
       <View className="h-full w-full">
         <View className="flex h-full w-full items-center justify-center  p-7">
           <View className="h-full w-full max-w-md">
-            <Form />
+            {paymentToEdit && <Form paymentToEdit={paymentToEdit} />}
+            {!paymentToEdit && <NoContent content="payment" />}
           </View>
         </View>
       </View>
