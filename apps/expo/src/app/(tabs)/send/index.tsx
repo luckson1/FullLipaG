@@ -57,7 +57,7 @@ const Form = () => {
   } = useForm<Values>({
     resolver: zodResolver(convertionValidator),
     defaultValues: {
-      exchangeRateId: "cli6ufqwh0000sxqsdbmj41wz",
+      exchangeRateId: exchangeData?.at(0)?.id,
       foreign: "1000",
     },
   });
