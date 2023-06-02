@@ -44,4 +44,78 @@ export const paymentRouter = createTRPCRouter({
         });
       return payment;
     }),
+  edit: protectedProcedure
+    .input(
+      z.object({
+        local: z.string(),
+        foreign: z.string(),
+        exchangeRateId: z.string(),
+        rateId: z.string(),
+        id: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const sentAmount = parseFloat(input.foreign);
+      const remittedAmount = parseFloat(input.local);
+
+      if (Number.isNaN(sentAmount) || Number.isNaN(remittedAmount))
+        throw new TRPCError({
+          code: "PARSE_ERROR",
+          message: "Invalid amounts, please try again",
+        });
+
+      const usersId = ctx.user.id;
+      const payment = await ctx.prisma.payment.findUniqueOrThrow({
+        where: {
+          id: input.id,
+        },
+      });
+      if (payment.usersId !== usersId)
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Not authorised to perform the action",
+        });
+      const editedPayment = await ctx.prisma.payment.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          sentAmount,
+          remittedAmount,
+          exchangeRateId: input.exchangeRateId,
+          rateId: input.rateId,
+        },
+        include: {
+          ExchangeRate: true,
+          rate: true,
+        },
+      });
+
+      if (!editedPayment)
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "An Error occured. Please try again",
+        });
+      return editedPayment;
+    }),
+
+  // getUsersOne: protectedProcedure
+  // .input(z.object({ id: z.string() }))
+  // .query(async ({ ctx, input }) => {
+  //   console.log(input.id);
+  //   const usersId = ctx.user.id;
+  //   const payment = await ctx.prisma.payment.findUniqueOrThrow({
+  //     where: {
+  //       id: input.id,
+  //     },
+  //   });
+  //   if (payment.usersId !== usersId) {
+  //     throw new TRPCError({
+  //       code: "UNAUTHORIZED",
+  //       message: "Only the author can edit this payment",
+  //     });
+  //   }
+
+  //   return payment;
+  // }),
 });
