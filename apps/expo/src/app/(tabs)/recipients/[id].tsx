@@ -58,7 +58,7 @@ const RecipientID = () => {
             </View>
             <View className="flex w-full items-center justify-center">
               <TouchableOpacity
-                className="flex w-20 flex-row items-center justify-around  rounded-md bg-green-400 py-2"
+                className="flex w-20 flex-row items-center justify-around  rounded-md bg-yellow-500 py-2"
                 onPress={() => {
                   router.push(`/recipients/edit?id=${recipient.id}`);
                 }}
