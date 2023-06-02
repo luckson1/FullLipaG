@@ -38,7 +38,9 @@ const Transactions = () => {
 
       <View className="flex w-full items-start justify-center">
         <View className="w-full  max-w-md">
-          <Text className=" my-5 text-center text-xl font-bold">History</Text>
+          <View className="my-3 py-5">
+            <Text className=" text-center text-xl font-bold">History</Text>
+          </View>
           {isLoading && !isError && (
             <View className="flex h-full w-full items-center justify-center">
               <LoadingComponent />
@@ -50,7 +52,7 @@ const Transactions = () => {
               data={transactionData}
               renderItem={({ item }) => (
                 <Pressable
-                  className="my-3 flex flex-row  justify-between"
+                  className="my-5 flex flex-row  justify-between"
                   onPress={() =>
                     router.push(`transactions/overview/id?id=${item.id}`)
                   }
