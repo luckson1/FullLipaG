@@ -116,6 +116,21 @@ const Index = () => {
                         <MaterialIcons name="send" size={20} color={"white"} />
                       </TouchableOpacity>
                     )}
+                    {!paymentInProgress && (
+                      <TouchableOpacity
+                        className="flex flex-row items-center justify-end "
+                        onPress={() => {
+                          addRecipient(item);
+                          router.push(`/recipients/id?id=${item.id}`);
+                        }}
+                      >
+                        <AntDesign
+                          name="right"
+                          size={32}
+                          color={"rgb(74 222 128 )"}
+                        />
+                      </TouchableOpacity>
+                    )}
                   </View>
                 </View>
               )}
