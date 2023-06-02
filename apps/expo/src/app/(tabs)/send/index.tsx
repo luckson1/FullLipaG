@@ -127,7 +127,7 @@ const Form = () => {
         addPayment({ ...data, rateId: selectedExchangeRateId });
     }
   };
-  console.log(selectedExchangeRateId);
+
   return (
     <View className="flex-1">
       <View className="my-2  flex  h-full w-full  flex-col ">
