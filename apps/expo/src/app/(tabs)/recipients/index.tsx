@@ -1,6 +1,7 @@
 import React from "react";
 import {
   FlatList,
+  Pressable,
   SafeAreaView,
   Text,
   TouchableOpacity,
@@ -45,8 +46,11 @@ const Index = () => {
 
       <View className="flex  h-fit w-full items-center justify-center p-5 ">
         <View className=" h-full w-full max-w-md">
+          <Text className="text-bold my-5 text-xl">
+            Who will you be sending money to?
+          </Text>
           <View className="flex w-full flex-row items-center justify-between">
-            <Text className="my-10 flex items-center  justify-center text-xl font-bold">
+            <Text className="mb-10 mt-5 flex items-center  justify-center text-xl font-bold">
               Recipients
             </Text>
             <TouchableOpacity
@@ -82,8 +86,14 @@ const Index = () => {
               className="flex w-full"
               data={data}
               renderItem={({ item }) => (
-                <View className="my-3 flex w-full flex-row  items-center justify-between">
-                  <View className="flex w-8/12 flex-row  items-center gap-1">
+                <Pressable
+                  className="my-5 flex w-full flex-row  items-center justify-between"
+                  onPress={() => {
+                    addRecipient(item);
+                    router.push(`/recipients/id?id=${item.id}`);
+                  }}
+                >
+                  <View className="flex w-8/12 flex-row  items-center">
                     <View className="w-1/4">
                       <Avatar
                         size={48}
@@ -107,7 +117,8 @@ const Index = () => {
                     {paymentInProgress && (
                       <TouchableOpacity
                         className="flex w-20 flex-row items-center justify-around  rounded-md bg-green-400 py-2"
-                        onPress={() => {
+                        onPress={(e) => {
+                          e.stopPropagation();
                           addRecipient(item);
                           router.push("/recipients/confirmation");
                         }}
@@ -117,22 +128,16 @@ const Index = () => {
                       </TouchableOpacity>
                     )}
                     {!paymentInProgress && (
-                      <TouchableOpacity
-                        className="flex flex-row items-center justify-end "
-                        onPress={() => {
-                          addRecipient(item);
-                          router.push(`/recipients/id?id=${item.id}`);
-                        }}
-                      >
+                      <View className="flex flex-row items-center justify-end ">
                         <AntDesign
                           name="right"
                           size={32}
                           color={"rgb(74 222 128 )"}
                         />
-                      </TouchableOpacity>
+                      </View>
                     )}
                   </View>
-                </View>
+                </Pressable>
               )}
             />
           </View>
