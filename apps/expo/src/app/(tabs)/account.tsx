@@ -65,9 +65,12 @@ const Account = () => {
             )}
 
             <View className="flex h-fit w-1/4 flex-row gap-2">
-              <Pressable className="rounded-md bg-green-400 px-5 py-2">
+              <TouchableOpacity
+                className="rounded-md bg-green-400 px-5 py-2"
+                onPress={() => router.push("/editProfile")}
+              >
                 <Text>Edit</Text>
-              </Pressable>
+              </TouchableOpacity>
             </View>
           </View>
           <View className="my-10  border-b border-slate-300 py-2">
@@ -93,7 +96,7 @@ const Account = () => {
           </TouchableOpacity>
           <TouchableOpacity
             className=" mt-7 flex w-full items-center justify-center   p-2 "
-            onPress={() => router.push("/profile")}
+            onPress={() => router.push("/editProfile")}
           >
             <View className="w-full">
               <View className="flex w-full flex-row items-center justify-between">
