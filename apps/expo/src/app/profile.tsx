@@ -16,7 +16,6 @@ import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { api } from "~/utils/api";
-import LoadingComponent from "~/components/LoadingComponent";
 
 const profileSchema = z.object({
   firstName: z.string().min(1, { message: "First name is required" }),
