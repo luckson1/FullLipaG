@@ -1,13 +1,13 @@
 import React from "react";
 import { Redirect } from "expo-router";
-import { useUser } from "@supabase/auth-helpers-react";
+import { useSession } from "@supabase/auth-helpers-react";
 
 const Index = () => {
-  const user = useUser();
+  const session = useSession();
   return (
     <>
-      {user && <Redirect href={"/home"} />}
-      {!user && <Redirect href={"/onboarding"} />}
+      {session && <Redirect href={"/home"} />}
+      {!session && <Redirect href={"/onboarding"} />}
     </>
   );
 };
