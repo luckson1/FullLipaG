@@ -38,9 +38,7 @@ const Transactions = () => {
 
       <View className="flex w-full items-start justify-center">
         <View className="w-full  max-w-md">
-          <Text className="mb-8 mt-2 text-center text-xl font-bold">
-            History
-          </Text>
+          <Text className=" my-5 text-center text-xl font-bold">History</Text>
           {isLoading && !isError && (
             <View className="flex h-full w-full items-center justify-center">
               <LoadingComponent />
@@ -63,15 +61,15 @@ const Transactions = () => {
                         size={40}
                         name={
                           item.Status?.at(0)?.name === "Received"
-                            ? "checkcircleo"
+                            ? "checkcircle"
                             : item.Status?.at(0)?.name === "Cancelled" ||
                               item.Status?.at(0)?.name === "Declined"
-                            ? "closecircleo"
+                            ? "closecircle"
                             : item.Status?.at(0)?.name === "Paused"
-                            ? "pausecircleo"
+                            ? "pausecircle"
                             : item.Status?.at(0)?.name === "Sent"
                             ? "rocket1"
-                            : "infocirlceo"
+                            : "infocirlce"
                         }
                         color={
                           item.Status?.at(0)?.name === "Received" ||
@@ -99,12 +97,15 @@ const Transactions = () => {
                             : item.Status?.at(0)?.name === "Cancelled" ||
                               item.Status?.at(0)?.name === "Declined"
                             ? "text-[#ef4444]"
-                            : item.Status?.at(0)?.name === "Paused"
-                            ? "text-amber-500"
+                            : item.Status?.at(0)?.name === "Paused" ||
+                              item.Status?.at(0)?.name === "To_Confirm"
+                            ? "text-yellow-500"
                             : "text-sky-500"
                         }`}
                       >
-                        {item.Status.at(0)?.name}
+                        {item.Status.at(0)?.name === "To_Confirm"
+                          ? "Confirmation Needed"
+                          : item.Status.at(0)?.name}
                       </Text>
                     </View>
                   </View>
