@@ -4,7 +4,7 @@ import { SvgUri } from "react-native-svg";
 
 const LoadingComponent = () => {
   return (
-    <View className="h-[60%] w-full ">
+    <View className="h-full w-full bg-white ">
       <View className="my-5 flex h-full w-full items-center justify-center bg-teal-50 opacity-20">
         <SvgUri
           width="70%"
