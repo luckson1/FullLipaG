@@ -127,11 +127,10 @@ const EditRecipientForm = ({ id }: { id: string }) => {
                 <TextInput
                   onBlur={onBlur}
                   onChangeText={(value) => onChange(value)}
-                  defaultValue={recipient?.name}
                   className={`block w-full rounded-md border  px-4 py-3 ${
                     errors.name
-                      ? "border-red-500  focus:border-green-500 focus:ring-green-500"
-                      : " border-gray-300  focus:border-green-500 focus:ring-green-500"
+                      ? "border-red-500 bg-slate-50 bg-opacity-10 focus:border-green-300 focus:ring-green-300"
+                      : " border-gray-300  focus:border-green-500 focus:ring-green-300"
                   }`}
                   value={value}
                 />
@@ -157,7 +156,7 @@ const EditRecipientForm = ({ id }: { id: string }) => {
                   onChangeText={onChange}
                   className={`block w-full rounded-md border  px-4 py-3 ${
                     errors.bankName
-                      ? "border-red-500  focus:border-green-500 focus:ring-green-500"
+                      ? "border-red-500 bg-slate-50 bg-opacity-10 focus:border-green-500 focus:ring-green-500"
                       : " border-gray-300  focus:border-green-500 focus:ring-green-500"
                   }`}
                   value={value}
@@ -182,7 +181,7 @@ const EditRecipientForm = ({ id }: { id: string }) => {
                 <Select
                   selectedValue={value}
                   width="100%"
-                  className="block w-full rounded-md border-gray-300  px-4 py-3 text-base"
+                  className="block w-full rounded-md border-gray-300 bg-slate-50 bg-opacity-10  px-4 py-3 text-base"
                   accessibilityLabel="Choose Country"
                   placeholder="Choose Country"
                   _selectedItem={{
@@ -194,8 +193,8 @@ const EditRecipientForm = ({ id }: { id: string }) => {
                   onValueChange={(itemValue) => onChange(itemValue)}
                 >
                   <Select.Item label="China" value="China" />
-                  <Select.Item label="Singapore" value="Singapore" />
-                  <Select.Item label="Hong Kong" value="Hong Kong" />
+                  <Select.Item label="Singapore" value={"Singapore"} />
+                  <Select.Item label="Hong Kong" value={"HongKong"} />
                 </Select>
               )}
             />
@@ -220,7 +219,7 @@ const EditRecipientForm = ({ id }: { id: string }) => {
                 <TextInput
                   onBlur={onBlur}
                   onChangeText={onChange}
-                  className={`block w-full rounded-md border  px-4 py-3 ${
+                  className={`block w-full rounded-md border bg-slate-50 bg-opacity-10  px-4 py-3 ${
                     errors.swiftCode
                       ? "border-red-500  focus:border-green-500 focus:ring-green-500"
                       : " border-gray-300  focus:border-green-500 focus:ring-green-500"
@@ -248,7 +247,7 @@ const EditRecipientForm = ({ id }: { id: string }) => {
                 <TextInput
                   onBlur={onBlur}
                   onChangeText={onChange}
-                  className={`block w-full rounded-md border  px-4 py-3 ${
+                  className={`block w-full rounded-md border bg-slate-50 bg-opacity-10  px-4 py-3 ${
                     errors.bankAccount
                       ? "border-red-500  focus:border-green-500 focus:ring-green-500"
                       : " border-gray-300  focus:border-green-500 focus:ring-green-500"
@@ -269,7 +268,7 @@ const EditRecipientForm = ({ id }: { id: string }) => {
               onPress={handleSubmit(onSubmit)}
             >
               <Text className="text-xl font-bold text-white">
-                {isLoading ? "Saving...." : "Save"}
+                {isLoading ? "Loading...." : "Add Recipient"}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity

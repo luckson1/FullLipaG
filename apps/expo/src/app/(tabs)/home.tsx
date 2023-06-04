@@ -282,7 +282,7 @@ const Index = () => {
                     )}
                   />
                   <TouchableOpacity
-                    className=" mb-7 mt-3 w-full rounded-full bg-green-400 py-4"
+                    className="  mb-7 flex w-full items-center justify-center rounded-lg bg-green-400 px-4 py-4 shadow-xl"
                     onPress={() => {
                       router.push("/send");
                     }}

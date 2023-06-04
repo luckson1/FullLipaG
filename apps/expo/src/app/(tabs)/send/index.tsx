@@ -58,7 +58,6 @@ const Form = () => {
     resolver: zodResolver(convertionValidator),
     defaultValues: {
       exchangeRateId: exchangeData?.at(0)?.id,
-      foreign: "1000",
     },
   });
 
@@ -129,8 +128,11 @@ const Form = () => {
   };
 
   return (
-    <View className="flex-1">
-      <View className="my-2  flex  h-full w-full  flex-col ">
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      className="flex-1"
+    >
+      <View className="my-2  flex   w-full  flex-[70%] flex-col">
         <Text className="mb-2 text-lg text-slate-700">
           Select the currency you want to send
         </Text>
@@ -142,7 +144,7 @@ const Form = () => {
               <Select
                 selectedValue={value}
                 width="100%"
-                className="block w-full  rounded-lg  border-gray-300 px-4 py-3.5 text-base"
+                className="block w-full  rounded-lg border-gray-300 bg-slate-50  bg-opacity-10 px-4 py-3.5 text-xl"
                 accessibilityLabel="Choose Currency"
                 placeholder="Choose Currency"
                 _selectedItem={{
@@ -174,8 +176,8 @@ const Form = () => {
             {errors.foreign.message}
           </Text>
         )}
-        <View className=" mb-10 flex h-fit w-full flex-row  items-start justify-between  border-b border-gray-300 focus:border-green-500 focus:ring-green-500">
-          <View className="flex flex-row  items-center  justify-center rounded-lg bg-white  px-4 py-4">
+        <View className=" mb-10 flex h-fit w-full flex-row items-start justify-between rounded-md border border-gray-200 bg-slate-50 bg-opacity-10 shadow-lg focus:border-green-300  focus:ring-green-300">
+          <View className="flex flex-row  items-center  justify-center rounded-lg bg-inherit px-4 py-4">
             <Text className="text-xl text-slate-700">
               {selectedExchangeCurrency}{" "}
             </Text>
@@ -204,12 +206,8 @@ const Form = () => {
             {errors.local.message}
           </Text>
         )}
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          keyboardVerticalOffset={Platform.OS === "ios" ? -64 : -32}
-          className=" mb-10 flex h-fit w-full flex-row  items-start justify-between  border-b border-gray-300 focus:border-green-500 focus:ring-green-500"
-        >
-          <View className="flex flex-row  items-center  justify-center rounded-lg bg-white  px-4 py-4">
+        <View className=" mb-10 flex h-fit w-full flex-row items-start justify-between rounded-md border border-gray-200 bg-slate-50 bg-opacity-10 shadow-lg focus:border-green-300 focus:ring-green-300">
+          <View className="flex flex-row  items-center  justify-center rounded-lg bg-inherit  px-4 py-4">
             <Text className="text-xl text-slate-700"> 🇰🇪 KES</Text>
           </View>
           <Controller
@@ -228,21 +226,22 @@ const Form = () => {
             )}
             name="local"
           />
-        </KeyboardAvoidingView>
-
+        </View>
+      </View>
+      <View className="flex flex-[30%] items-start justify-end">
         <TouchableOpacity
-          className="absolute bottom-5   flex w-full items-center justify-center rounded-lg bg-green-400 px-4 py-3 shadow-xl"
+          className="  flex w-full items-center justify-center rounded-lg bg-green-400 px-4 py-4 shadow-xl"
           onPress={handleSubmit(onSubmit)}
         >
           <Text
-            className="text-lg text-white"
+            className="text-xl text-white"
             disabled={isPaymentCreationLoading}
           >
             {isPaymentCreationLoading ? "Loading..." : "Continue"}
           </Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
