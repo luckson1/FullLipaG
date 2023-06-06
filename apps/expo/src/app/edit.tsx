@@ -217,7 +217,7 @@ const ProfileEditingScreen = ({ profile }: { profile: Profile }) => {
         </View>
         <View className="flex w-full flex-[10%] items-center justify-end bg-white px-7 py-2 ">
           <TouchableOpacity
-            className="absolute bottom-2 my-2   flex w-full items-center justify-center rounded-lg bg-green-400 px-4 py-3 shadow-xl"
+            className="absolute bottom-2 my-2   flex w-full items-center justify-center rounded-lg bg-teal-400 px-4 py-3 shadow-xl"
             onPress={handleSubmit(onSubmit)}
           >
             <Text
