@@ -26,6 +26,12 @@ const BankPolicy = ({
   const paymentMethod = useStore((state) => state.paymentMethod);
   return (
     <SafeAreaView className="flex flex-1 flex-col items-start justify-start  p-5">
+      <Stack.Screen
+        options={{
+          headerTitleStyle: { color: "#FFF" },
+          headerStyle: { backgroundColor: "rgb(20 184 166" },
+        }}
+      />
       <View className="my-10 mt-5 flex w-full  flex-row items-center justify-between px-3">
         <TouchableOpacity
           className="rounded-full p-2"
@@ -90,7 +96,7 @@ const BankPolicy = ({
       </View>
 
       <TouchableOpacity
-        className="flex w-full items-center justify-center rounded-lg bg-green-400 py-3 "
+        className="flex w-full items-center justify-center rounded-lg bg-teal-400 py-3 "
         onPress={() => setIsShowModal("transferInfo")}
       >
         <Text className="text-lg text-white"> Understood</Text>
@@ -163,7 +169,7 @@ const TransferInfo = ({
 
         <View className="my-4 flex w-full gap-y-4">
           <TouchableOpacity
-            className="flex w-full items-center justify-center rounded-lg bg-green-400 py-3 "
+            className="flex w-full items-center justify-center rounded-lg bg-teal-400 py-3 "
             onPress={() => {
               router.push(`/transactions/overview/id?id=${transaction.id}`);
               clearPaymentMethod();
