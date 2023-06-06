@@ -1,43 +1,40 @@
-
-import React from 'react'
-import { Stack } from 'expo-router'
+import React from "react";
+import { Stack } from "expo-router";
 
 const _layout = () => {
   return (
-  <Stack>
-    <Stack.Screen
-        name="index"
+    <Stack>
+      <Stack.Screen name="index" />
+      <Stack.Screen
+        name="add"
         options={{
-          // Hide the header for all other routes.
-          headerShown: false,
+          // Set the presentation mode to modal for our modal route.
+          presentation: "modal",
+          headerStyle: { backgroundColor: "rgb(20 184 166)" },
+          headerTitleStyle: { color: "#fff" },
         }}
       />
       <Stack.Screen
-        name="add"
-        
+        name="edit"
         options={{
-          
           // Set the presentation mode to modal for our modal route.
           presentation: "modal",
-               // Hide the header for all other routes.
-               headerShown: false,
-               
+          headerStyle: { backgroundColor: "rgb(20 184 166)" },
+          headerTitleStyle: { color: "#fff" },
         }}
       />
       <Stack.Screen
         name="confirmation"
-        
         options={{
-          
           // Set the presentation mode to modal for our modal route.
           presentation: "modal",
-               // Hide the header for all other routes.
-               headerShown: false,
-               
+          title: "Confirm payment Details",
+          headerStyle: { backgroundColor: "rgb(20 184 166)" },
+          headerTitleStyle: { color: "#fff" },
         }}
       />
-  </Stack>
-  )
-}
+    </Stack>
+  );
+};
 
-export default _layout
+export default _layout;

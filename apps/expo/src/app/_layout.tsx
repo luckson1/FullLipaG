@@ -8,8 +8,6 @@ import { NativeBaseProvider } from "native-base";
 import { TRPCProvider } from "../utils/api";
 import { supabase } from "../utils/supabase";
 
-// This is the main layout of the app
-// It wraps your pages with the providers they need
 export default function RootLayout() {
   return (
     <SessionContextProvider supabaseClient={supabase}>
@@ -19,6 +17,22 @@ export default function RootLayout() {
             <SafeAreaProvider>
               <Stack>
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen
+                  name="transactions"
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen name="auth" options={{ headerShown: false }} />
+                <Stack.Screen name="profile" options={{ headerShown: false }} />
+                <Stack.Screen name="edit" options={{ headerShown: false }} />
+                <Stack.Screen
+                  name="onboarding"
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="verification"
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen name="index" options={{ headerShown: false }} />
               </Stack>
               <StatusBar />
             </SafeAreaProvider>

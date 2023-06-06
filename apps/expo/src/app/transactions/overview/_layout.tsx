@@ -1,12 +1,18 @@
-
-import React from 'react'
-import { Stack } from 'expo-router'
+import React from "react";
+import { Stack } from "expo-router";
 
 const _layout = () => {
   return (
- <Stack  screenOptions={{headerShown: false}}/>
-  )
-}
+    <Stack>
+      <Stack.Screen
+        name="[id]"
+        options={{
+          title: "Transaction Information",
+          headerTitleStyle: { color: "#FFF" },
+        }}
+      />
+    </Stack>
+  );
+};
 
-export default _layout
-
+export default _layout;
