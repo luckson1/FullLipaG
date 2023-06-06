@@ -1,7 +1,6 @@
 import React from "react";
 import { Pressable } from "react-native";
 import { Tabs } from "expo-router";
-import { StatusBar } from "expo-status-bar";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 const _layout = () => {
