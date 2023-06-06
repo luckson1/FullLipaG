@@ -14,6 +14,7 @@ import { Tabs, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { AntDesign } from "@expo/vector-icons";
 import { Avatar, Icon } from "@rneui/themed";
+import moment from "moment";
 
 import { api } from "~/utils/api";
 import LoadingComponent from "~/components/LoadingComponent";
@@ -64,8 +65,9 @@ const Index = () => {
   if (!profile && !isLoading) return <View />;
   return (
     <SafeAreaView className="flex-1 ">
+      <StatusBar backgroundColor="rgb(74 222 128 )" />
       <Tabs.Screen options={{ headerShown: false }} />
-      <StatusBar backgroundColor="rgb(20 184 166)" />
+
       {isLoading && (
         <View className="h-full w-full">
           <LoadingComponent />
@@ -73,7 +75,7 @@ const Index = () => {
       )}
       {!isLoading && profile && (
         <View className="h-full w-full">
-          <ScrollView className=" h-[55%] min-h-[270px] w-full bg-teal-500 px-5  pb-5 pt-16">
+          <ScrollView className=" h-[55%] min-h-[270px] w-full bg-teal-500 px-3  pb-5 pt-16">
             <View className="flex h-full w-full items-center ">
               <View className="flex w-full max-w-md flex-row items-center  justify-between">
                 <View className="flex w-3/4 flex-row items-center justify-center ">
@@ -156,7 +158,7 @@ const Index = () => {
             </View>
           </ScrollView>
 
-          <View className=" flex h-[45%] w-full items-center justify-center bg-white px-5 py-5">
+          <View className=" flex h-[45%] w-full items-center justify-center bg-white px-3 py-5">
             <View className=" mt-3 flex w-full max-w-md flex-row justify-between">
               <Text className="text-xl font-semibold text-slate-600">
                 History
@@ -186,7 +188,7 @@ const Index = () => {
                   <NoContent content="transactions" />
 
                   <TouchableOpacity
-                    className="my-5 w-full rounded-xl bg-green-400 py-3"
+                    className="my-5 w-full rounded-xl bg-teal-400 py-3"
                     onPress={() => {
                       router.push("/send");
                     }}
@@ -209,10 +211,10 @@ const Index = () => {
                           router.push(`transactions/overview/id?id=${item.id}`)
                         }
                       >
-                        <View className="flex w-[65%] flex-row ">
-                          <View className="flex w-1/4  items-center justify-center">
+                        <View className="flex w-[55%] flex-row ">
+                          <View className="flex w-[17%]  items-center justify-center">
                             <AntDesign
-                              size={40}
+                              size={30}
                               name={
                                 item.Status?.at(0)?.name === "Received"
                                   ? "checkcircle"
@@ -240,7 +242,7 @@ const Index = () => {
                             />
                           </View>
 
-                          <View className="flex">
+                          <View className="ml-2 flex w-[80%]">
                             <Text className="font-medium text-slate-600">
                               {item.recipient.name}
                             </Text>
@@ -263,26 +265,31 @@ const Index = () => {
                             </Text>
                           </View>
                         </View>
-                        <View className="flex  w-[35%] flex-row items-center justify-center">
-                          <View className="flex w-[70%] items-center justify-center">
-                            <Text className="text-slate-600">
-                              {item.payment.ExchangeRate.target}
-                            </Text>
-                            <Text className="font-bold text-slate-600">
+                        <View className="flex  w-[45%] flex-row items-center justify-center">
+                          <View className="flex w-[80%] items-start justify-center">
+                            <Text className="font-semibold text-slate-600">
+                              {item.payment.ExchangeRate.target}{" "}
                               {item.payment.sentAmount.toLocaleString()}
                             </Text>
+                            <Text className="text-xs text-slate-600">
+                              {moment(item.Status.at(0)?.createdAt).format(
+                                "D MMM, h:mm a",
+                              )}
+                            </Text>
                           </View>
-                          <AntDesign
-                            name="right"
-                            size={32}
-                            color={"rgb(74 222 128)"}
-                          />
+                          <View className="flex w-[17%] items-center justify-center">
+                            <AntDesign
+                              name="right"
+                              size={30}
+                              color={"rgb(45 212 191)"}
+                            />
+                          </View>
                         </View>
                       </Pressable>
                     )}
                   />
                   <TouchableOpacity
-                    className="  mb-7 flex w-full items-center justify-center rounded-lg bg-green-400 px-4 py-4 shadow-xl"
+                    className="  mb-7 flex w-full items-center justify-center rounded-lg bg-teal-400 px-4 py-4 shadow-xl"
                     onPress={() => {
                       router.push("/send");
                     }}

@@ -5,6 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { AntDesign } from "@expo/vector-icons";
+import moment from "moment";
 import { FlatList } from "native-base";
 
 import { api } from "~/utils/api";
@@ -32,15 +33,18 @@ const Transactions = () => {
   const router = useRouter();
 
   return (
-    <SafeAreaView className="flex-1 bg-white p-5">
-      <Stack.Screen options={{ headerShown: false }} />
+    <SafeAreaView className="flex-1 bg-white p-3">
+      <Stack.Screen
+        options={{
+          title: "History",
+          headerTitleStyle: { color: "#FFF" },
+          headerStyle: { backgroundColor: "rgb(20 184 166" },
+        }}
+      />
       <StatusBar />
 
-      <View className="flex w-full items-start justify-center">
+      <View className="flex w-full items-start justify-center ">
         <View className="w-full  max-w-md">
-          <View className="my-3 py-5">
-            <Text className=" text-center text-xl font-bold">History</Text>
-          </View>
           {isLoading && !isError && (
             <View className="flex h-full w-full items-center justify-center">
               <LoadingComponent />
@@ -57,10 +61,10 @@ const Transactions = () => {
                     router.push(`transactions/overview/id?id=${item.id}`)
                   }
                 >
-                  <View className="flex w-[65%] flex-row ">
-                    <View className="flex w-1/4  items-center justify-center">
+                  <View className="flex w-[55%] flex-row ">
+                    <View className="flex w-[17%]  items-center justify-center">
                       <AntDesign
-                        size={40}
+                        size={30}
                         name={
                           item.Status?.at(0)?.name === "Received"
                             ? "checkcircle"
@@ -88,7 +92,7 @@ const Transactions = () => {
                       />
                     </View>
 
-                    <View className="flex">
+                    <View className="ml-2 flex w-[80%]">
                       <Text className="font-medium text-slate-600">
                         {item.recipient.name}
                       </Text>
@@ -111,20 +115,25 @@ const Transactions = () => {
                       </Text>
                     </View>
                   </View>
-                  <View className="flex  w-[35%] flex-row items-center justify-center">
-                    <View className="flex w-[70%] items-center justify-center">
-                      <Text className="text-slate-600">
-                        {item.payment.ExchangeRate.target}
-                      </Text>
-                      <Text className="font-bold text-slate-600">
+                  <View className="flex  w-[45%] flex-row items-center justify-center">
+                    <View className="flex w-[80%] items-start justify-center">
+                      <Text className="font-semibold text-slate-600">
+                        {item.payment.ExchangeRate.target}{" "}
                         {item.payment.sentAmount.toLocaleString()}
                       </Text>
+                      <Text className="text-xs text-slate-600">
+                        {moment(item.Status.at(0)?.createdAt).format(
+                          "D MMM, h:mm a",
+                        )}
+                      </Text>
                     </View>
-                    <AntDesign
-                      name="right"
-                      size={32}
-                      color={"rgb(74 222 128)"}
-                    />
+                    <View className="flex w-[17%] items-center justify-center">
+                      <AntDesign
+                        name="right"
+                        size={30}
+                        color={"rgb(45 212 191)"}
+                      />
+                    </View>
                   </View>
                 </Pressable>
               )}
