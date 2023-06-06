@@ -54,7 +54,7 @@ const Index = () => {
               Recipients
             </Text>
             <TouchableOpacity
-              className="flex w-24 flex-row items-center justify-around  rounded-md bg-green-400 py-3"
+              className="flex w-24 flex-row items-center justify-around  rounded-md bg-teal-400 py-3"
               onPress={() => router.push("/recipients/add")}
             >
               <AntDesign name="plus" size={24} color={"white"} />
@@ -67,7 +67,7 @@ const Index = () => {
                 <NoContent content="recipients" />
 
                 <TouchableOpacity
-                  className="my-5 w-full rounded-xl bg-green-400 py-3"
+                  className="my-5 w-full rounded-xl bg-teal-400 py-3"
                   onPress={() => router.push("/recipients/add")}
                 >
                   <Text className="text-center text-lg text-white">
@@ -116,7 +116,7 @@ const Index = () => {
                   <View className="flex w-1/4">
                     {paymentInProgress && (
                       <TouchableOpacity
-                        className="flex w-20 flex-row items-center justify-around  rounded-md bg-green-400 py-2"
+                        className="flex w-20 flex-row items-center justify-around  rounded-md bg-teal-400 py-2"
                         onPress={(e) => {
                           e.stopPropagation();
                           addRecipient(item);
@@ -132,7 +132,7 @@ const Index = () => {
                         <AntDesign
                           name="right"
                           size={32}
-                          color={"rgb(74 222 128 )"}
+                          color={"rgb(45 212 191)"}
                         />
                       </View>
                     )}

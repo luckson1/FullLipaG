@@ -164,7 +164,7 @@ const Otp = () => {
         <Pressable
           disabled={isLoading}
           onPress={handleVerification}
-          className="my-5 w-full rounded-md bg-green-400 py-3 "
+          className="my-5 w-full rounded-md bg-teal-400 py-3 "
           android_ripple={{ color: "rgb(20 184 166 )", radius: 40 }}
         >
           <Text className="text-center text-lg text-white">
@@ -179,7 +179,7 @@ const Otp = () => {
         {!isResendDisabled && (
           <TouchableOpacity
             onPress={handleResendOTP}
-            className={` flex items-center rounded-md bg-green-500 px-5 py-3`}
+            className={` flex items-center rounded-md bg-teal-400 px-5 py-3`}
           >
             <Text>Resend code</Text>
           </TouchableOpacity>

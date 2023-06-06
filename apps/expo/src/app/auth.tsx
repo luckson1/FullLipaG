@@ -124,7 +124,7 @@ const LoginScreen = () => {
           disabled={!isAgreed && isLoading}
           onPress={handleSubmit(onSubmit)}
           className={` absolute bottom-10 mb-4 flex w-full flex-row items-center justify-around rounded-lg px-4 py-3 ${
-            isAgreed && !isLoading ? " bg-green-400 " : "bg-slate-200"
+            isAgreed && !isLoading ? " bg-teal-400 " : "bg-slate-200"
           }`}
         >
           <Text

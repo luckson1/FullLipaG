@@ -8,7 +8,7 @@ import {
   View,
 } from "react-native";
 import Toast from "react-native-root-toast";
-import { Tabs, useRouter, useSearchParams } from "expo-router";
+import { Stack, useRouter, useSearchParams } from "expo-router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckIcon, KeyboardAvoidingView, Select } from "native-base";
 import { Controller, useForm } from "react-hook-form";
@@ -108,14 +108,10 @@ const EditRecipientForm = ({ id }: { id: string }) => {
   };
   return (
     <ScrollView className="flex-1 bg-white">
-      <Tabs.Screen options={{ href: null }} />
+      <Stack.Screen options={{ title: "Recipient's Bank Details" }} />
 
       <SafeAreaView className="flex w-full items-center justify-center ">
         <View className="items-between flex w-full max-w-md flex-col justify-between gap-y-5 p-5">
-          <View className="flex  w-full flex-row items-center justify-between">
-            <Text className="text-xl">Recipient&apos;s Bank Details</Text>
-          </View>
-
           <View className=" flex w-full items-start justify-between ">
             <Text className=" mb-2 text-slate-700">Recipient Company Name</Text>
             {errors.name && (
@@ -262,21 +258,14 @@ const EditRecipientForm = ({ id }: { id: string }) => {
           <View className="w-full">
             <TouchableOpacity
               disabled={isLoading}
-              className={`my-5 flex   w-full items-center justify-center rounded-lg ${
-                isLoading ? "bg-slate-300" : " bg-green-400"
+              className={`my-5 flex  w-full items-center justify-center rounded-lg ${
+                isLoading ? "bg-slate-300" : " bg-teal-400"
               } px-4 py-3 shadow-xl`}
               onPress={handleSubmit(onSubmit)}
             >
               <Text className="text-xl font-bold text-white">
                 {isLoading ? "Loading...." : "Add Recipient"}
               </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              disabled={isLoading}
-              className="my-2 flex w-full   items-center justify-center rounded-lg border border-green-400 bg-white px-4 py-3 shadow-xl focus:bg-green-400"
-              onPress={() => router.back()}
-            >
-              <Text className="text-xl font-bold">Cancel</Text>
             </TouchableOpacity>
           </View>
         </View>

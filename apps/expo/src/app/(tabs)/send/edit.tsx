@@ -246,7 +246,7 @@ const Form = ({
         </KeyboardAvoidingView>
 
         <TouchableOpacity
-          className="absolute bottom-5   flex w-full items-center justify-center rounded-lg bg-green-400 px-4 py-3 shadow-xl"
+          className="absolute bottom-5   flex w-full items-center justify-center rounded-lg bg-teal-400 px-4 py-3 shadow-xl"
           onPress={handleSubmit(onSubmit)}
         >
           <Text className="text-lg text-white" disabled={isLoading}>

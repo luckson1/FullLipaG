@@ -141,7 +141,7 @@ const Confirmation = () => {
             <TouchableOpacity
               disabled={isLoading}
               className={`my-2 flex w-full   items-center justify-center rounded-lg ${
-                isLoading ? "bg-slate-500" : " bg-green-400"
+                isLoading ? "bg-slate-500" : " bg-teal-400"
               } px-4 py-3 shadow-xl`}
               onPress={() =>
                 addTransaction({

@@ -230,7 +230,7 @@ const Form = () => {
       </View>
       <View className="flex flex-[30%] items-start justify-end">
         <TouchableOpacity
-          className="  flex w-full items-center justify-center rounded-lg bg-green-400 px-4 py-4 shadow-xl"
+          className="  flex w-full items-center justify-center rounded-lg bg-teal-400 px-4 py-4 shadow-xl"
           onPress={handleSubmit(onSubmit)}
         >
           <Text

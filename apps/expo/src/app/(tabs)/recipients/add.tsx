@@ -8,7 +8,7 @@ import {
   View,
 } from "react-native";
 import Toast from "react-native-root-toast";
-import { Tabs, useRouter } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckIcon, KeyboardAvoidingView, Select } from "native-base";
 import { Controller, useForm } from "react-hook-form";
@@ -87,14 +87,10 @@ const RecipientForm = () => {
   };
   return (
     <ScrollView className="flex-1 bg-white">
-      <Tabs.Screen options={{ href: null }} />
+      <Stack.Screen options={{ title: "Recipient's Bank Details" }} />
 
       <SafeAreaView className="flex w-full items-center justify-center ">
         <View className="items-between flex w-full max-w-md flex-col justify-between gap-y-5 p-5">
-          <View className="flex  w-full flex-row items-center justify-between">
-            <Text className="text-xl">Recipient&apos;s Bank Details</Text>
-          </View>
-
           <View className=" flex w-full items-start justify-between ">
             <Text className=" mb-2 text-slate-700">Recipient Company Name</Text>
             {errors.name && (
@@ -106,9 +102,9 @@ const RecipientForm = () => {
                 <TextInput
                   onBlur={onBlur}
                   onChangeText={(value) => onChange(value)}
-                  className={`block w-full rounded-md border  px-4 py-3 ${
+                  className={`block w-full rounded-md border  bg-slate-50 bg-opacity-10 px-4 py-3 ${
                     errors.name
-                      ? "border-red-500 bg-slate-50 bg-opacity-10 focus:border-green-300 focus:ring-green-300"
+                      ? "border-red-500 focus:border-green-300 focus:ring-green-300"
                       : " border-gray-300  focus:border-green-500 focus:ring-green-300"
                   }`}
                   value={value}
@@ -133,7 +129,7 @@ const RecipientForm = () => {
                 <TextInput
                   onBlur={onBlur}
                   onChangeText={onChange}
-                  className={`block w-full rounded-md border  px-4 py-3 ${
+                  className={`block w-full rounded-md border  bg-slate-50 bg-opacity-10  px-4 py-3 ${
                     errors.bankName
                       ? "border-red-500 bg-slate-50 bg-opacity-10 focus:border-green-500 focus:ring-green-500"
                       : " border-gray-300  focus:border-green-500 focus:ring-green-500"
@@ -242,20 +238,13 @@ const RecipientForm = () => {
             <TouchableOpacity
               disabled={isLoading}
               className={`my-5 flex   w-full items-center justify-center rounded-lg ${
-                isLoading ? "bg-slate-300" : " bg-green-400"
+                isLoading ? "bg-slate-300" : " bg-teal-400"
               } px-4 py-3 shadow-xl`}
               onPress={handleSubmit(onSubmit)}
             >
               <Text className="text-xl font-bold text-white">
                 {isLoading ? "Loading...." : "Add Recipient"}
               </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              disabled={isLoading}
-              className="my-2 flex w-full   items-center justify-center rounded-lg border border-green-400 bg-white px-4 py-3 shadow-xl focus:bg-green-400"
-              onPress={() => router.back()}
-            >
-              <Text className="text-xl font-bold">Cancel</Text>
             </TouchableOpacity>
           </View>
         </View>

@@ -1,14 +1,9 @@
 import React from "react";
-import {
-  Pressable,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-root-toast";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Stack, useRouter } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import { AntDesign, Entypo } from "@expo/vector-icons";
 import { Avatar } from "@rneui/themed";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
@@ -34,8 +29,8 @@ const Account = () => {
   });
   return (
     <ScrollView className="flex-1">
+      <StatusBar />
       <SafeAreaProvider className="flex h-full w-full items-center justify-center bg-white ">
-        <Stack.Screen options={{ headerShown: false }} />
         <View className="my-10 flex w-full max-w-md p-5">
           <View className="my-10  border-b border-slate-300 py-2">
             <Text className=" text-lg">You are using the service as</Text>
@@ -66,7 +61,7 @@ const Account = () => {
 
             <View className="flex h-fit w-1/4 flex-row gap-2">
               <TouchableOpacity
-                className="rounded-md bg-green-400 px-5 py-2"
+                className="rounded-md bg-teal-400 px-5 py-2"
                 onPress={() => router.push("/editProfile")}
               >
                 <Text>Edit</Text>
@@ -89,14 +84,14 @@ const Account = () => {
                 </View>
 
                 <View className=" w-1/6 rounded-full">
-                  <AntDesign name="right" size={24} color={"#4ade80"} />
+                  <AntDesign name="right" size={24} color={"rgb(45 212 191)"} />
                 </View>
               </View>
             </View>
           </TouchableOpacity>
           <TouchableOpacity
             className=" mt-7 flex w-full items-center justify-center   p-2 "
-            onPress={() => router.push("/editProfile")}
+            onPress={() => router.push("/edit")}
           >
             <View className="w-full">
               <View className="flex w-full flex-row items-center justify-between">
@@ -111,7 +106,11 @@ const Account = () => {
                 </View>
                 <View className="w-1/6">
                   <View className="rounded-full">
-                    <AntDesign name="right" size={24} color={"#4ade80"} />
+                    <AntDesign
+                      name="right"
+                      size={24}
+                      color={"rgb(45 212 191)"}
+                    />
                   </View>
                 </View>
               </View>
@@ -130,7 +129,11 @@ const Account = () => {
                 </View>
                 <View className="w-1/6">
                   <View className="rounded-full">
-                    <AntDesign name="right" size={24} color={"#4ade80"} />
+                    <AntDesign
+                      name="right"
+                      size={24}
+                      color={"rgb(45 212 191)"}
+                    />
                   </View>
                 </View>
               </View>
@@ -152,7 +155,11 @@ const Account = () => {
                 </View>
                 <View className="w-1/6">
                   <View className="rounded-full">
-                    <AntDesign name="right" size={24} color={"#4ade80"} />
+                    <AntDesign
+                      name="right"
+                      size={24}
+                      color={"rgb(45 212 191)"}
+                    />
                   </View>
                 </View>
               </View>
@@ -171,7 +178,11 @@ const Account = () => {
                 </View>
                 <View className="w-1/6">
                   <View className="rounded-full">
-                    <AntDesign name="right" size={24} color={"#4ade80"} />
+                    <AntDesign
+                      name="right"
+                      size={24}
+                      color={"rgb(45 212 191)"}
+                    />
                   </View>
                 </View>
               </View>

@@ -32,6 +32,8 @@ const RecipientCard = ({ id }: { id: string }) => {
       <Stack.Screen
         options={{
           presentation: "modal",
+          headerStyle: { backgroundColor: "rgb(20 184 166)" },
+          headerTitleStyle: { color: "#fff" },
           headerTitle: `${recipient?.name ?? "Recipient"}'s details`,
         }}
       />

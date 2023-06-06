@@ -378,7 +378,7 @@ const TransactionsDetails = ({
               onPress={handleSubmit(onSubmit)}
               disabled={isLoading}
               className={` mt-3 flex w-full flex-row items-center justify-around rounded-lg ${
-                isLoading ? "bg-slate-400" : " bg-green-400"
+                isLoading ? "bg-slate-400" : " bg-teal-400"
               } px-4 py-3.5 `}
             >
               <Text className={` "text-lg text-gray-50" font-bold`}>
@@ -420,7 +420,9 @@ const PaymentId = () => {
   return (
     <ScrollView className="flex-1 ">
       <SafeAreaView className="h-fit min-h-screen  w-full bg-white pb-3">
-        <Stack.Screen options={{ headerShown: false }} />
+        <Stack.Screen
+          options={{ headerStyle: { backgroundColor: "rgb(20 184 166)" } }}
+        />
         <StatusBar />
         {isLoading && !isError && (
           <View className="flex h-full w-full items-center justify-center bg-teal-500">
