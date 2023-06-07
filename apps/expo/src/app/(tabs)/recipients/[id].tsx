@@ -1,4 +1,4 @@
-import { SafeAreaView, ScrollView, Text, TouchableOpacity } from "react-native";
+import { SafeAreaView, Text, TouchableOpacity } from "react-native";
 import Toast from "react-native-root-toast";
 import { Stack, useRouter, useSearchParams } from "expo-router";
 import { AntDesign } from "@expo/vector-icons";
@@ -28,7 +28,7 @@ const RecipientCard = ({ id }: { id: string }) => {
     },
   );
   return (
-    <ScrollView className="flex-1 bg-white">
+    <View className="flex-1 bg-white">
       <Stack.Screen
         options={{
           presentation: "modal",
@@ -37,8 +37,12 @@ const RecipientCard = ({ id }: { id: string }) => {
           headerTitle: `${recipient?.name ?? "Recipient"}'s details`,
         }}
       />
-      <SafeAreaView className="flex w-full flex-col items-center justify-between  p-5">
-        {isLoading && <LoadingComponent />}
+      <SafeAreaView className="flex h-full w-full flex-col items-center justify-between  p-5">
+        {isLoading && (
+          <View className="h-full w-full">
+            <LoadingComponent />
+          </View>
+        )}
         {recipient && (
           <View className=" my-5 w-full rounded-xl border border-slate-300 bg-slate-50 bg-opacity-5 py-3 shadow-xl">
             <View className="flex w-full flex-row justify-between px-5 py-3">
@@ -71,7 +75,7 @@ const RecipientCard = ({ id }: { id: string }) => {
           </View>
         )}
       </SafeAreaView>
-    </ScrollView>
+    </View>
   );
 };
 
