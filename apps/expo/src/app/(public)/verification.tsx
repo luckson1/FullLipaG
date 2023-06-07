@@ -12,7 +12,8 @@ import {
 import Toast from "react-native-root-toast";
 import { Stack, useRouter, useSearchParams } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
+
+import { supabase } from "~/utils/supabase";
 
 const Otp = () => {
   const params = useSearchParams();
@@ -90,27 +91,19 @@ const Otp = () => {
       setOtpCode(updatedOtpCode);
     }
   };
-  const supabase = useSupabaseClient();
-  // const handleResendOtp = async () => {
-  //   await supabase.auth.signInWithOtp({
-  //     phone: `+254${phoneNumber}`,
-  //   });
-  // };
+
   const [isLoading, setIsLoading] = useState(false);
   const handleVerification = async () => {
     try {
       setIsLoading(true);
-      const {
-        error,
-        data: { session },
-      } = await supabase.auth.verifyOtp({
+      const { error, data: session } = await supabase.auth.verifyOtp({
         phone: `+254${phoneNumber}`,
         token: otpCode.join(""),
         type: "sms",
         options: { redirectTo: `/home` },
       });
       if (session) {
-        navigation.push("/home");
+        navigation.replace("/home");
         setIsLoading(false);
       }
       if (error) {
@@ -125,7 +118,17 @@ const Otp = () => {
         });
         setIsLoading(false);
       }
-    } catch (error) {}
+    } catch (error) {
+      Toast.show("An error occured. Try again", {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.TOP,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        textColor: "red",
+        delay: 0,
+      });
+    }
   };
 
   return (

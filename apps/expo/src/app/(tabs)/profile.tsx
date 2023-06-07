@@ -39,8 +39,8 @@ const ProfileCreationScreen = () => {
 
   const { mutate: createProfile, isLoading: isProfileCreationLoading } =
     api.profile.create.useMutation({
-      onError(error) {
-        Toast.show(error.message, {
+      onError() {
+        Toast.show(" Unable to create Profile, Try Again", {
           duration: Toast.durations.SHORT,
           position: Toast.positions.TOP,
           shadow: true,

@@ -39,7 +39,7 @@ const LoginScreen = () => {
       phone: `+254${data.phoneNumber}`,
     });
     if (userSession) {
-      router.push(`/verification?number=${data.phoneNumber}`);
+      router.replace(`/verification?number=${data.phoneNumber}`);
       setIsLoading(false);
     }
     if (error) {
@@ -60,6 +60,7 @@ const LoginScreen = () => {
   const [isAgreed, setIsAgreed] = useState(true);
   return (
     <SafeAreaView className="h-screen w-screen flex-1 bg-white">
+      <StatusBar />
       <Stack.Screen options={{ headerShown: false }} />
       <StatusBar />
       <View className="flex h-full w-full flex-[80%] items-center justify-center p-5">

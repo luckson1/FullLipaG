@@ -26,12 +26,6 @@ const BankPolicy = ({
   const paymentMethod = useStore((state) => state.paymentMethod);
   return (
     <SafeAreaView className="flex flex-1 flex-col items-start justify-start  p-5">
-      <Stack.Screen
-        options={{
-          headerTitleStyle: { color: "#FFF" },
-          headerStyle: { backgroundColor: "rgb(20 184 166" },
-        }}
-      />
       <View className="my-10 mt-5 flex w-full  flex-row items-center justify-between px-3">
         <TouchableOpacity
           className="rounded-full p-2"
@@ -388,7 +382,7 @@ const TransactionId = () => {
   return (
     <SafeAreaView className="flex-1 bg-white">
       {isLoading && !isError && (
-        <View className="flex h-full w-full items-center justify-center">
+        <View className=" flex h-full w-full">
           <LoadingComponent />
         </View>
       )}

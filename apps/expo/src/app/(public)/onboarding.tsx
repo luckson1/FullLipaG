@@ -43,7 +43,7 @@ const DATA = [
   },
 ];
 
-const bgs = ["#818cf8", "#059669", "#34d399", "#4ade80"];
+const bgs = ["#14b8a6", "#6366f1", "#14b8a6", "#6366f1"];
 const Indicator = ({
   scrollX,
   width,
@@ -163,7 +163,7 @@ const Onboarding = () => {
 
   return (
     <View className="flex flex-1 items-center justify-center bg-white">
-      <StatusBar hidden />
+      <StatusBar />
       <Stack.Screen options={{ headerShown: false }} />
 
       <Backdrop scrollX={scrollX} width={width} />

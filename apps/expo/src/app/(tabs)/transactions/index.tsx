@@ -36,7 +36,6 @@ const Transactions = () => {
     <SafeAreaView className="flex-1 bg-white p-3">
       <Stack.Screen
         options={{
-          title: "History",
           headerTitleStyle: { color: "#FFF" },
           headerStyle: { backgroundColor: "rgb(20 184 166" },
         }}

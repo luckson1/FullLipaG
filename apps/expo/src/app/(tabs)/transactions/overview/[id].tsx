@@ -91,6 +91,28 @@ const PaymentTrackingScreen = ({
     Status: Status[];
   };
 }) => {
+  const schema = z.object({
+    bankReferenceNumber: z.string(),
+  });
+
+  const { mutate: addBankReference, isLoading } =
+    api.transaction.addBankRef.useMutation({
+      onError(error) {
+        Toast.show(error.message, {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.TOP,
+          shadow: true,
+          backgroundColor: "white",
+          animation: true,
+          hideOnPress: true,
+          textColor: "red",
+          delay: 0,
+        });
+      },
+      onSuccess: async () => {
+        await ctx.transaction.invalidate();
+      },
+    });
   const statuses = transaction.Status;
   const data = statuses.map((s) => ({
     time: s.createdAt.toLocaleString(),
@@ -123,21 +145,36 @@ const PaymentTrackingScreen = ({
   const isReceived = statuses.at(lastIndexStatus)?.name === "Received";
   const cannotCancel =
     isCancelled || isDeclined || isSent || isProcessed || isReceived;
-  const { mutate: cancel, isLoading } = api.transaction.cancel.useMutation({
-    onError(error) {
-      Toast.show(`An Error Occured: ${error.message}`, {
-        duration: Toast.durations.SHORT,
-        position: Toast.positions.TOP,
-        shadow: true,
-        animation: true,
-        hideOnPress: true,
-        textColor: "red",
-        delay: 0,
-      });
-    },
-    onSuccess: async () => {
-      await ctx.transaction.invalidate();
-    },
+  const { mutate: cancel, isLoading: isCancelLoading } =
+    api.transaction.cancel.useMutation({
+      onError(error) {
+        Toast.show(`An Error Occured: ${error.message}`, {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.TOP,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          textColor: "red",
+          delay: 0,
+        });
+      },
+      onSuccess: async () => {
+        await ctx.transaction.invalidate();
+      },
+    });
+  type FormData = z.infer<typeof schema>;
+  const onSubmit = (data: FormData) => {
+    addBankReference({
+      id: transaction.id,
+      ...data,
+    });
+  };
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: zodResolver(schema),
   });
   return (
     <ScrollView style={styles.container}>
@@ -154,6 +191,53 @@ const PaymentTrackingScreen = ({
           </View>
         </View>
       ))}
+      {((!isCancelled && !transaction.bankReferenceNumber) || isDeclined) && (
+        <View className="mt-7 h-fit w-full rounded-md border border-slate-300 bg-slate-50 bg-opacity-50 p-3 shadow-xl">
+          <Text className="mt-3 text-xl font-semibold text-slate-700">
+            Payment confirmation
+          </Text>
+          <View className="mt-3  flex w-full justify-between">
+            <View className=" flex w-full items-start justify-between ">
+              <Text className=" mb-2 text-slate-700">
+                Enter the bank reference number
+              </Text>
+              {errors.bankReferenceNumber && (
+                <Text className=" mb-2 text-red-500">
+                  {errors.bankReferenceNumber.message}
+                </Text>
+              )}
+              <Controller
+                control={control}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    onBlur={onBlur}
+                    placeholder="Bank reference number"
+                    onChangeText={(value) => onChange(value)}
+                    className={`block w-full rounded-md border bg-white px-4 py-3 ${
+                      errors.bankReferenceNumber
+                        ? "border-red-500  focus:border-green-500 focus:ring-green-500"
+                        : " border-gray-300  focus:border-green-500 focus:ring-green-500"
+                    }`}
+                    value={value}
+                  />
+                )}
+                name="bankReferenceNumber"
+              />
+            </View>
+            <Pressable
+              onPress={handleSubmit(onSubmit)}
+              disabled={isCancelLoading}
+              className={` mt-3 flex w-full flex-row items-center justify-around rounded-lg ${
+                isLoading ? "bg-slate-400" : " bg-teal-400"
+              } px-4 py-3.5 `}
+            >
+              <Text className={` "text-lg text-gray-50" font-bold`}>
+                Confirm payment
+              </Text>
+            </Pressable>
+          </View>
+        </View>
+      )}
       {!cannotCancel && (
         <View className="my-5 flex items-center justify-center">
           <TouchableOpacity
@@ -247,47 +331,12 @@ const TransactionsDetails = ({
     Status: Status[];
   };
 }) => {
-  const schema = z.object({
-    bankReferenceNumber: z.string(),
-  });
-  const ctx = api.useContext();
-  const { mutate: addBankReference, isLoading } =
-    api.transaction.addBankRef.useMutation({
-      onError(error) {
-        Toast.show(error.message, {
-          duration: Toast.durations.SHORT,
-          position: Toast.positions.TOP,
-          shadow: true,
-          backgroundColor: "white",
-          animation: true,
-          hideOnPress: true,
-          textColor: "red",
-          delay: 0,
-        });
-      },
-      onSuccess: async () => {
-        await ctx.transaction.invalidate();
-      },
-    });
   const statuses = transaction.Status;
   const lastIndexStatus = statuses.length - 1;
   const isCancelled = statuses.at(lastIndexStatus)?.name === "Cancelled";
   const isDeclined = statuses.at(lastIndexStatus)?.name === "Declined";
   const isNewBankReferenceNeeded = isCancelled || isDeclined;
-  type FormData = z.infer<typeof schema>;
-  const onSubmit = (data: FormData) => {
-    addBankReference({
-      id: transaction.id,
-      ...data,
-    });
-  };
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormData>({
-    resolver: zodResolver(schema),
-  });
+
   return (
     <View className="my-5 h-full  w-full">
       <View className="mt-7 h-fit w-full rounded-md border border-slate-300 bg-slate-50 bg-opacity-50 p-3 shadow-xl">
@@ -341,53 +390,6 @@ const TransactionsDetails = ({
           <Text className="text-base">{transaction.recipient.bankAccount}</Text>
         </View>
       </View>
-      {((!isCancelled && !transaction.bankReferenceNumber) || isDeclined) && (
-        <View className="mt-7 h-fit w-full rounded-md border border-slate-300 bg-slate-50 bg-opacity-50 p-3 shadow-xl">
-          <Text className="mt-3 text-xl font-semibold text-slate-700">
-            Payment confirmation
-          </Text>
-          <View className="mt-3  flex w-full justify-between">
-            <View className=" flex w-full items-start justify-between ">
-              <Text className=" mb-2 text-slate-700">
-                Enter the bank reference number
-              </Text>
-              {errors.bankReferenceNumber && (
-                <Text className=" mb-2 text-red-500">
-                  {errors.bankReferenceNumber.message}
-                </Text>
-              )}
-              <Controller
-                control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <TextInput
-                    onBlur={onBlur}
-                    placeholder="Bank reference number"
-                    onChangeText={(value) => onChange(value)}
-                    className={`block w-full rounded-md border bg-white px-4 py-3 ${
-                      errors.bankReferenceNumber
-                        ? "border-red-500  focus:border-green-500 focus:ring-green-500"
-                        : " border-gray-300  focus:border-green-500 focus:ring-green-500"
-                    }`}
-                    value={value}
-                  />
-                )}
-                name="bankReferenceNumber"
-              />
-            </View>
-            <Pressable
-              onPress={handleSubmit(onSubmit)}
-              disabled={isLoading}
-              className={` mt-3 flex w-full flex-row items-center justify-around rounded-lg ${
-                isLoading ? "bg-slate-400" : " bg-teal-400"
-              } px-4 py-3.5 `}
-            >
-              <Text className={` "text-lg text-gray-50" font-bold`}>
-                Confirm payment
-              </Text>
-            </Pressable>
-          </View>
-        </View>
-      )}
     </View>
   );
 };
@@ -415,20 +417,21 @@ const PaymentId = () => {
     },
   );
 
-  const [view, setView] = useState<ViewState>("overview");
+  const [view, setView] = useState<ViewState>("timeline");
 
   return (
     <ScrollView className="flex-1 ">
+      {isLoading && !isError && (
+        <View className="flex h-full w-full items-center justify-center bg-teal-500">
+          <LoadingComponent />
+        </View>
+      )}
       <SafeAreaView className="h-fit min-h-screen  w-full bg-white pb-3">
         <Stack.Screen
           options={{ headerStyle: { backgroundColor: "rgb(20 184 166)" } }}
         />
         <StatusBar />
-        {isLoading && !isError && (
-          <View className="flex h-full w-full items-center justify-center bg-teal-500">
-            <LoadingComponent />
-          </View>
-        )}
+
         {!isLoading && transaction && (
           <View className="h-full w-full p-5">
             <Tab view={view} setView={setView} />
