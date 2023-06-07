@@ -57,7 +57,9 @@ const Transactions = () => {
                 <Pressable
                   className="my-5 flex flex-row  justify-between"
                   onPress={() =>
-                    router.push(`transactions/overview/id?id=${item.id}`)
+                    router.push(
+                      `transactions/overview/id?transactionId=${item.id}`,
+                    )
                   }
                 >
                   <View className="flex w-[55%] flex-row ">

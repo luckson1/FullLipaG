@@ -18,6 +18,7 @@ import { z } from "zod";
 
 import { api } from "~/utils/api";
 import LoadingComponent from "~/components/LoadingComponent";
+import NoContent from "~/components/NoContent";
 import {
   type ExchangeRate,
   type Payment,
@@ -393,9 +394,7 @@ const TransactionsDetails = ({
     </View>
   );
 };
-const PaymentId = () => {
-  const params = useSearchParams();
-  const id = params.id as string;
+const PaymentDetails = ({ id }: { id: string }) => {
   const {
     data: transaction,
     isError,
@@ -445,6 +444,17 @@ const PaymentId = () => {
         )}
       </SafeAreaView>
     </ScrollView>
+  );
+};
+
+const PaymentId = () => {
+  const params = useSearchParams();
+  const id = params.transactionId;
+  return (
+    <View className="flex-1">
+      {id && typeof id === "string" && <PaymentDetails id={id} />}
+      {!id || (typeof id !== "string" && <NoContent content="transaction" />)}
+    </View>
   );
 };
 

@@ -87,7 +87,7 @@ const Index = () => {
                   className="my-5 flex w-full flex-row  items-center justify-between"
                   onPress={() => {
                     addRecipient(item);
-                    router.push(`/recipients/id?id=${item.id}`);
+                    router.push(`/recipients/id?recipientId=${item.id}`);
                   }}
                 >
                   <View className="flex w-8/12 flex-row  items-center">

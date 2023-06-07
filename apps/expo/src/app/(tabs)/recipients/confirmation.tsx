@@ -23,7 +23,7 @@ const Confirmation = () => {
     {
       async onSuccess(transaction) {
         await ctx.transaction.invalidate();
-        router.replace(`/transactions/id?id=${transaction.id}`);
+        router.replace(`/transactions/id?transactionId=${transaction.id}`);
         clearPayment();
         clearRecipient();
       },
@@ -75,7 +75,9 @@ const Confirmation = () => {
               <TouchableOpacity
                 className="flex w-20 flex-row items-center justify-around "
                 onPress={() => {
-                  router.push(`/recipients/edit?id=${currentRecipient.id}`);
+                  router.push(
+                    `/recipients/edit?recipientId=${currentRecipient.id}`,
+                  );
                 }}
               >
                 <Text className=" text-sm text-sky-500">Edit</Text>

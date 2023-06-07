@@ -15,6 +15,7 @@ import { Icon } from "@rneui/themed";
 import { api } from "~/utils/api";
 import useStore from "~/utils/zuztand";
 import LoadingComponent from "~/components/LoadingComponent";
+import NoContent from "~/components/NoContent";
 import { type Transaction } from ".prisma/client";
 
 type ModalType = "paymentMethod" | "bankPolicy" | "transferInfo";
@@ -165,7 +166,9 @@ const TransferInfo = ({
           <TouchableOpacity
             className="flex w-full items-center justify-center rounded-lg bg-teal-400 py-3 "
             onPress={() => {
-              router.push(`/transactions/overview/id?id=${transaction.id}`);
+              router.push(
+                `/transactions/overview/id?transactionId=${transaction.id}`,
+              );
               clearPaymentMethod();
             }}
           >
@@ -174,7 +177,9 @@ const TransferInfo = ({
           <TouchableOpacity
             className="flex w-full items-center justify-center rounded-lg border border-green-400 bg-inherit py-3"
             onPress={() => {
-              router.push(`/transactions/overview/id?id=${transaction.id}`);
+              router.push(
+                `/transactions/overview/id?transactionId=${transaction.id}`,
+              );
               clearPaymentMethod();
             }}
           >
@@ -352,12 +357,11 @@ const PaymentMethod = ({
   );
 };
 
-const TransactionId = () => {
+const TransactionDetails = ({ id }: { id: string }) => {
   <Stack.Screen options={{ headerShown: false }} />;
 
   const [isShowModal, setIsShowModal] = useState<ModalType>("paymentMethod");
-  const params = useSearchParams();
-  const id = params.id as string;
+
   const {
     data: transaction,
     isError,
@@ -409,6 +413,17 @@ const TransactionId = () => {
         </View>
       )}
     </SafeAreaView>
+  );
+};
+
+const TransactionId = () => {
+  const params = useSearchParams();
+  const id = params.transactionId;
+  return (
+    <View className="flex-1">
+      {id && typeof id === "string" && <TransactionDetails id={id} />}
+      {!id || (typeof id !== "string" && <NoContent content="transaction" />)}
+    </View>
   );
 };
 

@@ -65,7 +65,7 @@ const RecipientCard = ({ id }: { id: string }) => {
               <TouchableOpacity
                 className="my-3 flex flex-row items-center"
                 onPress={() => {
-                  router.push(`/recipients/edit?id=${recipient.id}`);
+                  router.push(`/recipients/edit?recipientId=${recipient.id}`);
                 }}
               >
                 <Text className=" mr-3  text-sky-500">Edit</Text>
@@ -82,7 +82,7 @@ const RecipientCard = ({ id }: { id: string }) => {
 const RecipientId = () => {
   const params = useSearchParams();
 
-  const id = params.id;
+  const id = params.recipientId;
 
   return (
     <View className="flex-1">

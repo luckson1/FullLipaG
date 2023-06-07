@@ -277,7 +277,7 @@ const EditRecipientForm = ({ id }: { id: string }) => {
 const Edit = () => {
   const params = useSearchParams();
 
-  const id = params.id;
+  const id = params.recipientId;
 
   return (
     <View className="flex-1">
