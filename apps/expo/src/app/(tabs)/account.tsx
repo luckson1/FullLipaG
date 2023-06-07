@@ -2,16 +2,15 @@ import React from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-root-toast";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { Stack, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { AntDesign, Entypo } from "@expo/vector-icons";
 import { Avatar } from "@rneui/themed";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
 import { api } from "~/utils/api";
+import { supabase } from "~/utils/supabase";
 
 const Account = () => {
-  const supabase = useSupabaseClient();
   const router = useRouter();
   const { data: profile } = api.profile.getUserProfile.useQuery(undefined, {
     onError(error) {
@@ -141,7 +140,10 @@ const Account = () => {
           </TouchableOpacity>
           <TouchableOpacity
             className=" mt-7 flex w-full items-center justify-center   p-2 "
-            onPress={() => supabase.auth.signOut()}
+            onPress={async () => {
+              await supabase.auth.signOut();
+              router.replace("/onboarding");
+            }}
           >
             <View className="w-full">
               <View className="flex w-full flex-row items-center justify-between">
