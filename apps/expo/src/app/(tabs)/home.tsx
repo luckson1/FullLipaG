@@ -65,7 +65,7 @@ const Index = () => {
   if (!profile && !isLoading) return <View />;
   return (
     <SafeAreaView className="flex-1 ">
-      <StatusBar backgroundColor="rgb(74 222 128 )" />
+      <StatusBar backgroundColor="rgb(20 184 166)" />
       <Tabs.Screen options={{ headerShown: false }} />
 
       {isLoading && (
@@ -289,7 +289,7 @@ const Index = () => {
                     )}
                   />
                   <TouchableOpacity
-                    className="  mb-7 flex w-full items-center justify-center rounded-lg bg-teal-400 px-4 py-4 shadow-xl"
+                    className="  mb-7 flex w-full items-center justify-center rounded-lg bg-teal-400 px-4 py-3 shadow-xl"
                     onPress={() => {
                       router.push("/send");
                     }}
