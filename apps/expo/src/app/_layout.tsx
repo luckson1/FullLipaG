@@ -17,21 +17,12 @@ export default function RootLayout() {
             <SafeAreaProvider>
               <Stack>
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+
                 <Stack.Screen
-                  name="transactions"
+                  name="(public)"
                   options={{ headerShown: false }}
                 />
-                <Stack.Screen name="auth" options={{ headerShown: false }} />
-                <Stack.Screen name="profile" options={{ headerShown: false }} />
-                <Stack.Screen name="edit" options={{ headerShown: false }} />
-                <Stack.Screen
-                  name="onboarding"
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name="verification"
-                  options={{ headerShown: false }}
-                />
+
                 <Stack.Screen name="index" options={{ headerShown: false }} />
               </Stack>
               <StatusBar />
