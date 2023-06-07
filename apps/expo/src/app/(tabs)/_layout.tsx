@@ -29,7 +29,7 @@ const _layout = () => {
 
           tabBarStyle: { backgroundColor: "#f8fafc" },
           headerTitleStyle: { fontSize: 16 },
-          tabBarActiveTintColor: "rgb(45 212 191)",
+          tabBarActiveTintColor: "#6366f1",
           tabBarInactiveTintColor: "#94a3b8",
           tabBarLabelStyle: { fontSize: 14 },
 
@@ -44,7 +44,7 @@ const _layout = () => {
           headerTitleAlign: "center",
           headerTitleStyle: { fontSize: 16, color: "#fff" },
           tabBarStyle: { backgroundColor: "#f8fafc" },
-          tabBarActiveTintColor: "rgb(45 212 191)",
+          tabBarActiveTintColor: "#6366f1",
           tabBarInactiveTintColor: "#94a3b8",
           tabBarLabelStyle: { fontSize: 14 },
           tabBarButton: (props) => (
@@ -64,14 +64,14 @@ const _layout = () => {
       <Tabs.Screen
         name="recipients"
         options={{
-          title: "Recepients",
+          headerShown: false,
 
           headerTitleAlign: "center",
 
           headerStyle: { backgroundColor: " rgb(20 184 166)" },
           headerTitleStyle: { fontSize: 16, color: "#fff" },
           tabBarStyle: { backgroundColor: "#f8fafc" },
-          tabBarActiveTintColor: "rgb(45 212 191)",
+          tabBarActiveTintColor: "#6366f1",
           tabBarInactiveTintColor: "#94a3b8",
           tabBarLabelStyle: { fontSize: 14 },
           tabBarButton: (props) => (
@@ -95,7 +95,7 @@ const _layout = () => {
           headerStyle: { backgroundColor: " rgb(20 184 166)" },
           headerTitleStyle: { fontSize: 16, color: "#fff" },
           tabBarStyle: { backgroundColor: "#f8fafc" },
-          tabBarActiveTintColor: "rgb(45 212 191)",
+          tabBarActiveTintColor: "#6366f1",
           tabBarInactiveTintColor: "#94a3b8",
           tabBarLabelStyle: { fontSize: 14 },
           tabBarButton: (props) => (
@@ -108,6 +108,42 @@ const _layout = () => {
             />
           ),
           tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="transactions"
+        options={{
+          headerShown: false,
+
+          headerTitleAlign: "center",
+
+          headerStyle: { backgroundColor: " rgb(20 184 166)" },
+          headerTitleStyle: { fontSize: 16, color: "#fff" },
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          headerShown: false,
+
+          headerTitleAlign: "center",
+
+          headerStyle: { backgroundColor: " rgb(20 184 166)" },
+          headerTitleStyle: { fontSize: 16, color: "#fff" },
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="edit"
+        options={{
+          headerShown: false,
+
+          headerTitleAlign: "center",
+
+          headerStyle: { backgroundColor: " rgb(20 184 166)" },
+          headerTitleStyle: { fontSize: 16, color: "#fff" },
+          href: null,
         }}
       />
     </Tabs>
