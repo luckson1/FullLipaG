@@ -123,9 +123,9 @@ const EditRecipientForm = ({ id }: { id: string }) => {
                 <TextInput
                   onBlur={onBlur}
                   onChangeText={(value) => onChange(value)}
-                  className={`block w-full rounded-md border  px-4 py-3 ${
+                  className={`block w-full rounded-md border  bg-slate-50 bg-opacity-10 px-4 py-3 ${
                     errors.name
-                      ? "border-red-500 bg-slate-50 bg-opacity-10 focus:border-green-300 focus:ring-green-300"
+                      ? "border-red-500 focus:border-green-300 focus:ring-green-300"
                       : " border-gray-300  focus:border-green-500 focus:ring-green-300"
                   }`}
                   value={value}
@@ -150,9 +150,9 @@ const EditRecipientForm = ({ id }: { id: string }) => {
                 <TextInput
                   onBlur={onBlur}
                   onChangeText={onChange}
-                  className={`block w-full rounded-md border  px-4 py-3 ${
+                  className={`block w-full rounded-md border bg-slate-50 bg-opacity-5  px-4 py-3 ${
                     errors.bankName
-                      ? "border-red-500 bg-slate-50 bg-opacity-10 focus:border-green-500 focus:ring-green-500"
+                      ? "border-red-500  focus:border-green-500 focus:ring-green-500"
                       : " border-gray-300  focus:border-green-500 focus:ring-green-500"
                   }`}
                   value={value}
@@ -264,7 +264,7 @@ const EditRecipientForm = ({ id }: { id: string }) => {
               onPress={handleSubmit(onSubmit)}
             >
               <Text className="text-xl font-bold text-white">
-                {isLoading ? "Loading...." : "Add Recipient"}
+                {isLoading ? "Saving...." : "Save"}
               </Text>
             </TouchableOpacity>
           </View>

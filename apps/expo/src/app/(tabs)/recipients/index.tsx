@@ -41,14 +41,11 @@ const Index = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <Stack.Screen options={{ headerShown: false }} />
+      <Stack.Screen options={{ headerShown: true }} />
       <StatusBar />
 
       <View className="flex  h-fit w-full items-center justify-center p-5 ">
         <View className=" h-full w-full max-w-md">
-          <Text className="text-bold my-5 text-xl">
-            Who will you be sending money to?
-          </Text>
           <View className="flex w-full flex-row items-center justify-between">
             <Text className="mb-10 mt-5 flex items-center  justify-center text-xl font-bold">
               Recipients
@@ -100,7 +97,7 @@ const Index = () => {
                         rounded
                         icon={{ name: "user", type: "font-awesome" }}
                         containerStyle={{
-                          backgroundColor: "#9700b9",
+                          backgroundColor: "rgb(99 102 241)",
                         }}
                       />
                     </View>
