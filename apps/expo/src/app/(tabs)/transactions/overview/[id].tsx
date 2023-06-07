@@ -243,12 +243,12 @@ const PaymentTrackingScreen = ({
           <TouchableOpacity
             onPress={() => cancel({ id: transaction.id })}
             className={` flex  items-center justify-center rounded-xl px-3 py-3 ${
-              isLoading ? "bg-slate-400" : "bg-red-400"
+              isLoading || isCancelLoading ? "bg-slate-400" : "bg-red-400"
             }`}
           >
             <Text
               className={`text-sm text-white ${
-                isLoading ? "text-slate-700" : "text-white"
+                isLoading || isCancelLoading ? "text-slate-700" : "text-white"
               }`}
             >
               Cancel Transaction
