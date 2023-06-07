@@ -23,7 +23,7 @@ const Confirmation = () => {
     {
       async onSuccess(transaction) {
         await ctx.transaction.invalidate();
-        router.push(`/transactions/id?id=${transaction.id}`);
+        router.replace(`/transactions/id?id=${transaction.id}`);
         clearPayment();
         clearRecipient();
       },
@@ -45,11 +45,13 @@ const Confirmation = () => {
   return (
     <ScrollView className="flex-1 bg-white">
       <SafeAreaView className="flex h-full w-full flex-col items-center justify-between  p-5">
-        <View className="h-1/2 w-full">
-          {!currentPayment && <NoContent content="recipient" />}
-        </View>
+        {!currentPayment && (
+          <View className="h-1/2 w-full">
+            <NoContent content="recipient" />
+          </View>
+        )}
         {currentRecipient && (
-          <View className=" my-3 w-full rounded-xl border border-slate-300 bg-slate-50 bg-opacity-5 py-3 shadow-xl">
+          <View className=" my-3  w-full rounded-xl border border-slate-300 bg-slate-50 bg-opacity-5 py-3 shadow-xl">
             <Text className=" mx-5 text-xl font-bold">
               {currentRecipient?.name}&apos;s Details
             </Text>
