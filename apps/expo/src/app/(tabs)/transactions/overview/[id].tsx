@@ -28,7 +28,7 @@ import {
   type Transaction,
 } from ".prisma/client";
 
-type ViewState = "timeline" | "overview";
+type ViewState = "tracker" | "overview";
 const Tab = ({
   view,
   setView,
@@ -37,10 +37,10 @@ const Tab = ({
   setView: React.Dispatch<React.SetStateAction<ViewState>>;
 }) => {
   return (
-    <View className="mx-auto flex h-fit w-full max-w-xl flex-row items-center justify-between rounded-lg bg-slate-100 p-0.5 text-xs">
+    <View className="mx-auto flex h-fit w-full max-w-xl flex-row-reverse items-center justify-between rounded-lg bg-slate-100 p-0.5 text-xs">
       {view === "overview" ? (
         <Pressable
-          className=" flex w-6/12  items-center justify-center rounded-lg bg-slate-900 px-3 py-2"
+          className=" flex w-6/12  items-center justify-center rounded-lg bg-indigo-500 px-3 py-2"
           onPress={() => setView("overview")}
         >
           <Text className="flex cursor-pointer items-center justify-center text-white">
@@ -57,22 +57,22 @@ const Tab = ({
           </Text>
         </Pressable>
       )}
-      {view === "timeline" ? (
+      {view === "tracker" ? (
         <Pressable
-          className=" flex w-6/12  items-center justify-center rounded-lg bg-slate-900 px-3 py-2"
-          onPress={() => setView("timeline")}
+          className=" flex w-6/12  items-center justify-center rounded-lg bg-indigo-500 px-3 py-2"
+          onPress={() => setView("tracker")}
         >
           <Text className="flex cursor-pointer items-center justify-center text-white">
-            Timeline
+            Tracker
           </Text>
         </Pressable>
       ) : (
         <Pressable
           className=" flex w-6/12  items-center justify-center rounded-lg bg-inherit px-3 py-2"
-          onPress={() => setView("timeline")}
+          onPress={() => setView("tracker")}
         >
           <Text className="flex cursor-pointer items-center justify-center text-slate-900">
-            Timeline
+            Tracker
           </Text>
         </Pressable>
       )}
@@ -180,7 +180,7 @@ const PaymentTrackingScreen = ({
   return (
     <ScrollView style={styles.container}>
       {data.map((item, index) => (
-        <View key={index} style={styles.timelineItem}>
+        <View key={index} style={styles.trackerItem}>
           {index !== data.length - 1 && <View style={styles.line} />}
           <View
             style={[styles.circle, { backgroundColor: getColor(item.status) }]}
@@ -279,7 +279,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 32,
   },
-  timelineItem: {
+  trackerItem: {
     flexDirection: "row",
     marginBottom: 20,
     alignItems: "flex-start", // Align items at the top
@@ -416,7 +416,7 @@ const PaymentDetails = ({ id }: { id: string }) => {
     },
   );
 
-  const [view, setView] = useState<ViewState>("timeline");
+  const [view, setView] = useState<ViewState>("tracker");
 
   return (
     <ScrollView className="flex-1 ">
@@ -434,7 +434,7 @@ const PaymentDetails = ({ id }: { id: string }) => {
         {!isLoading && transaction && (
           <View className="h-full w-full p-5">
             <Tab view={view} setView={setView} />
-            {view === "timeline" && (
+            {view === "tracker" && (
               <PaymentTrackingScreen transaction={transaction} />
             )}
             {view === "overview" && (
