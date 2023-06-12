@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  Modal,
   Pressable,
   StyleSheet,
   Text,
@@ -177,6 +178,7 @@ const PaymentTrackingScreen = ({
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
+  const [isShowModal, setIsShowModal] = useState(false);
   return (
     <ScrollView style={styles.container}>
       {data.map((item, index) => (
@@ -192,6 +194,33 @@ const PaymentTrackingScreen = ({
           </View>
         </View>
       ))}
+
+      <Modal visible={isShowModal} animationType="slide">
+        <View className="flex flex-1 items-center justify-center p-5">
+          <View className="fixed top-0 flex h-48 w-full  justify-center rounded-md border border-slate-200 bg-slate-50 p-5">
+            <Text className="text-lg">
+              Are you sure you want to cancel this transaction?
+            </Text>
+            <View className=" my-5 flex w-full flex-row items-center justify-between">
+              <TouchableOpacity
+                onPress={() => setIsShowModal(false)}
+                className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-500 px-10  py-2  text-sm transition-all hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+              >
+                <Text className="text-sm text-white">No</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  cancel({ id: transaction.id });
+                  setIsShowModal(false);
+                }}
+                className="inline-flex items-center justify-center rounded-md border border-transparent bg-red-500 px-10  py-2  text-sm transition-all hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+              >
+                <Text className="text-sm text-white">Yes</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
       {((!isCancelled && !transaction.bankReferenceNumber) || isDeclined) && (
         <View className="mt-7 h-fit w-full rounded-md border border-slate-300 bg-slate-50 bg-opacity-50 p-3 shadow-xl">
           <Text className="mt-3 text-xl font-semibold text-slate-700">
@@ -227,13 +256,13 @@ const PaymentTrackingScreen = ({
             </View>
             <Pressable
               onPress={handleSubmit(onSubmit)}
-              disabled={isCancelLoading}
+              disabled={isCancelLoading || isLoading}
               className={` mt-3 flex w-full flex-row items-center justify-around rounded-lg ${
                 isLoading ? "bg-slate-400" : " bg-teal-400"
               } px-4 py-3.5 `}
             >
               <Text className={` "text-lg text-gray-50" font-bold`}>
-                Confirm payment
+                {isLoading ? "Confirming payment" : " Confirm payment"}
               </Text>
             </Pressable>
           </View>
@@ -242,7 +271,8 @@ const PaymentTrackingScreen = ({
       {!cannotCancel && (
         <View className="my-5 flex items-center justify-center">
           <TouchableOpacity
-            onPress={() => cancel({ id: transaction.id })}
+            onPress={() => setIsShowModal(true)}
+            disabled={isLoading || isCancelLoading}
             className={` flex  items-center justify-center rounded-xl px-3 py-3 ${
               isLoading || isCancelLoading ? "bg-slate-400" : "bg-red-400"
             }`}
@@ -252,7 +282,9 @@ const PaymentTrackingScreen = ({
                 isLoading || isCancelLoading ? "text-slate-700" : "text-white"
               }`}
             >
-              Cancel Transaction
+              {isCancelLoading
+                ? "Cancelling Transaction"
+                : "  Cancel Transaction"}
             </Text>
           </TouchableOpacity>
         </View>
