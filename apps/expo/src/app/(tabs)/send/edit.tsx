@@ -17,6 +17,7 @@ import { z } from "zod";
 
 import { api } from "~/utils/api";
 import useStore from "~/utils/zuztand";
+import LoadingDots from "~/components/LoadingDots";
 import NoContent from "~/components/NoContent";
 import type { ExchangeRate, Payment, Rate } from ".prisma/client";
 
@@ -246,11 +247,20 @@ const Form = ({
         </KeyboardAvoidingView>
 
         <TouchableOpacity
-          className="absolute bottom-5   flex w-full items-center justify-center rounded-lg bg-teal-400 px-4 py-3 shadow-xl"
+          className={`absolute bottom-5   flex w-full items-center justify-center rounded-lg ${
+            isLoading ? "bg-slate-400" : " bg-teal-400"
+          } px-4 py-3 shadow-xl`}
           onPress={handleSubmit(onSubmit)}
         >
           <Text className="text-lg text-white" disabled={isLoading}>
-            {isLoading ? "Loading..." : "Continue"}
+            {isLoading ? (
+              <View className="flex h-full w-full items-center justify-between">
+                <Text>Loading</Text>
+                <LoadingDots size={10} color="rgb(45 212 191)" />
+              </View>
+            ) : (
+              "Continue"
+            )}
           </Text>
         </TouchableOpacity>
       </View>
