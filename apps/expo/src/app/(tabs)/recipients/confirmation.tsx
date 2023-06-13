@@ -6,6 +6,7 @@ import { View } from "native-base";
 
 import { api } from "~/utils/api";
 import useStore from "~/utils/zuztand";
+import LoadingDots from "~/components/LoadingDots";
 import NoContent from "~/components/NoContent";
 
 const Confirmation = () => {
@@ -144,7 +145,7 @@ const Confirmation = () => {
           <View className="my-3 w-full">
             <TouchableOpacity
               disabled={isLoading}
-              className={`my-2 flex w-full   items-center justify-center rounded-lg ${
+              className={`my-2 flex w-full flex-row   items-center justify-around rounded-lg ${
                 isLoading ? "bg-slate-500" : " bg-teal-400"
               } px-4 py-3 shadow-xl`}
               onPress={() =>
@@ -161,8 +162,9 @@ const Confirmation = () => {
                   isLoading ? "text-slate-900" : "text-white"
                 }`}
               >
-                {isLoading ? "Creating transaction ..." : "Confirm"}
+                {isLoading ? "Creating transaction" : "Confirm"}
               </Text>
+              {isLoading && <LoadingDots color="white" size={10} />}
             </TouchableOpacity>
           </View>
         )}

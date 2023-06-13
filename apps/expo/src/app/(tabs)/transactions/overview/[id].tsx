@@ -19,6 +19,7 @@ import { z } from "zod";
 
 import { api } from "~/utils/api";
 import LoadingComponent from "~/components/LoadingComponent";
+import LoadingDots from "~/components/LoadingDots";
 import NoContent from "~/components/NoContent";
 import {
   type ExchangeRate,
@@ -264,6 +265,7 @@ const PaymentTrackingScreen = ({
               <Text className={` "text-lg text-gray-50" font-bold`}>
                 {isLoading ? "Confirming payment" : " Confirm payment"}
               </Text>
+              {isLoading && <LoadingDots color="white" size={10} />}
             </Pressable>
           </View>
         </View>
@@ -273,7 +275,7 @@ const PaymentTrackingScreen = ({
           <TouchableOpacity
             onPress={() => setIsShowModal(true)}
             disabled={isLoading || isCancelLoading}
-            className={` flex  items-center justify-center rounded-xl px-3 py-3 ${
+            className={` flex  flex-row items-center justify-around rounded-xl px-3 py-3 ${
               isLoading || isCancelLoading ? "bg-slate-400" : "bg-red-400"
             }`}
           >
@@ -286,6 +288,7 @@ const PaymentTrackingScreen = ({
                 ? "Cancelling Transaction"
                 : "  Cancel Transaction"}
             </Text>
+            {isLoading && <LoadingDots color="white" size={10} />}
           </TouchableOpacity>
         </View>
       )}

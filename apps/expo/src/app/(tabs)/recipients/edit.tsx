@@ -16,6 +16,7 @@ import { z } from "zod";
 
 import { api } from "~/utils/api";
 import useStore from "~/utils/zuztand";
+import LoadingDots from "~/components/LoadingDots";
 import NoContent from "~/components/NoContent";
 
 const EditRecipientForm = ({ id }: { id: string }) => {
@@ -258,14 +259,15 @@ const EditRecipientForm = ({ id }: { id: string }) => {
           <View className="w-full">
             <TouchableOpacity
               disabled={isLoading}
-              className={`my-5 flex  w-full items-center justify-center rounded-lg ${
+              className={`my-5 flex  w-full flex-row items-center justify-around rounded-lg ${
                 isLoading ? "bg-slate-300" : " bg-teal-400"
               } px-4 py-3 shadow-xl`}
               onPress={handleSubmit(onSubmit)}
             >
               <Text className="text-xl font-bold text-white">
-                {isLoading ? "Saving...." : "Save"}
+                {isLoading ? "Saving" : "Save"}
               </Text>
+              {isLoading && <LoadingDots color="white" size={10} />}
             </TouchableOpacity>
           </View>
         </View>

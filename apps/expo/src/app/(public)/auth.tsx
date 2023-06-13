@@ -9,6 +9,8 @@ import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 
+import LoadingDots from "~/components/LoadingDots";
+
 const schema = z.object({
   phoneNumber: z.string(),
 });
@@ -135,8 +137,9 @@ const LoginScreen = () => {
                 : "text-lg font-bold text-gray-500"
             }`}
           >
-            Let me in
+            {isLoading ? "Loading" : " Let me in"}
           </Text>
+          {isLoading && <LoadingDots color="white" size={10} />}
         </Pressable>
       </View>
     </SafeAreaView>

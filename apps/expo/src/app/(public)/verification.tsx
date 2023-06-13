@@ -14,6 +14,7 @@ import { Stack, useRouter, useSearchParams } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 
 import { supabase } from "~/utils/supabase";
+import LoadingDots from "~/components/LoadingDots";
 
 const Otp = () => {
   const params = useSearchParams();
@@ -167,12 +168,13 @@ const Otp = () => {
         <Pressable
           disabled={isLoading}
           onPress={handleVerification}
-          className="my-5 w-full rounded-md bg-teal-400 py-3 "
+          className="my-5 flex w-full flex-row items-center justify-around rounded-md bg-teal-400 py-3 "
           android_ripple={{ color: "rgb(20 184 166 )", radius: 40 }}
         >
           <Text className="text-center text-lg text-white">
-            {isLoading ? "Loading ..." : "Verify OTP"}
+            {isLoading ? "Verifying" : "Verify OTP"}
           </Text>
+          {isLoading && <LoadingDots color="white" size={10} />}
         </Pressable>
       </View>
       <View className="absolute  bottom-5 flex w-full flex-[30%]   flex-row items-baseline justify-between p-7">

@@ -16,6 +16,7 @@ import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { api } from "~/utils/api";
+import LoadingDots from "~/components/LoadingDots";
 
 const profileSchema = z.object({
   firstName: z.string().min(1, { message: "First name is required" }),
@@ -212,6 +213,9 @@ const ProfileCreationScreen = () => {
             >
               {isProfileCreationLoading ? "Loading" : "Save"}
             </Text>
+            {isProfileCreationLoading && (
+              <LoadingDots color="white" size={10} />
+            )}
           </TouchableOpacity>
         </View>
       </View>

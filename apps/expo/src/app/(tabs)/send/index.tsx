@@ -17,6 +17,7 @@ import { z } from "zod";
 
 import { api } from "~/utils/api";
 import useStore from "~/utils/zuztand";
+import LoadingDots from "~/components/LoadingDots";
 
 const ZeCurrencies = z.string();
 export type Currencies = z.infer<typeof ZeCurrencies>;
@@ -101,25 +102,24 @@ const Form = () => {
   }, [selectedExchangeRate]);
   const router = useRouter();
   const setPayment = useStore((state) => state.setNewPayment);
-  const { mutate: addPayment, isLoading: isPaymentCreationLoading } =
-    api.payment.add.useMutation({
-      onSuccess(payment) {
-        setPayment(payment);
-        router.push(`recipients`);
-      },
-      onError(error) {
-        Toast.show(error.message, {
-          duration: Toast.durations.SHORT,
-          position: Toast.positions.TOP,
-          shadow: true,
-          animation: true,
-          backgroundColor: "white",
-          hideOnPress: true,
-          textColor: "red",
-          delay: 0,
-        });
-      },
-    });
+  const { mutate: addPayment, isLoading } = api.payment.add.useMutation({
+    onSuccess(payment) {
+      setPayment(payment);
+      router.push(`recipients`);
+    },
+    onError(error) {
+      Toast.show(error.message, {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.TOP,
+        shadow: true,
+        animation: true,
+        backgroundColor: "white",
+        hideOnPress: true,
+        textColor: "red",
+        delay: 0,
+      });
+    },
+  });
   const onSubmit = (data: Values) => {
     {
       selectedExchangeRateId &&
@@ -179,7 +179,7 @@ const Form = () => {
         <View className=" mb-10 flex h-fit w-full flex-row items-start justify-between rounded-md border border-gray-200 bg-slate-50 bg-opacity-10 shadow-lg focus:border-green-300  focus:ring-green-300">
           <View className="flex flex-row  items-center  justify-center rounded-lg bg-inherit px-4 py-4">
             <Text className="text-xl text-slate-700">
-              {selectedExchangeCurrency}{" "}
+              {selectedExchangeCurrency}
             </Text>
           </View>
           <Controller
@@ -230,15 +230,20 @@ const Form = () => {
       </View>
       <View className="flex flex-[30%] items-start justify-end">
         <TouchableOpacity
-          className="  flex w-full items-center justify-center rounded-lg bg-teal-400 px-4 py-4 shadow-xl"
+          disabled={isLoading}
+          className={`absolute bottom-5   flex w-full items-center justify-center rounded-lg  ${
+            isLoading ? "bg-slate-400" : " bg-teal-400"
+          } px-4 py-3 shadow-xl`}
           onPress={handleSubmit(onSubmit)}
         >
-          <Text
-            className="text-xl text-white"
-            disabled={isPaymentCreationLoading}
-          >
-            {isPaymentCreationLoading ? "Loading..." : "Continue"}
-          </Text>
+          {isLoading ? (
+            <View className="flex h-full w-full flex-row items-center justify-around">
+              <Text className="text-lg text-white">Loading</Text>
+              <LoadingDots color="white" size={10} />
+            </View>
+          ) : (
+            <Text className="text-lg text-white">Continue</Text>
+          )}
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>

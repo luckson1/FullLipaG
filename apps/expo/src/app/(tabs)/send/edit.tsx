@@ -247,21 +247,20 @@ const Form = ({
         </KeyboardAvoidingView>
 
         <TouchableOpacity
+          disabled={isLoading}
           className={`absolute bottom-5   flex w-full items-center justify-center rounded-lg ${
             isLoading ? "bg-slate-400" : " bg-teal-400"
           } px-4 py-3 shadow-xl`}
           onPress={handleSubmit(onSubmit)}
         >
-          <Text className="text-lg text-white" disabled={isLoading}>
-            {isLoading ? (
-              <View className="flex h-full w-full items-center justify-between">
-                <Text>Loading</Text>
-                <LoadingDots size={10} color="rgb(45 212 191)" />
-              </View>
-            ) : (
-              "Continue"
-            )}
-          </Text>
+          {isLoading ? (
+            <View className="flex h-full w-full flex-row items-center justify-around">
+              <Text className="text-white">Loading</Text>
+              <LoadingDots color="white" size={10} />
+            </View>
+          ) : (
+            <Text className="text-white">Continue</Text>
+          )}
         </TouchableOpacity>
       </View>
     </View>
