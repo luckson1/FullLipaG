@@ -288,7 +288,7 @@ const PaymentTrackingScreen = ({
                 ? "Cancelling Transaction"
                 : "  Cancel Transaction"}
             </Text>
-            {isLoading && <LoadingDots color="white" size={10} />}
+            {isCancelLoading && <LoadingDots color="white" size={10} />}
           </TouchableOpacity>
         </View>
       )}
