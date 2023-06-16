@@ -27,8 +27,16 @@ import { prisma } from "@acme/db";
  * processing a request
  *
  */
+enum userRoles {
+  USER = "USER",
+  ADMIN = "ADMIN",
+  SUPER_ADMIN = "SUPER_ADMIN",
+}
+interface ExtendedUser extends User {
+  userRole: userRoles;
+}
 type CreateContextOptions = {
-  user: User | null;
+  user: ExtendedUser | null;
 };
 
 /**
@@ -64,7 +72,7 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
     : await supabase.auth.getUser();
 
   return createInnerTRPCContext({
-    user: user.data.user,
+    user: user.data.user as ExtendedUser,
   });
 };
 
@@ -139,7 +147,7 @@ export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
 
 // protected admin route
 const enforceUserIsAdmin = t.middleware(({ ctx, next }) => {
-  if (!ctx.user?.id || !ctx.user.role || ctx.user.role !== "Admin") {
+  if (!ctx.user?.userRole || ctx.user.userRole === "USER") {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
   return next({
