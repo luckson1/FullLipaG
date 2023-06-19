@@ -42,7 +42,10 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
       alert(error.message);
       setIsLoading(false);
     }
-    if (data.user) setIsLoading(false);
+    if (data.user) {
+      setIsLoading(false);
+      alert(`A login link has been sent to your em ail : ${email}`);
+    }
   };
   return (
     <div className={cn("grid gap-6", className)} {...props}>
