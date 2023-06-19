@@ -82,12 +82,12 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
               autoCorrect="off"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              // disabled={isLoading}
+              disabled={isLoading}
             />
           </div>
           <Button
             className="bg-teal-500 hover:bg-teal-700"
-            // disabled={isLoading}
+            disabled={isLoading}
           >
             {isLoading && (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
