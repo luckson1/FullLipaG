@@ -21,6 +21,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     setIsLoading(true);
     const { error, data } = await supabase.auth.signInWithOAuth({
       provider: "google",
+      options: { redirectTo: "/dashboard" },
     });
 
     if (error) {
@@ -28,7 +29,6 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
       setIsLoading(false);
     } else if (data.url) {
       setIsLoading(false);
-      router.push("/dashboard");
     }
   };
 
