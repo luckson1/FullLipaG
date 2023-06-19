@@ -47,9 +47,6 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
       <form onSubmit={() => signInWithOTP(email)}>
         <div className="grid gap-2">
           <div className="grid gap-1">
-            <Label className="sr-only" htmlFor="email">
-              Email
-            </Label>
             <Input
               id="email"
               placeholder="name@example.com"
@@ -63,7 +60,8 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             />
           </div>
           <Button
-          // disabled={isLoading}
+            className="bg-teal-500 hover:bg-teal-700"
+            // disabled={isLoading}
           >
             {isLoading && (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
