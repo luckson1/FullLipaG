@@ -49,7 +49,12 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   };
   return (
     <div className={cn("grid gap-6", className)} {...props}>
-      <form onSubmit={() => signInWithOTP(email)}>
+      <form
+        onSubmit={async (e) => {
+          e.preventDefault();
+          await signInWithOTP(email);
+        }}
+      >
         <div className="grid gap-2">
           <div className="grid gap-1">
             <Input
