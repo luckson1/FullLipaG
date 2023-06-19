@@ -5,29 +5,35 @@ import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { Icons } from "~/components/Icons";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
+import { supabase } from "~/lib/client";
 import { cn } from "~/lib/utils";
+import { ToastAction } from "./ui/toast";
+import { toast, useToast } from "./ui/use-toast";
 
 type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>;
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const supabase = useSupabaseClient();
 
   const [email, setEmail] = useState("");
 
   const signInWithGoogle = async () => {
     setIsLoading(true);
-    const { error, data } = await supabase.auth.signInWithOAuth({
+    const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: { redirectTo: "/dashboard" },
     });
 
     if (error) {
-      alert(error.message);
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: ` There was a problem: ${error.message}`,
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      });
       setIsLoading(false);
-    } else if (data.url) {
+    } else {
       setIsLoading(false);
     }
   };
@@ -39,12 +45,22 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
       options: { emailRedirectTo: "/dashboard" },
     });
     if (error) {
-      alert(error.message);
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: ` There was a problem: ${error.message}`,
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      });
+
       setIsLoading(false);
     }
     if (data.user) {
       setIsLoading(false);
-      alert(`A login link has been sent to your em ail : ${email}`);
+      toast({
+        title: "Magic Link sent to your Email.",
+        description: ` Check your inbox for a link to log you in`,
+        action: <ToastAction altText="Close">Close</ToastAction>,
+      });
     }
   };
   return (
