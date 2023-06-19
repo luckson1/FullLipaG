@@ -1,9 +1,19 @@
+import { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useSession } from "@supabase/auth-helpers-react";
 
 import { UserAuthForm } from "../components/signin";
 
 export default function AuthenticationPage() {
+  const session = useSession();
+  const router = useRouter();
+  useEffect(() => {
+    if (session) {
+      router.push("/dashboard");
+    }
+  }, []);
   return (
     <>
       {/* <div className="md:hidden">
