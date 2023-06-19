@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useRouter } from "next/router";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
 import { Icons } from "~/components/Icons";
@@ -11,6 +12,7 @@ type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>;
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
   const supabase = useSupabaseClient();
 
   const [email, setEmail] = useState("");
@@ -26,7 +28,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
       setIsLoading(false);
     } else if (data.url) {
       setIsLoading(false);
-      alert("Check your email for a login magic link.");
+      router.push("/dashboard");
     }
   };
 
