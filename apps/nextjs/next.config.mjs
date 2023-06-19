@@ -12,7 +12,11 @@ const config = {
 
   // Allow optimizing avatar images from GitHub
   images: {
-    domains: ["avatars.githubusercontent.com"],
+    domains: [
+      "avatars.githubusercontent.com",
+      "images.unsplash.com",
+      "res.cloudinary.com",
+    ],
   },
 
   /** We already do linting and typechecking as separate tasks in CI */
