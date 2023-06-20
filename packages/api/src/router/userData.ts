@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { adminProcedure, createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const profileRouter = createTRPCRouter({
   create: protectedProcedure
@@ -73,5 +73,27 @@ export const profileRouter = createTRPCRouter({
       },
     });
     return profile;
+  }),
+  getNumberOfUsers: adminProcedure.query(async ({ ctx }) => {
+    const totalUsers = await ctx.prisma.users.count();
+
+    return totalUsers;
+  }),
+  getNumberOfActiveUsers: adminProcedure.query(async ({ ctx }) => {
+    const countUsersWithReceivedTransaction = await ctx.prisma.users.count({
+      where: {
+        Transaction: {
+          some: {
+            Status: {
+              some: {
+                name: "Received",
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return countUsersWithReceivedTransaction;
   }),
 });
