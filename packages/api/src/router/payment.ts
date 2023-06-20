@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { adminProcedure, createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const paymentRouter = createTRPCRouter({
   add: protectedProcedure
@@ -99,23 +99,77 @@ export const paymentRouter = createTRPCRouter({
       return editedPayment;
     }),
 
-  // getUsersOne: protectedProcedure
-  // .input(z.object({ id: z.string() }))
-  // .query(async ({ ctx, input }) => {
-  //   console.log(input.id);
-  //   const usersId = ctx.user.id;
-  //   const payment = await ctx.prisma.payment.findUniqueOrThrow({
-  //     where: {
-  //       id: input.id,
-  //     },
-  //   });
-  //   if (payment.usersId !== usersId) {
-  //     throw new TRPCError({
-  //       code: "UNAUTHORIZED",
-  //       message: "Only the author can edit this payment",
-  //     });
-  //   }
+  getTotalsByCurrency: adminProcedure.query(async ({ ctx }) => {
+    const totalsByExchangeRateId = await ctx.prisma.payment.groupBy({
+      by: ["exchangeRateId"],
+      where: {
+        Transaction: {
+          some: {
+            Status: {
+              some: {
+                name: "Received",
+              },
+            },
+          },
+        },
+      },
+      _sum: {
+        sentAmount: true,
+      },
+    });
 
-  //   return payment;
-  // }),
+    const exchangeRateIds = totalsByExchangeRateId.map(
+      (group) => group.exchangeRateId,
+    );
+
+    const exchangeRates = await ctx.prisma.exchangeRate.findMany({
+      where: {
+        id: {
+          in: exchangeRateIds,
+        },
+      },
+      select: {
+        id: true,
+        target: true,
+      },
+    });
+
+    const totalsByCurrency = totalsByExchangeRateId.map((group) => {
+      const exchangeRateId = group.exchangeRateId;
+      const sentAmount = group._sum.sentAmount;
+
+      const exchangeRate = exchangeRates.find(
+        (rate) => rate.id === exchangeRateId,
+      );
+      const targetCurrency = exchangeRate?.target;
+
+      return {
+        exchangeRateId,
+        sentAmount,
+        targetCurrency,
+      };
+    });
+
+    return totalsByCurrency;
+  }),
+
+  getUsersOne: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      console.log(input.id);
+      const usersId = ctx.user.id;
+      const payment = await ctx.prisma.payment.findUniqueOrThrow({
+        where: {
+          id: input.id,
+        },
+      });
+      if (payment.usersId !== usersId) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Only the author can edit this payment",
+        });
+      }
+
+      return payment;
+    }),
 });

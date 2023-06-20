@@ -154,7 +154,7 @@ const enforceUserIsAdmin = t.middleware(({ ctx, next }) => {
     ctx: {
       // infers the `user` as non-nullable
       user: ctx.user,
-      role: ctx.user.role,
+      role: ctx.user.userRole,
     },
   });
 });
