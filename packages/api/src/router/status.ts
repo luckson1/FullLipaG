@@ -8,9 +8,9 @@ export const statusRouter = createTRPCRouter({
       z.object({
         name: z.enum([
           "Initiated",
-          "Canceled",
+          "Cancelled",
           "Paused",
-          "Confirmed",
+          "Processing",
           "Processed",
           "Sent",
           "Received",
