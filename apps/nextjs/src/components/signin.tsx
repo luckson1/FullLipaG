@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { useRouter } from "next/router";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
 import { Icons } from "~/components/Icons";
 import { Button } from "~/components/ui/button";
@@ -8,13 +6,12 @@ import { Input } from "~/components/ui/input";
 import { supabase } from "~/lib/client";
 import { cn } from "~/lib/utils";
 import { ToastAction } from "./ui/toast";
-import { toast, useToast } from "./ui/use-toast";
+import { toast } from "./ui/use-toast";
 
 type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>;
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
 
   const [email, setEmail] = useState("");
 
