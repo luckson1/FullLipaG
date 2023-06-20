@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { endOfMonth, format, startOfMonth } from "date-fns";
 import { z } from "zod";
 
 import { adminProcedure, createTRPCRouter, protectedProcedure } from "../trpc";
@@ -326,4 +327,90 @@ export const transactionRouter = createTRPCRouter({
         });
       return transaction;
     }),
+  getTransactionsMadeThisMonth: adminProcedure.query(async ({ ctx }) => {
+    const currentDate = new Date();
+    const startOfMonthDate = startOfMonth(currentDate);
+    const endOfMonthDate = endOfMonth(currentDate);
+
+    const countReceivedTransactionsThisMonth =
+      await ctx.prisma.transaction.count({
+        where: {
+          Status: {
+            some: {
+              name: "Received",
+            },
+          },
+          createdAt: {
+            gte: startOfMonthDate,
+            lte: endOfMonthDate,
+          },
+        },
+      });
+
+    return countReceivedTransactionsThisMonth;
+  }),
+  getRecentTransactions: adminProcedure.query(async ({ ctx }) => {
+    const mostRecentCompletedTransactions =
+      await ctx.prisma.transaction.findMany({
+        where: {
+          Status: {
+            some: {
+              name: "Received",
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: 5, // Adjust the number as per your requirement
+        select: {
+          id: true,
+          createdAt: true,
+          user: {
+            select: {
+              Profile: {
+                select: {
+                  lastName: true,
+                  firstName: true,
+                },
+              },
+            },
+          },
+        },
+      });
+    return mostRecentCompletedTransactions;
+  }),
+  getSuccessfulTransactionsPerMonth: adminProcedure.query(async ({ ctx }) => {
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+
+    const data = [];
+
+    for (let month = 0; month < 12; month++) {
+      const startDate = startOfMonth(new Date(currentYear, month, 1));
+      const endDate = endOfMonth(new Date(currentYear, month, 1));
+
+      const totalReceivedTransactions = await ctx.prisma.transaction.count({
+        where: {
+          Status: {
+            some: {
+              name: "Received",
+            },
+          },
+          createdAt: {
+            gte: startDate,
+            lte: endDate,
+          },
+        },
+      });
+
+      const monthName = format(startDate, "MMM");
+
+      data.push({
+        month: monthName,
+        total: totalReceivedTransactions,
+      });
+    }
+    return data;
+  }),
 });
