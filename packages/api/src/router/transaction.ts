@@ -362,7 +362,7 @@ export const transactionRouter = createTRPCRouter({
         orderBy: {
           createdAt: "desc",
         },
-        take: 5, // Adjust the number as per your requirement
+        take: 5,
         select: {
           id: true,
           createdAt: true,
@@ -403,11 +403,15 @@ export const transactionRouter = createTRPCRouter({
         const startDate = startOfMonth(new Date(currentYear, month, 1));
         const endDate = endOfMonth(new Date(currentYear, month, 1));
 
-        const totalReceivedTransactions = await ctx.prisma.transaction.count({
+        const totalSentAmount = await ctx.prisma.payment.aggregate({
           where: {
-            Status: {
+            Transaction: {
               some: {
-                name: "Received",
+                Status: {
+                  some: {
+                    name: "Received",
+                  },
+                },
               },
             },
             createdAt: {
@@ -415,15 +419,19 @@ export const transactionRouter = createTRPCRouter({
               lte: endDate,
             },
           },
+          _sum: {
+            remittedAmount: true,
+          },
         });
 
         const monthName = format(startDate, "MMM");
 
         data.push({
-          month: monthName,
-          total: totalReceivedTransactions,
+          name: monthName,
+          total: totalSentAmount._sum.remittedAmount || 0,
         });
       }
+
       return data;
     },
   ),
