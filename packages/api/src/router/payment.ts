@@ -116,6 +116,9 @@ export const paymentRouter = createTRPCRouter({
       _sum: {
         sentAmount: true,
       },
+      _count: {
+        id: true,
+      },
     });
 
     const exchangeRateIds = totalsByExchangeRateId.map(
@@ -137,6 +140,7 @@ export const paymentRouter = createTRPCRouter({
     const totalsByCurrency = totalsByExchangeRateId.map((group) => {
       const exchangeRateId = group.exchangeRateId;
       const sentAmount = group._sum.sentAmount;
+      const numberOfTransactions = group._count.id;
 
       const exchangeRate = exchangeRates.find(
         (rate) => rate.id === exchangeRateId,
@@ -147,6 +151,7 @@ export const paymentRouter = createTRPCRouter({
         exchangeRateId,
         sentAmount,
         targetCurrency,
+        numberOfTransactions,
       };
     });
 
