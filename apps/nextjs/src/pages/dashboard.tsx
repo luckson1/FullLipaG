@@ -119,7 +119,7 @@ export function Overview() {
         />
         <YAxis
           stroke="#888888"
-          fontSize={12}
+          fontSize={8}
           tickLine={false}
           axisLine={false}
           tickFormatter={(value) => `KES${value}`}
