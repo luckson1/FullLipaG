@@ -349,7 +349,7 @@ export const transactionRouter = createTRPCRouter({
 
     return countReceivedTransactionsThisMonth;
   }),
-  getRecentTransactions: adminProcedure.query(async ({ ctx }) => {
+  getRecentTransactions: protectedProcedure.query(async ({ ctx }) => {
     const mostRecentCompletedTransactions =
       await ctx.prisma.transaction.findMany({
         where: {
