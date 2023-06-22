@@ -2,6 +2,8 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { addDays, format } from "date-fns";
 import {
   Activity,
@@ -107,6 +109,15 @@ export function RecentSales() {
 
 export function Overview() {
   const { data } = api.transaction.getSuccessfulTransactionsPerMonth.useQuery();
+  if (!data) {
+    return (
+      <ResponsiveContainer width="100%" height={350}>
+        <div className="flex flex-row items-end justify-between">
+          {Array(12).fill(<Skeleton className="h-3/4 w-5 rounded-md" />)}
+        </div>
+      </ResponsiveContainer>
+    );
+  }
   return (
     <ResponsiveContainer width="100%" height={350}>
       <BarChart data={data}>
@@ -182,6 +193,12 @@ export function CalendarDateRangePicker({
 }
 export function UserNav() {
   const { data: profile } = api.profile.getUserProfile.useQuery();
+  const router = useRouter();
+  const supabase = useSupabaseClient();
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    await router.replace("/");
+  };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -207,7 +224,7 @@ export function UserNav() {
         <DropdownMenuGroup>
           <DropdownMenuItem>
             <User className="mr-2 h-4 w-4" />
-            <span>Profile</span>
+            <span></span>
             <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem>
@@ -226,7 +243,7 @@ export function UserNav() {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={handleLogout}>
           <LogOut className="mr-2 h-4 w-4" />
           <span>Log out</span>
           <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
@@ -288,6 +305,9 @@ export default function DashboardPage() {
   const { data: transactions } =
     api.transaction.getTransactionsMadeThisMonth.useQuery();
   const { data: totals } = api.payment.getTotalsByCurrency.useQuery();
+  const { data: totalUsers } = api.profile.getNumberOfUsers.useQuery();
+  const { data: totalActiveUsers } =
+    api.profile.getNumberOfActiveUsers.useQuery();
   return (
     <>
       <div className="hidden flex-col md:flex">
@@ -326,55 +346,90 @@ export default function DashboardPage() {
             </TabsList>
             <TabsContent value="overview" className="space-y-4">
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                {!totals && (
+                  <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <Skeleton className="h-4 w-1/3 rounded-md" />
+                      <DollarSign className="text-muted-foreground h-4 w-4" />
+                    </CardHeader>
+                    <CardContent>
+                      <Skeleton className="h-8 w-1/3 rounded-md" />
+                    </CardContent>
+                  </Card>
+                )}
+                {totals &&
+                  totals.map((t) => (
+                    <Card key={t.exchangeRateId}>
+                      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-sm font-medium">
+                          Total Transactions
+                        </CardTitle>
+                        <DollarSign className="text-muted-foreground h-4 w-4" />
+                      </CardHeader>
+                      <CardContent>
+                        <div className="text-2xl font-bold">
+                          {t.sentAmount} {t.sentAmount}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">
-                      Total Transactions
-                    </CardTitle>
-                    <DollarSign className="text-muted-foreground h-4 w-4" />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold">$45,231.89</div>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">
-                      Subscriptions
-                    </CardTitle>
+                    <CardTitle className="text-sm font-medium">Users</CardTitle>
                     <Users className="text-muted-foreground h-4 w-4" />
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">+2350</div>
-                    <p className="text-muted-foreground text-xs">
+                    {!totalUsers && (
+                      <Skeleton className="h-4 w-1/3 rounded-md" />
+                    )}
+                    <div className="text-2xl font-bold">{totalUsers}</div>
+                    {/* <p className="text-muted-foreground text-xs">
                       +180.1% from last month
-                    </p>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Sales</CardTitle>
-                    <CreditCard className="text-muted-foreground h-4 w-4" />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold">+12,234</div>
-                    <p className="text-muted-foreground text-xs">
-                      +19% from last month
-                    </p>
+                    </p> */}
                   </CardContent>
                 </Card>
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">
-                      Active Now
+                      Transactions
+                    </CardTitle>
+                    <CreditCard className="text-muted-foreground h-4 w-4" />
+                  </CardHeader>
+                  <CardContent>
+                    {!totals &&
+                      Array(2).fill(
+                        <Skeleton className="h-8 w-1/3 rounded-md" />,
+                      )}
+                    {totals &&
+                      totals.map((t) => (
+                        <div
+                          className="text-2xl font-bold"
+                          key={t.exchangeRateId}
+                        >
+                          {t.numberOfTransactions}
+                        </div>
+                      ))}
+                    {/* <p className="text-muted-foreground text-xs">
+                      +19% from last month
+                    </p> */}
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">
+                      Active Users
                     </CardTitle>
                     <Activity className="text-muted-foreground h-4 w-4" />
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">+573</div>
-                    <p className="text-muted-foreground text-xs">
+                    {!totalActiveUsers &&
+                      Array(1).fill(
+                        <Skeleton className="h-8 w-1/3 rounded-md" />,
+                      )}
+                    <div className="text-2xl font-bold">{totalActiveUsers}</div>
+                    {/* <p className="text-muted-foreground text-xs">
                       +201 since last hour
-                    </p>
+                    </p> */}
                   </CardContent>
                 </Card>
               </div>
