@@ -53,7 +53,7 @@ import { cn } from "~/lib/utils";
 
 export function RecentSales() {
   const {
-    data: recentSales,
+    data: recentTransactions,
     isLoading,
     isError,
   } = api.transaction.getRecentTransactions.useQuery(undefined, {
@@ -66,7 +66,7 @@ export function RecentSales() {
       });
     },
   });
-  if (isLoading || !recentSales)
+  if (isLoading || !recentTransactions)
     return (
       <div className="space-y-8">
         {Array(5).fill(
@@ -79,19 +79,29 @@ export function RecentSales() {
     );
   return (
     <div className="space-y-8">
-      {recentSales.map((sale) => (
-        <div className="flex items-center" key={sale.id}>
+      {recentTransactions.map((transaction) => (
+        <div className="flex items-center" key={transaction.id}>
           <Avatar className="h-9 w-9">
-            <AvatarImage src={sale.user.Profile?.image ?? ""} alt="Avatar" />
+            <AvatarImage
+              src={transaction.user.Profile?.image ?? ""}
+              alt="Avatar"
+            />
             <AvatarFallback>OM</AvatarFallback>
           </Avatar>
           <div className="ml-4 space-y-1">
             <p className="text-sm font-medium leading-none">
-              {sale.user.Profile?.firstName} {sale.user.Profile?.lastName}
+              {transaction.user.Profile?.firstName}{" "}
+              {transaction.user.Profile?.lastName}
             </p>
-            <p className="text-muted-foreground text-sm">{sale.user.phone}</p>
+            <p className="text-muted-foreground text-sm">
+              {transaction.user.phone}
+            </p>
           </div>
-          <div className="ml-auto font-medium">{sale.payment.sentAmount}</div>
+          <div className="ml-auto font-medium">
+            {" "}
+            {transaction.payment.ExchangeRate.target}{" "}
+            {transaction.payment.sentAmount}
+          </div>
         </div>
       ))}
     </div>

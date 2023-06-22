@@ -369,6 +369,11 @@ export const transactionRouter = createTRPCRouter({
           payment: {
             select: {
               sentAmount: true,
+              ExchangeRate: {
+                select: {
+                  target: true,
+                },
+              },
             },
           },
           user: {
