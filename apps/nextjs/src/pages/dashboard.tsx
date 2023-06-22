@@ -384,7 +384,7 @@ export default function DashboardPage() {
                   </CardHeader>
                   <CardContent>
                     {!totalUsers ||
-                      (totalActiveUsers && (
+                      (!totalActiveUsers && (
                         <Skeleton className="h-4 w-1/2 rounded-md" />
                       ))}
                     <div className="text-2xl font-bold">
