@@ -366,12 +366,19 @@ export const transactionRouter = createTRPCRouter({
         select: {
           id: true,
           createdAt: true,
+          payment: {
+            select: {
+              sentAmount: true,
+            },
+          },
           user: {
             select: {
+              phone: true,
               Profile: {
                 select: {
                   lastName: true,
                   firstName: true,
+                  image: true,
                 },
               },
             },
