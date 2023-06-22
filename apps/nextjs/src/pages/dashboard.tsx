@@ -368,7 +368,7 @@ export default function DashboardPage() {
                       </CardHeader>
                       <CardContent>
                         <div className="text-2xl font-bold">
-                          {t.sentAmount} {t.sentAmount}
+                          {t.targetCurrency} {t.sentAmount}
                         </div>
                       </CardContent>
                     </Card>
@@ -406,7 +406,7 @@ export default function DashboardPage() {
                           className="text-2xl font-bold"
                           key={t.exchangeRateId}
                         >
-                          {t.numberOfTransactions}
+                          {t.targetCurrency} {t.numberOfTransactions}
                         </div>
                       ))}
                     {/* <p className="text-muted-foreground text-xs">
