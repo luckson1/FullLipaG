@@ -392,37 +392,39 @@ export const transactionRouter = createTRPCRouter({
       });
     return mostRecentCompletedTransactions;
   }),
-  getSuccessfulTransactionsPerMonth: adminProcedure.query(async ({ ctx }) => {
-    const currentDate = new Date();
-    const currentYear = currentDate.getFullYear();
+  getSuccessfulTransactionsPerMonth: protectedProcedure.query(
+    async ({ ctx }) => {
+      const currentDate = new Date();
+      const currentYear = currentDate.getFullYear();
 
-    const data = [];
+      const data = [];
 
-    for (let month = 0; month < 12; month++) {
-      const startDate = startOfMonth(new Date(currentYear, month, 1));
-      const endDate = endOfMonth(new Date(currentYear, month, 1));
+      for (let month = 0; month < 12; month++) {
+        const startDate = startOfMonth(new Date(currentYear, month, 1));
+        const endDate = endOfMonth(new Date(currentYear, month, 1));
 
-      const totalReceivedTransactions = await ctx.prisma.transaction.count({
-        where: {
-          Status: {
-            some: {
-              name: "Received",
+        const totalReceivedTransactions = await ctx.prisma.transaction.count({
+          where: {
+            Status: {
+              some: {
+                name: "Received",
+              },
+            },
+            createdAt: {
+              gte: startDate,
+              lte: endDate,
             },
           },
-          createdAt: {
-            gte: startDate,
-            lte: endDate,
-          },
-        },
-      });
+        });
 
-      const monthName = format(startDate, "MMM");
+        const monthName = format(startDate, "MMM");
 
-      data.push({
-        month: monthName,
-        total: totalReceivedTransactions,
-      });
-    }
-    return data;
-  }),
+        data.push({
+          month: monthName,
+          total: totalReceivedTransactions,
+        });
+      }
+      return data;
+    },
+  ),
 });
