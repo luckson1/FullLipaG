@@ -357,32 +357,42 @@ export default function DashboardPage() {
                     </CardContent>
                   </Card>
                 )}
-                {totals &&
-                  totals.map((t) => (
-                    <Card key={t.exchangeRateId}>
-                      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">
-                          Total Transactions
-                        </CardTitle>
-                        <DollarSign className="text-muted-foreground h-4 w-4" />
-                      </CardHeader>
-                      <CardContent>
-                        <div className="text-2xl font-bold">
+                {totals && (
+                  <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className="text-sm font-medium">
+                        Total Transactions
+                      </CardTitle>
+                      <DollarSign className="text-muted-foreground h-4 w-4" />
+                    </CardHeader>
+                    <CardContent>
+                      {totals.map((t) => (
+                        <div
+                          className="text-2xl font-bold"
+                          key={t.exchangeRateId}
+                        >
                           {t.targetCurrency} {t.sentAmount}
                         </div>
-                      </CardContent>
-                    </Card>
-                  ))}
+                      ))}
+                    </CardContent>
+                  </Card>
+                )}
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">Users</CardTitle>
                     <Users className="text-muted-foreground h-4 w-4" />
                   </CardHeader>
                   <CardContent>
-                    {!totalUsers && (
-                      <Skeleton className="h-4 w-1/2 rounded-md" />
-                    )}
-                    <div className="text-2xl font-bold">{totalUsers}</div>
+                    {!totalUsers ||
+                      (totalActiveUsers && (
+                        <Skeleton className="h-4 w-1/2 rounded-md" />
+                      ))}
+                    <div className="text-2xl font-bold">
+                      Total Users {totalUsers}
+                    </div>
+                    <div className="text-2xl font-bold">
+                      Active Users {totalActiveUsers}
+                    </div>
                     {/* <p className="text-muted-foreground text-xs">
                       +180.1% from last month
                     </p> */}
@@ -414,24 +424,6 @@ export default function DashboardPage() {
                     </p> */}
                   </CardContent>
                 </Card>
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">
-                      Active Users
-                    </CardTitle>
-                    <Activity className="text-muted-foreground h-4 w-4" />
-                  </CardHeader>
-                  <CardContent>
-                    {!totalActiveUsers &&
-                      Array(1).fill(
-                        <Skeleton className="h-8 w-1/2 rounded-md" />,
-                      )}
-                    <div className="text-2xl font-bold">{totalActiveUsers}</div>
-                    {/* <p className="text-muted-foreground text-xs">
-                      +201 since last hour
-                    </p> */}
-                  </CardContent>
-                </Card>
               </div>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
                 <Card className="col-span-4">
@@ -446,7 +438,7 @@ export default function DashboardPage() {
                   <CardHeader>
                     <CardTitle>Recent Transactions</CardTitle>
                     <CardDescription>
-                      You made {transactions} sales this month.
+                      There were {transactions} transactions this month.
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
