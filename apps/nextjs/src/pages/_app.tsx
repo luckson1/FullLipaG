@@ -9,7 +9,7 @@ import type { AppProps } from "next/app";
 import { SessionContextProvider } from "@supabase/auth-helpers-react";
 
 import { api } from "~/utils/api";
-import { Toast } from "~/components/ui/toast";
+import { Toast, ToastProvider } from "~/components/ui/toast";
 
 function MyApp({
   Component,
@@ -22,8 +22,10 @@ function MyApp({
       supabaseClient={supabaseClient}
       initialSession={pageProps.initialSession}
     >
-      <Component {...pageProps} />
-      <Toast />
+      <ToastProvider>
+        <Component {...pageProps} />
+        <Toast />
+      </ToastProvider>
     </SessionContextProvider>
   );
 }
