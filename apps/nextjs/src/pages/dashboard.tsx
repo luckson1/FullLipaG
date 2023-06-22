@@ -349,11 +349,11 @@ export default function DashboardPage() {
                 {!totals && (
                   <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <Skeleton className="h-4 w-1/3 rounded-md" />
+                      <Skeleton className="h-8 w-1/2 rounded-md" />
                       <DollarSign className="text-muted-foreground h-4 w-4" />
                     </CardHeader>
                     <CardContent>
-                      <Skeleton className="h-8 w-1/3 rounded-md" />
+                      <Skeleton className="h-8 w-1/2 rounded-md" />
                     </CardContent>
                   </Card>
                 )}
@@ -380,7 +380,7 @@ export default function DashboardPage() {
                   </CardHeader>
                   <CardContent>
                     {!totalUsers && (
-                      <Skeleton className="h-4 w-1/3 rounded-md" />
+                      <Skeleton className="h-4 w-1/2 rounded-md" />
                     )}
                     <div className="text-2xl font-bold">{totalUsers}</div>
                     {/* <p className="text-muted-foreground text-xs">
@@ -398,7 +398,7 @@ export default function DashboardPage() {
                   <CardContent>
                     {!totals &&
                       Array(2).fill(
-                        <Skeleton className="h-8 w-1/3 rounded-md" />,
+                        <Skeleton className="my-2 h-8 w-1/2 rounded-md" />,
                       )}
                     {totals &&
                       totals.map((t) => (
@@ -424,7 +424,7 @@ export default function DashboardPage() {
                   <CardContent>
                     {!totalActiveUsers &&
                       Array(1).fill(
-                        <Skeleton className="h-8 w-1/3 rounded-md" />,
+                        <Skeleton className="h-8 w-1/2 rounded-md" />,
                       )}
                     <div className="text-2xl font-bold">{totalActiveUsers}</div>
                     {/* <p className="text-muted-foreground text-xs">
