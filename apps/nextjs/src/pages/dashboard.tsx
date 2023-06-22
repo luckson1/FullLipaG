@@ -112,7 +112,7 @@ export function Overview() {
   if (!data) {
     return (
       <ResponsiveContainer width="100%" height={350}>
-        <div className="flex flex-row items-end justify-between">
+        <div className="flex flex-1 flex-row items-end justify-between">
           {Array(12).fill(<Skeleton className="h-3/4 w-5 rounded-md" />)}
         </div>
       </ResponsiveContainer>
