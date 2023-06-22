@@ -148,7 +148,10 @@ export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
 // protected admin route
 const enforceUserIsAdmin = t.middleware(({ ctx, next }) => {
   if (!ctx.user?.userRole || ctx.user.userRole !== "ADMIN") {
-    throw new TRPCError({ code: "UNAUTHORIZED", message: ctx.user?.userRole });
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: ctx.user?.userRole ?? "none",
+    });
   }
   return next({
     ctx: {
