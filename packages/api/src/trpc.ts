@@ -27,16 +27,9 @@ import { prisma } from "@acme/db";
  * processing a request
  *
  */
-enum userRoles {
-  USER = "USER",
-  ADMIN = "ADMIN",
-  SUPER_ADMIN = "SUPER_ADMIN",
-}
-interface ExtendedUser extends User {
-  userRole: userRoles;
-}
+
 type CreateContextOptions = {
-  user: ExtendedUser | null;
+  user: User | null;
 };
 
 /**
@@ -72,7 +65,7 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
     : await supabase.auth.getUser();
 
   return createInnerTRPCContext({
-    user: user.data.user as ExtendedUser,
+    user: user.data.user,
   });
 };
 
@@ -146,18 +139,27 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
 export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
 
 // protected admin route
-const enforceUserIsAdmin = t.middleware(({ ctx, next }) => {
-  if (!ctx.user?.userRole || ctx.user.userRole !== "ADMIN") {
+const enforceUserIsAdmin = t.middleware(async ({ ctx, next }) => {
+  if (!ctx?.user?.id) {
     throw new TRPCError({
       code: "UNAUTHORIZED",
-      message: ctx.user?.userRole ?? "none",
+    });
+  }
+  const user = await prisma.users.findUniqueOrThrow({
+    where: {
+      id: ctx.user.id,
+    },
+  });
+  if (user.userRole === "USER") {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
     });
   }
   return next({
     ctx: {
       // infers the `user` as non-nullable
       user: ctx.user,
-      role: ctx.user.userRole,
+      role: user.userRole,
     },
   });
 });
