@@ -349,7 +349,7 @@ export const transactionRouter = createTRPCRouter({
 
     return countReceivedTransactionsThisMonth;
   }),
-  getRecentTransactions: protectedProcedure.query(async ({ ctx }) => {
+  getRecentTransactions: adminProcedure.query(async ({ ctx }) => {
     const mostRecentCompletedTransactions =
       await ctx.prisma.transaction.findMany({
         where: {
@@ -392,47 +392,45 @@ export const transactionRouter = createTRPCRouter({
       });
     return mostRecentCompletedTransactions;
   }),
-  getSuccessfulTransactionsPerMonth: protectedProcedure.query(
-    async ({ ctx }) => {
-      const currentDate = new Date();
-      const currentYear = currentDate.getFullYear();
+  getSuccessfulTransactionsPerMonth: adminProcedure.query(async ({ ctx }) => {
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
 
-      const data = [];
+    const data = [];
 
-      for (let month = 0; month < 12; month++) {
-        const startDate = startOfMonth(new Date(currentYear, month, 1));
-        const endDate = endOfMonth(new Date(currentYear, month, 1));
+    for (let month = 0; month < 12; month++) {
+      const startDate = startOfMonth(new Date(currentYear, month, 1));
+      const endDate = endOfMonth(new Date(currentYear, month, 1));
 
-        const totalSentAmount = await ctx.prisma.payment.aggregate({
-          where: {
-            Transaction: {
-              some: {
-                Status: {
-                  some: {
-                    name: "Received",
-                  },
+      const totalSentAmount = await ctx.prisma.payment.aggregate({
+        where: {
+          Transaction: {
+            some: {
+              Status: {
+                some: {
+                  name: "Received",
                 },
               },
             },
-            createdAt: {
-              gte: startDate,
-              lte: endDate,
-            },
           },
-          _sum: {
-            remittedAmount: true,
+          createdAt: {
+            gte: startDate,
+            lte: endDate,
           },
-        });
+        },
+        _sum: {
+          remittedAmount: true,
+        },
+      });
 
-        const monthName = format(startDate, "MMM");
+      const monthName = format(startDate, "MMM");
 
-        data.push({
-          name: monthName,
-          total: totalSentAmount._sum.remittedAmount || 0,
-        });
-      }
+      data.push({
+        name: monthName,
+        total: totalSentAmount._sum.remittedAmount || 0,
+      });
+    }
 
-      return data;
-    },
-  ),
+    return data;
+  }),
 });

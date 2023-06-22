@@ -122,7 +122,7 @@ export function Overview() {
           fontSize={8}
           tickLine={false}
           axisLine={false}
-          tickFormatter={(value) => `KES${value}`}
+          tickFormatter={(value) => `KES ${value}`}
         />
         <Bar dataKey="total" fill="rgb(20 184 166)" radius={[4, 4, 0, 0]} />
       </BarChart>
@@ -181,6 +181,7 @@ export function CalendarDateRangePicker({
   );
 }
 export function UserNav() {
+  const { data: profile } = api.profile.getUserProfile.useQuery();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -194,9 +195,11 @@ export function UserNav() {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">shadcn</p>
+            <p className="text-sm font-medium leading-none">
+              {profile?.firstName}
+            </p>
             <p className="text-muted-foreground text-xs leading-none">
-              m@example.com
+              {profile?.email ?? profile?.email}
             </p>
           </div>
         </DropdownMenuLabel>
@@ -264,13 +267,13 @@ export function MainNav({
         href="/examples/dashboard"
         className="text-muted-foreground hover:text-primary text-sm font-medium transition-colors"
       >
-        Customers
+        Users
       </Link>
       <Link
         href="/examples/dashboard"
         className="text-muted-foreground hover:text-primary text-sm font-medium transition-colors"
       >
-        Products
+        Transactions
       </Link>
       <Link
         href="/examples/dashboard"
@@ -282,6 +285,9 @@ export function MainNav({
   );
 }
 export default function DashboardPage() {
+  const { data: transactions } =
+    api.transaction.getTransactionsMadeThisMonth.useQuery();
+  const { data: totals } = api.payment.getTotalsByCurrency.useQuery();
   return (
     <>
       <div className="hidden flex-col md:flex">
@@ -383,9 +389,9 @@ export default function DashboardPage() {
                 </Card>
                 <Card className="col-span-3">
                   <CardHeader>
-                    <CardTitle>Recent Sales</CardTitle>
+                    <CardTitle>Recent Transactions</CardTitle>
                     <CardDescription>
-                      You made 265 sales this month.
+                      You made {transactions} sales this month.
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
