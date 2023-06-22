@@ -72,7 +72,7 @@ export function RecentSales() {
         {Array(5).fill(
           <div className="flex items-center">
             <Skeleton className="h-10 w-10 rounded-full" />
-            <Skeleton className="mx-4 h-16 w-full rounded-md" />
+            <Skeleton className="mx-4 h-12 w-full rounded-md" />
           </div>,
         )}
       </div>
