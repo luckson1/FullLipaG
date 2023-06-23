@@ -413,7 +413,7 @@ export default function TransactionsPage() {
               </Button>
             </div>
           </div>
-          {!data && <Skeleton className="h-full w-full" />}
+          {!data && <Skeleton className="h-full w-full flex-[80%]" />}
           {data && <DataTable data={data} />}
         </div>
       </div>
