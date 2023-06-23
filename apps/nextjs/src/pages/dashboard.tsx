@@ -112,7 +112,7 @@ export function Overview() {
   if (!data) {
     return (
       <ResponsiveContainer width="100%" height={350}>
-        <div className="flex flex-1 flex-row items-end justify-between">
+        <div className="flex h-full w-full flex-1 flex-row items-end justify-between">
           {Array(12).fill(<Skeleton className="h-3/4 w-5 rounded-md" />)}
         </div>
       </ResponsiveContainer>
@@ -275,25 +275,25 @@ export function MainNav({
       {...props}
     >
       <Link
-        href="/examples/dashboard"
+        href="/dashboard"
         className="hover:text-primary text-sm font-medium transition-colors"
       >
         Overview
       </Link>
       <Link
-        href="/examples/dashboard"
+        href="/users"
         className="text-muted-foreground hover:text-primary text-sm font-medium transition-colors"
       >
         Users
       </Link>
       <Link
-        href="/examples/dashboard"
+        href="/transactions"
         className="text-muted-foreground hover:text-primary text-sm font-medium transition-colors"
       >
         Transactions
       </Link>
       <Link
-        href="/examples/dashboard"
+        href="/settings"
         className="text-muted-foreground hover:text-primary text-sm font-medium transition-colors"
       >
         Settings
