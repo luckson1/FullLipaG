@@ -132,9 +132,7 @@ export const columns: ColumnDef<Transaction>[] = [
       const amount = parseFloat(row.getValue("amount"));
 
       // Format the amount as a dollar amount
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-      }).format(amount);
+      const formatted = new Intl.NumberFormat("en-US", {}).format(amount);
 
       return <div className="text-right font-medium">{formatted}</div>;
     },
@@ -145,9 +143,7 @@ export const columns: ColumnDef<Transaction>[] = [
     cell: ({ row }) => {
       const rate = parseFloat(row.getValue("rate"));
 
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-      }).format(rate);
+      const formatted = new Intl.NumberFormat("en-US", {}).format(rate);
 
       return <div className="text-right font-medium">{formatted}</div>;
     },
@@ -184,7 +180,7 @@ export const columns: ColumnDef<Transaction>[] = [
     },
     cell: ({ row }) => (
       <div className="lowercase">
-        {format(new Date(row.getValue("senderPhone")), "MM/dd/yyyy")}
+        {format(row.getValue("senderPhone"), "MM/dd/yyyy")}
       </div>
     ),
   },
