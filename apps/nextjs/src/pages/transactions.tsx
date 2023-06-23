@@ -173,13 +173,15 @@ export const columns: ColumnDef<Transaction>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Sender Number
+          Date
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
       );
     },
     cell: ({ row }) => (
-      <div className="lowercase">{row.getValue("senderPhone")}</div>
+      <div className="lowercase">
+        {format(new Date(row.getValue("time")), "MM/dd/yyyy")}
+      </div>
     ),
   },
   {
