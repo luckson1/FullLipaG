@@ -113,7 +113,7 @@ export function Overview() {
     return (
       <ResponsiveContainer width="100%" height={350}>
         <div className="flex h-full w-full flex-1 flex-row items-end justify-between">
-          {Array(12).fill(<Skeleton className="h-3/4 w-5 rounded-md" />)}
+          {Array(12).fill(<Skeleton className="h-3/4 w-8 rounded-md" />)}
         </div>
       </ResponsiveContainer>
     );
