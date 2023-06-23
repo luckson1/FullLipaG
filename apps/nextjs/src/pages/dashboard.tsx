@@ -368,7 +368,7 @@ export default function DashboardPage() {
                     <CardContent>
                       {totals.map((t) => (
                         <div
-                          className="text-2xl font-bold"
+                          className="text-lg font-bold"
                           key={t.exchangeRateId}
                         >
                           {t.targetCurrency} {t.sentAmount}
@@ -383,16 +383,22 @@ export default function DashboardPage() {
                     <Users className="text-muted-foreground h-4 w-4" />
                   </CardHeader>
                   <CardContent>
-                    {!totalUsers ||
-                      (!totalActiveUsers && (
-                        <Skeleton className="h-4 w-1/2 rounded-md" />
-                      ))}
-                    <div className="text-2xl font-bold">
-                      Total Users {totalUsers}
-                    </div>
-                    <div className="text-2xl font-bold">
-                      Active Users {totalActiveUsers}
-                    </div>
+                    {!totalActiveUsers && (
+                      <Skeleton className="w-2/2 my-2 h-4 rounded-md" />
+                    )}
+                    {!totalUsers && (
+                      <Skeleton className="w-2/2 my-2 h-4 rounded-md" />
+                    )}
+                    {totalUsers && (
+                      <div className="text-lg font-bold">
+                        Total Users {totalUsers}
+                      </div>
+                    )}
+                    {totalActiveUsers && (
+                      <div className="text-lg font-bold">
+                        Active Users {totalActiveUsers}
+                      </div>
+                    )}
                     {/* <p className="text-muted-foreground text-xs">
                       +180.1% from last month
                     </p> */}
@@ -413,7 +419,7 @@ export default function DashboardPage() {
                     {totals &&
                       totals.map((t) => (
                         <div
-                          className="text-2xl font-bold"
+                          className="text-lg font-bold"
                           key={t.exchangeRateId}
                         >
                           {t.targetCurrency} {t.numberOfTransactions}
