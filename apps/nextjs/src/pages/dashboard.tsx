@@ -370,7 +370,7 @@ export default function DashboardPage() {
                     <CardContent>
                       {totals.map((t) => (
                         <div
-                          className="flex flex-row justify-around text-lg font-bold"
+                          className="flex flex-row justify-between text-lg font-bold"
                           key={t.exchangeRateId}
                         >
                           <p> {t.targetCurrency}</p>
@@ -393,13 +393,13 @@ export default function DashboardPage() {
                       <Skeleton className="my-2 h-8 w-full rounded-md" />
                     )}
                     {totalUsers && (
-                      <div className="flex flex-row justify-around text-lg font-bold">
+                      <div className="flex flex-row justify-between text-lg font-bold">
                         <p> Total Users</p>
                         <p> {totalUsers}</p>
                       </div>
                     )}
                     {totalActiveUsers && (
-                      <div className="flex flex-row justify-around text-lg font-bold">
+                      <div className="flex flex-row justify-between text-lg font-bold">
                         <p>Active Users</p>
                         <p>{totalActiveUsers}</p>
                       </div>
@@ -424,10 +424,11 @@ export default function DashboardPage() {
                     {totals &&
                       totals.map((t) => (
                         <div
-                          className="text-lg font-bold"
+                          className="flex flex-row justify-between text-lg font-bold"
                           key={t.exchangeRateId}
                         >
-                          {t.targetCurrency} {t.numberOfTransactions}
+                          <p> {t.targetCurrency}</p>
+                          <p> {t.numberOfTransactions}</p>
                         </div>
                       ))}
                     {/* <p className="text-muted-foreground text-xs">
