@@ -195,6 +195,10 @@ export const transactionRouter = createTRPCRouter({
           },
         },
         Status: {
+          orderBy: {
+            createdAt: "desc",
+          },
+          take: 1,
           select: {
             name: true,
           },
