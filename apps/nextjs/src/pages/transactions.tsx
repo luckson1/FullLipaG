@@ -179,9 +179,7 @@ export const columns: ColumnDef<Transaction>[] = [
       );
     },
     cell: ({ row }) => (
-      <div className="lowercase">
-        {format(row.getValue("senderPhone"), "MM/dd/yyyy")}
-      </div>
+      <div className="lowercase">{row.getValue("senderPhone")}</div>
     ),
   },
   {
