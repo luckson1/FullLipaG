@@ -1,5 +1,6 @@
 import { Download } from "lucide-react";
 
+import { ModeToggle } from "~/components/mode-toggle";
 import { Button } from "~/components/ui/button";
 import { CalendarDateRangePicker, MainNav, Search, UserNav } from "./dashboard";
 
@@ -12,6 +13,7 @@ export default function UsersPage() {
             <MainNav className="mx-6" />
             <div className="ml-auto flex items-center space-x-4">
               <Search />
+              <ModeToggle />
               <UserNav />
             </div>
           </div>

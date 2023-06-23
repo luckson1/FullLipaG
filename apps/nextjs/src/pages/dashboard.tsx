@@ -21,6 +21,7 @@ import { type DateRange } from "react-day-picker";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
 import { api } from "~/utils/api";
+import { ModeToggle } from "~/components/mode-toggle";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Calendar } from "~/components/ui/calendar";
@@ -332,6 +333,7 @@ export default function DashboardPage() {
             <MainNav className="mx-6" />
             <div className="ml-auto flex items-center space-x-4">
               <Search />
+              <ModeToggle />
               <UserNav />
             </div>
           </div>
