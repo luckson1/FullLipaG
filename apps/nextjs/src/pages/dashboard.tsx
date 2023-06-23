@@ -355,7 +355,8 @@ export default function DashboardPage() {
                       <DollarSign className="text-muted-foreground h-4 w-4" />
                     </CardHeader>
                     <CardContent>
-                      <Skeleton className="h-8 w-full rounded-md" />
+                      <Skeleton className="my-2 h-8 w-full rounded-md" />
+                      <Skeleton className="my-2 h-8 w-full rounded-md" />
                     </CardContent>
                   </Card>
                 )}
