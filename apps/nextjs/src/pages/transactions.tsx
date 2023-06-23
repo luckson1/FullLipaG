@@ -16,8 +16,12 @@ import {
   type SortingState,
   type VisibilityState,
 } from "@tanstack/react-table";
+import { format } from "date-fns";
 import { Download } from "lucide-react";
 
+import { type StatusName } from "@acme/db";
+
+import { api } from "~/utils/api";
 import { ModeToggle } from "~/components/mode-toggle";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
@@ -31,6 +35,7 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { Input } from "~/components/ui/input";
+import { Skeleton } from "~/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -41,47 +46,20 @@ import {
 } from "~/components/ui/table";
 import { CalendarDateRangePicker, MainNav, Search, UserNav } from "./dashboard";
 
-const data: Payment[] = [
-  {
-    id: "m5gr84i9",
-    amount: 316,
-    status: "success",
-    email: "ken99@yahoo.com",
-  },
-  {
-    id: "3u1reuv4",
-    amount: 242,
-    status: "success",
-    email: "Abe45@gmail.com",
-  },
-  {
-    id: "derv1ws0",
-    amount: 837,
-    status: "processing",
-    email: "Monserrat44@gmail.com",
-  },
-  {
-    id: "5kma53ae",
-    amount: 874,
-    status: "success",
-    email: "Silas22@gmail.com",
-  },
-  {
-    id: "bhqecj4p",
-    amount: 721,
-    status: "failed",
-    email: "carmella@hotmail.com",
-  },
-];
-
-export type Payment = {
+export type Transaction = {
   id: string;
+  currency: string;
   amount: number;
-  status: "pending" | "processing" | "success" | "failed";
-  email: string;
+  rate: number | undefined;
+  recipient: string;
+  status: StatusName | undefined;
+  time: Date;
+  reference: string | null;
+  senderEmail: string | undefined;
+  senderPhone: string | null;
 };
 
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<Transaction>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -103,25 +81,49 @@ export const columns: ColumnDef<Payment>[] = [
   },
   {
     accessorKey: "status",
-    header: "Status",
+    header: "status",
     cell: ({ row }) => (
       <div className="capitalize">{row.getValue("status")}</div>
     ),
   },
   {
-    accessorKey: "email",
+    accessorKey: "senderEmail",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Email
+          Sender Email
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
       );
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
+    cell: ({ row }) => (
+      <div className="lowercase">{row.getValue("senderEmail")}</div>
+    ),
+  },
+  {
+    accessorKey: "senderPhone",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Sender Number
+          <CaretSortIcon className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => (
+      <div className="lowercase">{row.getValue("senderPhone")}</div>
+    ),
+  },
+  {
+    accessorKey: "currency",
+    header: "currency",
+    cell: ({ row }) => <div>{row.getValue("currency")}</div>,
   },
   {
     accessorKey: "amount",
@@ -132,11 +134,66 @@ export const columns: ColumnDef<Payment>[] = [
       // Format the amount as a dollar amount
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
-        currency: "USD",
       }).format(amount);
 
       return <div className="text-right font-medium">{formatted}</div>;
     },
+  },
+  {
+    accessorKey: "rate",
+    header: () => <div className="text-right">rate</div>,
+    cell: ({ row }) => {
+      const rate = parseFloat(row.getValue("rate"));
+
+      const formatted = new Intl.NumberFormat("en-US", {
+        style: "currency",
+      }).format(rate);
+
+      return <div className="text-right font-medium">{formatted}</div>;
+    },
+  },
+  {
+    accessorKey: "recipient",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Recipient
+          <CaretSortIcon className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => (
+      <div className="lowercase">{row.getValue("recipient")}</div>
+    ),
+  },
+  {
+    accessorKey: "time",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Sender Number
+          <CaretSortIcon className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => (
+      <div className="lowercase">
+        {format(new Date(row.getValue("senderPhone")), "MM/dd/yyyy")}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "reference",
+    header: "reference",
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue("reference")}</div>
+    ),
   },
   {
     id: "actions",
@@ -169,7 +226,7 @@ export const columns: ColumnDef<Payment>[] = [
   },
 ];
 
-export function DataTable() {
+export function DataTable({ data }: { data: Transaction[] }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -314,6 +371,8 @@ export function DataTable() {
 }
 
 export default function TransactionsPage() {
+  const { data } = api.transaction.getAll.useQuery();
+
   return (
     <>
       <div className="hidden flex-col md:flex">
@@ -338,7 +397,8 @@ export default function TransactionsPage() {
               </Button>
             </div>
           </div>
-          <DataTable />
+          {!data && <Skeleton className="h-full w-full" />}
+          {data && <DataTable data={data} />}
         </div>
       </div>
     </>
