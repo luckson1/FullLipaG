@@ -349,11 +349,13 @@ export default function DashboardPage() {
                 {!totals && (
                   <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <Skeleton className="h-8 w-1/2 rounded-md" />
+                      <CardTitle className="text-sm font-medium">
+                        Total Transactions
+                      </CardTitle>
                       <DollarSign className="text-muted-foreground h-4 w-4" />
                     </CardHeader>
                     <CardContent>
-                      <Skeleton className="h-8 w-1/2 rounded-md" />
+                      <Skeleton className="h-8 w-full rounded-md" />
                     </CardContent>
                   </Card>
                 )}
@@ -368,10 +370,11 @@ export default function DashboardPage() {
                     <CardContent>
                       {totals.map((t) => (
                         <div
-                          className="text-lg font-bold"
+                          className="flex flex-row justify-around text-lg font-bold"
                           key={t.exchangeRateId}
                         >
-                          {t.targetCurrency} {t.sentAmount}
+                          <p> {t.targetCurrency}</p>
+                          <p> {t.sentAmount}</p>
                         </div>
                       ))}
                     </CardContent>
@@ -384,19 +387,21 @@ export default function DashboardPage() {
                   </CardHeader>
                   <CardContent>
                     {!totalActiveUsers && (
-                      <Skeleton className="w-2/2 my-2 h-4 rounded-md" />
+                      <Skeleton className="my-2 h-8 w-full rounded-md" />
                     )}
                     {!totalUsers && (
-                      <Skeleton className="w-2/2 my-2 h-4 rounded-md" />
+                      <Skeleton className="my-2 h-8 w-full rounded-md" />
                     )}
                     {totalUsers && (
-                      <div className="text-lg font-bold">
-                        Total Users {totalUsers}
+                      <div className="flex flex-row justify-around text-lg font-bold">
+                        <p> Total Users</p>
+                        <p> {totalUsers}</p>
                       </div>
                     )}
                     {totalActiveUsers && (
-                      <div className="text-lg font-bold">
-                        Active Users {totalActiveUsers}
+                      <div className="flex flex-row justify-around text-lg font-bold">
+                        <p>Active Users</p>
+                        <p>{totalActiveUsers}</p>
                       </div>
                     )}
                     {/* <p className="text-muted-foreground text-xs">
@@ -414,7 +419,7 @@ export default function DashboardPage() {
                   <CardContent>
                     {!totals &&
                       Array(2).fill(
-                        <Skeleton className="my-2 h-8 w-1/2 rounded-md" />,
+                        <Skeleton className="my-2 h-8 w-full rounded-md" />,
                       )}
                     {totals &&
                       totals.map((t) => (
