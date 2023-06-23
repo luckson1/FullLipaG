@@ -169,7 +169,7 @@ export const columns: ColumnDef<Payment>[] = [
   },
 ];
 
-export function DataTableDemo() {
+export function DataTable() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -338,6 +338,7 @@ export default function TransactionsPage() {
               </Button>
             </div>
           </div>
+          <DataTable />
         </div>
       </div>
     </>
