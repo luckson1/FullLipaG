@@ -122,40 +122,39 @@ export const columns: ColumnDef<Transaction>[] = [
   },
   {
     accessorKey: "currency",
-    header: "currency",
-    cell: ({ row, column }) => {
+    header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          <div className="text-right font-medium">
-            {row.getValue("currency")}
-          </div>
-          ;
+          Currency
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
       );
     },
+    cell: ({ row }) => <div>{row.getValue("currency")}</div>,
   },
   {
     accessorKey: "amount",
-    header: () => <div className="text-right">Amount</div>,
-    cell: ({ row, column }) => {
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Amount
+          <CaretSortIcon className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
       const amount = parseFloat(row.getValue("amount"));
 
       // Format the amount as a dollar amount
       const formatted = new Intl.NumberFormat("en-US", {}).format(amount);
 
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          <div className="text-right font-medium">{formatted}</div>;
-          <CaretSortIcon className="ml-2 h-4 w-4" />
-        </Button>
-      );
+      return <div className="text-right font-medium">{formatted}</div>;
     },
   },
   {
