@@ -24,10 +24,8 @@ function MyApp({
       initialSession={pageProps.initialSession}
     >
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-        <ToastProvider>
-          <Component {...pageProps} />
-          <Toast />
-        </ToastProvider>
+        <Component {...pageProps} />
+        <Toast />
       </ThemeProvider>
     </SessionContextProvider>
   );
