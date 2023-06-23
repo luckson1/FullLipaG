@@ -187,13 +187,65 @@ export const transactionRouter = createTRPCRouter({
       return editedPayment;
     }),
   getAll: adminProcedure.query(async ({ ctx }) => {
-    const transactions = await ctx.prisma.transaction.findMany();
+    const transactions = await ctx.prisma.transaction.findMany({
+      include: {
+        recipient: {
+          select: {
+            name: true,
+          },
+        },
+        Status: {
+          select: {
+            name: true,
+          },
+        },
+        user: {
+          select: {
+            phone: true,
+            email: true,
+
+            Profile: {
+              select: {
+                email: true,
+              },
+            },
+          },
+        },
+        payment: {
+          select: {
+            sentAmount: true,
+            ExchangeRate: {
+              select: {
+                target: true,
+                Rate: {
+                  select: {
+                    value: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
     if (!transactions)
       throw new TRPCError({
         code: "NOT_FOUND",
         message: "Transactions not found.",
       });
-    return transactions;
+    const formattedTransaction = transactions.map((t) => ({
+      id: t.id,
+      currency: t.payment.ExchangeRate.target,
+      amount: t.payment.sentAmount,
+      rate: t.payment.ExchangeRate.Rate.at(0)?.value,
+      recipient: t.recipient.name,
+      status: t.Status.at(0)?.name,
+      time: t.createdAt,
+      reference: t.bankReferenceNumber,
+      senderEmail: t.user.email ?? t.user.Profile?.email,
+      senderPhone: t.user.phone,
+    }));
+    return formattedTransaction;
   }),
   getOne: adminProcedure
     .input(
