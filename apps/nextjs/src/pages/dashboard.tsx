@@ -127,7 +127,7 @@ export function Overview() {
             .map((_, index) => (
               <Skeleton
                 key={index}
-                className=" w-8 rounded-md"
+                className=" w-12 rounded-md"
                 style={{ height: getRandomHeight() }}
               />
             ))}
