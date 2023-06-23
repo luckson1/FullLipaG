@@ -51,10 +51,11 @@ import {
 import { Skeleton } from "~/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { ToastAction } from "~/components/ui/toast";
-import { toast } from "~/components/ui/use-toast";
+import { useToast } from "~/components/ui/use-toast";
 import { cn } from "~/lib/utils";
 
 export function RecentSales() {
+  const { toast } = useToast();
   const { data: recentTransactions, isLoading } =
     api.transaction.getRecentTransactions.useQuery(undefined, {
       onError(err) {
@@ -109,7 +110,20 @@ export function RecentSales() {
 }
 
 export function Overview() {
-  const { data } = api.transaction.getSuccessfulTransactionsPerMonth.useQuery();
+  const { toast } = useToast();
+  const { data } = api.transaction.getSuccessfulTransactionsPerMonth.useQuery(
+    undefined,
+    {
+      onError(err) {
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: ` There was a problem: ${err.message}`,
+          action: <ToastAction altText="Try again">Try again</ToastAction>,
+        });
+      },
+    },
+  );
   const getRandomHeight = () => {
     const minHeight = 50; // minimum height in pixels
     const maxHeight = 300; // maximum height in pixels
@@ -209,7 +223,17 @@ export function CalendarDateRangePicker({
   );
 }
 export function UserNav() {
-  const { data: profile } = api.profile.getUserProfile.useQuery();
+  const { toast } = useToast();
+  const { data: profile } = api.profile.getUserProfile.useQuery(undefined, {
+    onError(err) {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: ` There was a problem: ${err.message}`,
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      });
+    },
+  });
   const router = useRouter();
   const supabase = useSupabaseClient();
   const handleLogout = async () => {
@@ -319,12 +343,52 @@ export function MainNav({
   );
 }
 export default function DashboardPage() {
+  const { toast } = useToast();
   const { data: transactions } =
-    api.transaction.getTransactionsMadeThisMonth.useQuery();
-  const { data: totals } = api.payment.getTotalsByCurrency.useQuery();
-  const { data: totalUsers } = api.profile.getNumberOfUsers.useQuery();
+    api.transaction.getTransactionsMadeThisMonth.useQuery(undefined, {
+      onError(err) {
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: ` There was a problem: ${err.message}`,
+          action: <ToastAction altText="Try again">Try again</ToastAction>,
+        });
+      },
+    });
+  const { data: totals } = api.payment.getTotalsByCurrency.useQuery(undefined, {
+    onError(err) {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: ` There was a problem: ${err.message}`,
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      });
+    },
+  });
+  const { data: totalUsers } = api.profile.getNumberOfUsers.useQuery(
+    undefined,
+    {
+      onError(err) {
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: ` There was a problem: ${err.message}`,
+          action: <ToastAction altText="Try again">Try again</ToastAction>,
+        });
+      },
+    },
+  );
   const { data: totalActiveUsers } =
-    api.profile.getNumberOfActiveUsers.useQuery();
+    api.profile.getNumberOfActiveUsers.useQuery(undefined, {
+      onError(err) {
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: ` There was a problem: ${err.message}`,
+          action: <ToastAction altText="Try again">Try again</ToastAction>,
+        });
+      },
+    });
   return (
     <>
       <div className="hidden flex-col md:flex">

@@ -4,6 +4,7 @@ import {
   ChevronDownIcon,
   DotsHorizontalIcon,
 } from "@radix-ui/react-icons";
+import { ToastAction } from "@radix-ui/react-toast";
 import {
   flexRender,
   getCoreRowModel,
@@ -44,6 +45,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
+import { useToast } from "~/components/ui/use-toast";
 import { CalendarDateRangePicker, MainNav, Search, UserNav } from "./dashboard";
 
 export type Transaction = {
@@ -387,7 +389,17 @@ export function DataTable({ data }: { data: Transaction[] }) {
 }
 
 export default function TransactionsPage() {
-  const { data } = api.transaction.getAll.useQuery();
+  const { toast } = useToast();
+  const { data } = api.transaction.getAll.useQuery(undefined, {
+    onError(err) {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: ` There was a problem: ${err.message}`,
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      });
+    },
+  });
 
   return (
     <>
