@@ -41,8 +41,6 @@ import {
 } from "~/components/ui/table";
 import { CalendarDateRangePicker, MainNav, Search, UserNav } from "./dashboard";
 
-("use client");
-
 const data: Payment[] = [
   {
     id: "m5gr84i9",
