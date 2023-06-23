@@ -111,7 +111,7 @@ export function Overview() {
   const { data } = api.transaction.getSuccessfulTransactionsPerMonth.useQuery();
   const getRandomHeight = () => {
     const minHeight = 50; // minimum height in pixels
-    const maxHeight = 200; // maximum height in pixels
+    const maxHeight = 300; // maximum height in pixels
     return `${
       Math.floor(Math.random() * (maxHeight - minHeight + 1)) + minHeight
     }px`;
