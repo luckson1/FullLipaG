@@ -109,11 +109,27 @@ export function RecentSales() {
 
 export function Overview() {
   const { data } = api.transaction.getSuccessfulTransactionsPerMonth.useQuery();
+  const getRandomHeight = () => {
+    const minHeight = 50; // minimum height in pixels
+    const maxHeight = 200; // maximum height in pixels
+    return `${
+      Math.floor(Math.random() * (maxHeight - minHeight + 1)) + minHeight
+    }px`;
+  };
+
   if (!data) {
     return (
       <ResponsiveContainer width="100%" height={350}>
         <div className="flex h-full w-full flex-1 flex-row items-end justify-between">
-          {Array(12).fill(<Skeleton className="h-3/4 w-8 rounded-md" />)}
+          {Array(12)
+            .fill(null)
+            .map((_, index) => (
+              <Skeleton
+                key={index}
+                className=" w-8 rounded-md"
+                style={{ height: getRandomHeight() }}
+              />
+            ))}
         </div>
       </ResponsiveContainer>
     );
