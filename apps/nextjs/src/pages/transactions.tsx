@@ -123,18 +123,39 @@ export const columns: ColumnDef<Transaction>[] = [
   {
     accessorKey: "currency",
     header: "currency",
-    cell: ({ row }) => <div>{row.getValue("currency")}</div>,
+    cell: ({ row, column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          <div className="text-right font-medium">
+            {row.getValue("currency")}
+          </div>
+          ;
+          <CaretSortIcon className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   {
     accessorKey: "amount",
     header: () => <div className="text-right">Amount</div>,
-    cell: ({ row }) => {
+    cell: ({ row, column }) => {
       const amount = parseFloat(row.getValue("amount"));
 
       // Format the amount as a dollar amount
       const formatted = new Intl.NumberFormat("en-US", {}).format(amount);
 
-      return <div className="text-right font-medium">{formatted}</div>;
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          <div className="text-right font-medium">{formatted}</div>;
+          <CaretSortIcon className="ml-2 h-4 w-4" />
+        </Button>
+      );
     },
   },
   {
