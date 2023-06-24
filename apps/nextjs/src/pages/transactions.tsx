@@ -280,7 +280,27 @@ export function DataTable({ data }: { data: Transaction[] }) {
           onChange={(event) =>
             table.getColumn("status")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="max-w-xs"
+        />
+        <Input
+          placeholder="Filter Phone Numbers..."
+          value={
+            (table.getColumn("senderPhone")?.getFilterValue() as string) ?? ""
+          }
+          onChange={(event) =>
+            table.getColumn("senderPhone")?.setFilterValue(event.target.value)
+          }
+          className="max-w-xs"
+        />
+        <Input
+          placeholder="Filter recipients..."
+          value={
+            (table.getColumn("recipient")?.getFilterValue() as string) ?? ""
+          }
+          onChange={(event) =>
+            table.getColumn("recipient")?.setFilterValue(event.target.value)
+          }
+          className="max-w-xs"
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
