@@ -4,7 +4,6 @@ import {
   ChevronDownIcon,
   DotsHorizontalIcon,
 } from "@radix-ui/react-icons";
-import { ToastAction } from "@radix-ui/react-toast";
 import {
   flexRender,
   getCoreRowModel,
@@ -19,6 +18,7 @@ import {
 } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { Download } from "lucide-react";
+import { Toaster, toast } from "react-hot-toast";
 
 import { type StatusName } from "@acme/db";
 
@@ -45,7 +45,6 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { useToast } from "~/components/ui/use-toast";
 import { CalendarDateRangePicker, MainNav, Search, UserNav } from "./dashboard";
 
 export type Transaction = {
@@ -389,21 +388,16 @@ export function DataTable({ data }: { data: Transaction[] }) {
 }
 
 export default function TransactionsPage() {
-  const { toast } = useToast();
   const { data } = api.transaction.getAll.useQuery(undefined, {
     onError(err) {
-      toast({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: ` There was a problem: ${err.message}`,
-        action: <ToastAction altText="Try again">Try again</ToastAction>,
-      });
+      toast.error("An erro occured. Please try again");
     },
   });
 
   return (
     <>
       <div className="hidden flex-col md:flex">
+        <Toaster />
         <div className="border-b">
           <div className="flex h-16 items-center px-4">
             <MainNav className="mx-6" />

@@ -18,6 +18,7 @@ import {
   Users,
 } from "lucide-react";
 import { type DateRange } from "react-day-picker";
+import { Toaster, toast } from "react-hot-toast";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
 import { api } from "~/utils/api";
@@ -50,21 +51,13 @@ import {
 } from "~/components/ui/popover";
 import { Skeleton } from "~/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
-import { ToastAction } from "~/components/ui/toast";
-import { toast, useToast } from "~/components/ui/use-toast";
 import { cn } from "~/lib/utils";
 
 export function RecentSales() {
-  const { toast } = useToast();
   const { data: recentTransactions, isLoading } =
     api.transaction.getRecentTransactions.useQuery(undefined, {
       onError(err) {
-        toast({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description: ` There was a problem: ${err.message}`,
-          action: <ToastAction altText="Try again">Try again</ToastAction>,
-        });
+        toast.error("An error occured. Please try again");
       },
     });
   if (isLoading || !recentTransactions)
@@ -110,17 +103,11 @@ export function RecentSales() {
 }
 
 export function Overview() {
-  const { toast } = useToast();
   const { data } = api.transaction.getSuccessfulTransactionsPerMonth.useQuery(
     undefined,
     {
       onError(err) {
-        toast({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description: ` There was a problem: ${err.message}`,
-          action: <ToastAction altText="Try again">Try again</ToastAction>,
-        });
+        toast.error("An error occured. Please try again");
       },
     },
   );
@@ -225,12 +212,7 @@ export function CalendarDateRangePicker({
 export function UserNav() {
   const { data: profile } = api.profile.getUserProfile.useQuery(undefined, {
     onError(err) {
-      toast({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: ` There was a problem: ${err.message}`,
-        action: <ToastAction altText="Try again">Try again</ToastAction>,
-      });
+      toast.error("An error occured. Please try again");
     },
   });
   const router = useRouter();
@@ -342,55 +324,35 @@ export function MainNav({
   );
 }
 export default function DashboardPage() {
-  const { toast } = useToast();
   const { data: transactions } =
     api.transaction.getTransactionsMadeThisMonth.useQuery(undefined, {
       onError(err) {
-        toast({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description: ` There was a problem: ${err.message}`,
-          action: <ToastAction altText="Try again">Try again</ToastAction>,
-        });
+        toast.error("An error occured. Please try again");
       },
     });
   const { data: totals } = api.payment.getTotalsByCurrency.useQuery(undefined, {
     onError(err) {
-      toast({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: ` There was a problem: ${err.message}`,
-        action: <ToastAction altText="Try again">Try again</ToastAction>,
-      });
+      toast.error("An error occured. Please try again");
     },
   });
   const { data: totalUsers } = api.profile.getNumberOfUsers.useQuery(
     undefined,
     {
       onError(err) {
-        toast({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description: ` There was a problem: ${err.message}`,
-          action: <ToastAction altText="Try again">Try again</ToastAction>,
-        });
+        toast.error("An error occured. Please try again");
       },
     },
   );
   const { data: totalActiveUsers } =
     api.profile.getNumberOfActiveUsers.useQuery(undefined, {
       onError(err) {
-        toast({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description: ` There was a problem: ${err.message}`,
-          action: <ToastAction altText="Try again">Try again</ToastAction>,
-        });
+        toast.error("An error occured. Please try again");
       },
     });
   return (
     <>
       <div className="hidden flex-col md:flex">
+        <Toaster position="top-right" reverseOrder={false} />
         <div className="border-b">
           <div className="flex h-16 items-center px-4">
             <MainNav className="mx-6" />
