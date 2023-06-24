@@ -280,7 +280,7 @@ export function DataTable({ data }: { data: Transaction[] }) {
           onChange={(event) =>
             table.getColumn("status")?.setFilterValue(event.target.value)
           }
-          className="max-w-xs"
+          className="mr-4 max-w-xs"
         />
         <Input
           placeholder="Filter Phone Numbers..."
@@ -290,7 +290,7 @@ export function DataTable({ data }: { data: Transaction[] }) {
           onChange={(event) =>
             table.getColumn("senderPhone")?.setFilterValue(event.target.value)
           }
-          className="max-w-xs"
+          className="mr-4 max-w-xs"
         />
         <Input
           placeholder="Filter recipients..."
