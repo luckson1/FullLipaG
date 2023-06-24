@@ -51,7 +51,7 @@ import {
 import { Skeleton } from "~/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { ToastAction } from "~/components/ui/toast";
-import { useToast } from "~/components/ui/use-toast";
+import { toast, useToast } from "~/components/ui/use-toast";
 import { cn } from "~/lib/utils";
 
 export function RecentSales() {
@@ -223,7 +223,6 @@ export function CalendarDateRangePicker({
   );
 }
 export function UserNav() {
-  const { toast } = useToast();
   const { data: profile } = api.profile.getUserProfile.useQuery(undefined, {
     onError(err) {
       toast({
