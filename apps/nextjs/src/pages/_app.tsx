@@ -10,7 +10,15 @@ import { SessionContextProvider } from "@supabase/auth-helpers-react";
 
 import { api } from "~/utils/api";
 import { ThemeProvider } from "~/components/theme-provider";
-import { Toast, ToastProvider, ToastViewport } from "~/components/ui/toast";
+import {
+  Toast,
+  ToastAction,
+  ToastClose,
+  ToastDescription,
+  ToastProvider,
+  ToastTitle,
+  ToastViewport,
+} from "~/components/ui/toast";
 
 function MyApp({
   Component,
@@ -26,7 +34,12 @@ function MyApp({
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         <ToastProvider>
           <Component {...pageProps} />
-          <Toast />
+          <Toast>
+            <ToastTitle />
+            <ToastDescription />
+            <ToastClose />
+            <ToastAction altText="close" />
+          </Toast>
           <ToastViewport />
         </ToastProvider>
       </ThemeProvider>
