@@ -273,7 +273,7 @@ export function DataTable({ data }: { data: Transaction[] }) {
 
   return (
     <div className="w-full">
-      <div className="flex  flex-row flex-wrap items-center justify-between py-4">
+      <div className="flex  w-full flex-row flex-wrap items-center justify-between py-4">
         <Input
           placeholder="Filter status..."
           value={(table.getColumn("status")?.getFilterValue() as string) ?? ""}
