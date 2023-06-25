@@ -19,7 +19,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     setIsLoading(true);
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: "/dashboard" },
+      options: { redirectTo: "https://sinoremit.vercel.app/dashboard" },
     });
 
     if (error) {
@@ -32,10 +32,9 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 
   const signInWithOTP = async (email: string) => {
     setIsLoading(true);
-    console.log("waiting");
     const { error, data } = await supabase.auth.signInWithOtp({
       email,
-      options: { emailRedirectTo: "/dashboard" },
+      options: { emailRedirectTo: "https://sinoremit.vercel.app/dashboard" },
     });
     if (error) {
       toast.error(` There was a problem: ${error.message}`);
@@ -43,7 +42,6 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
       setIsLoading(false);
     }
     if (data) {
-      console.log(data);
       setIsLoading(false);
       setEmailSent(true);
       toast.success("Magic Link sent to your Email.");
