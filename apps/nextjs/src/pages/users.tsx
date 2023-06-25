@@ -199,25 +199,7 @@ export const columns: ColumnDef<Users>[] = [
       return <div className="text-right font-medium">{formatted}</div>;
     },
   },
-  {
-    accessorKey: "time",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Date
-          <CaretSortIcon className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => (
-      <div className="lowercase">
-        {format(new Date(row.getValue("time")), "MM/dd/yyyy")}
-      </div>
-    ),
-  },
+
   {
     accessorKey: "role",
     header: "Role",
@@ -302,12 +284,10 @@ export function DataTable({ data }: { data: Users[] }) {
           className="mr-4 max-w-xs"
         />
         <Input
-          placeholder="Filter recipients..."
-          value={
-            (table.getColumn("recipient")?.getFilterValue() as string) ?? ""
-          }
+          placeholder="Filter Gender..."
+          value={(table.getColumn("gender")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("recipient")?.setFilterValue(event.target.value)
+            table.getColumn("gender")?.setFilterValue(event.target.value)
           }
           className="max-w-xs"
         />
