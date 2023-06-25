@@ -96,4 +96,40 @@ export const profileRouter = createTRPCRouter({
 
     return countUsersWithReceivedTransaction;
   }),
+  getAllUsers: adminProcedure.query(async ({ ctx }) => {
+    const users = await ctx.prisma.users.findMany({
+      select: {
+        id: true,
+        phone: true,
+        email: true,
+        userRole: true,
+        Profile: {
+          select: {
+            email: true,
+            firstName: true,
+            lastName: true,
+          },
+        },
+        created_at: true,
+        _count: {
+          select: {
+            Transaction: true,
+            Recipient: true,
+          },
+        },
+      },
+    });
+    const formattedUsers = users.map((user) => ({
+      id: user.id,
+      phone: user.phone,
+      email: user.email ?? user.Profile?.email,
+      role: user.userRole,
+      firstName: user.Profile?.firstName,
+      lastName: user.Profile?.lastName,
+      Transactions: user._count.Transaction,
+      recipients: user._count.Recipient,
+      time: user.created_at,
+    }));
+    return formattedUsers;
+  }),
 });
