@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Toaster, toast } from "react-hot-toast";
 
 import { Icons } from "~/components/Icons";
 import { Button } from "~/components/ui/button";
@@ -6,7 +7,6 @@ import { Input } from "~/components/ui/input";
 import { supabase } from "~/lib/client";
 import { cn } from "~/lib/utils";
 import { ToastAction } from "./ui/toast";
-import { toast } from "./ui/use-toast";
 
 type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -23,12 +23,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     });
 
     if (error) {
-      toast({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: ` There was a problem: ${error.message}`,
-        action: <ToastAction altText="Try again">Try again</ToastAction>,
-      });
+      toast.error(` There was a problem: ${error.message}`);
       setIsLoading(false);
     } else {
       setIsLoading(false);
@@ -37,31 +32,25 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 
   const signInWithOTP = async (email: string) => {
     setIsLoading(true);
+    console.log("waiting");
     const { error, data } = await supabase.auth.signInWithOtp({
       email,
       options: { emailRedirectTo: "/dashboard" },
     });
     if (error) {
-      toast({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: ` There was a problem: ${error.message}`,
-        action: <ToastAction altText="Try again">Try again</ToastAction>,
-      });
+      toast.error(` There was a problem: ${error.message}`);
 
       setIsLoading(false);
     }
-    if (data.user) {
+    if (data) {
+      console.log(data);
       setIsLoading(false);
-      toast({
-        title: "Magic Link sent to your Email.",
-        description: ` Check your inbox for a link to log you in`,
-        action: <ToastAction altText="Close">Close</ToastAction>,
-      });
+      toast.success("Magic Link sent to your Email.");
     }
   };
   return (
     <div className={cn("grid gap-6", className)} {...props}>
+      <Toaster position="top-right" reverseOrder={false} />
       <form
         onSubmit={async (e) => {
           e.preventDefault();
