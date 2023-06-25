@@ -366,7 +366,7 @@ export default function DashboardPage() {
               <CalendarDateRangePicker />
               <Button
                 size="sm"
-                className=" bg-teal-500 hover:bg-teal-600 dark:bg-teal-600 dark:hover:bg-teal-700"
+                className=" bg-teal-500 text-slate-200 hover:bg-teal-600 dark:bg-teal-600 dark:hover:bg-teal-700"
               >
                 <Download className="mr-2 h-4 w-4" />
                 Download
