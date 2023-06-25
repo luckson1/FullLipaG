@@ -3,10 +3,9 @@
 import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { addDays, format } from "date-fns";
 import {
-  Activity,
   Calendar as CalendarIcon,
   CreditCard,
   DollarSign,
@@ -320,14 +319,26 @@ export function MainNav({
   );
 }
 export default function DashboardPage() {
+  const router = useRouter();
+  const session = useSession();
+  React.useEffect(() => {
+    if (session) router.push("/");
+  }, [router, session]);
+
   const { data: transactions } =
     api.transaction.getTransactionsMadeThisMonth.useQuery(undefined, {
       onError(err) {
+        if (err.data?.code === "UNAUTHORIZED") {
+          router.push("/");
+        }
         toast.error("An error occured. Please try again");
       },
     });
   const { data: totals } = api.payment.getTotalsByCurrency.useQuery(undefined, {
     onError(err) {
+      if (err.data?.code === "UNAUTHORIZED") {
+        router.push("/");
+      }
       toast.error("An error occured. Please try again");
     },
   });
@@ -335,6 +346,9 @@ export default function DashboardPage() {
     undefined,
     {
       onError(err) {
+        if (err.data?.code === "UNAUTHORIZED") {
+          router.push("/");
+        }
         toast.error("An error occured. Please try again");
       },
     },
@@ -342,9 +356,13 @@ export default function DashboardPage() {
   const { data: totalActiveUsers } =
     api.profile.getNumberOfActiveUsers.useQuery(undefined, {
       onError(err) {
+        if (err.data?.code === "UNAUTHORIZED") {
+          router.push("/");
+        }
         toast.error("An error occured. Please try again");
       },
     });
+
   return (
     <>
       <div className="hidden flex-col md:flex">
