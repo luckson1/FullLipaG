@@ -422,8 +422,11 @@ export default function TransactionsPage() {
             <h2 className="text-3xl font-bold tracking-tight">Users</h2>
             <div className="flex items-center space-x-2">
               <CalendarDateRangePicker />
-              <Button size="sm">
-                <Download className="mr-2 h-4 w-4 bg-teal-500 dark:bg-teal-600" />
+              <Button
+                size="sm"
+                className=" bg-teal-500 hover:bg-teal-600 dark:bg-teal-600 dark:hover:bg-teal-700"
+              >
+                <Download className="mr-2 h-4 w-4" />
                 Download
               </Button>
             </div>
