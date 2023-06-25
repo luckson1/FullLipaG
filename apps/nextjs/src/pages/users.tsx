@@ -20,7 +20,7 @@ import { format } from "date-fns";
 import { Download } from "lucide-react";
 import { Toaster, toast } from "react-hot-toast";
 
-import { type USERROLES } from "@acme/db";
+import { type Gender, type USERROLES } from "@acme/db";
 
 import { api } from "~/utils/api";
 import { ModeToggle } from "~/components/mode-toggle";
@@ -52,11 +52,12 @@ export type Users = {
   phone: string | null;
   email: string | undefined;
   role: USERROLES;
-  firstName: string | undefined;
-  lastName: string | undefined;
+  name: string;
   Transactions: number;
   recipients: number;
   time: Date | null;
+  gender: Gender | undefined;
+  age: number;
 };
 
 export const columns: ColumnDef<Users>[] = [
@@ -87,37 +88,35 @@ export const columns: ColumnDef<Users>[] = [
     ),
   },
   {
-    accessorKey: "firstName",
+    accessorKey: "name",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          First Name
+          Name
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
       );
     },
-    cell: ({ row }) => (
-      <div className="lowercase">{row.getValue("firstName")}</div>
-    ),
+    cell: ({ row }) => <div className="lowercase">{row.getValue("name")}</div>,
   },
   {
-    accessorKey: "lastName",
+    accessorKey: "gender",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Last Name
+          Gender
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
       );
     },
     cell: ({ row }) => (
-      <div className="lowercase">{row.getValue("lastName")}</div>
+      <div className="lowercase">{row.getValue("gender")}</div>
     ),
   },
   {
@@ -134,6 +133,28 @@ export const columns: ColumnDef<Users>[] = [
       );
     },
     cell: ({ row }) => <div>{row.getValue("email")}</div>,
+  },
+  {
+    accessorKey: "age",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Age
+          <CaretSortIcon className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const amount = parseFloat(row.getValue("age"));
+
+      // Format the amount as a dollar amount
+      const formatted = new Intl.NumberFormat("en-US", {}).format(amount);
+
+      return <div className="text-right font-medium">{formatted}</div>;
+    },
   },
   {
     accessorKey: "recipients",

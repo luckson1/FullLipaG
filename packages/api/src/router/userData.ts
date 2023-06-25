@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { differenceInYears } from "date-fns";
 import { z } from "zod";
 
 import { adminProcedure, createTRPCRouter, protectedProcedure } from "../trpc";
@@ -108,6 +109,8 @@ export const profileRouter = createTRPCRouter({
             email: true,
             firstName: true,
             lastName: true,
+            gender: true,
+            dateOfBirth: true,
           },
         },
         created_at: true,
@@ -124,11 +127,16 @@ export const profileRouter = createTRPCRouter({
       phone: user.phone,
       email: user.email ?? user.Profile?.email,
       role: user.userRole,
-      firstName: user.Profile?.firstName,
-      lastName: user.Profile?.lastName,
+      name: `${user.Profile?.firstName}  ${user.Profile?.lastName}`,
+
       Transactions: user._count.Transaction,
       recipients: user._count.Recipient,
       time: user.created_at,
+      gender: user.Profile?.gender,
+      age: differenceInYears(
+        new Date(),
+        user.Profile?.dateOfBirth ?? new Date(),
+      ),
     }));
     return formattedUsers;
   }),
