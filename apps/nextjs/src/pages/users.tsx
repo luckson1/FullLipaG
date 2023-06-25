@@ -427,7 +427,8 @@ export default function TransactionsPage() {
               </Button>
             </div>
           </div>
-          {!data && <Skeleton className="h-full w-full flex-[80%]" />}
+          {!data &&
+            Array(10).fill(<Skeleton className="h-16 w-full rounded-md" />)}
           {data && <DataTable data={data} />}
         </div>
       </div>
