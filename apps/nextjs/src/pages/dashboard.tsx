@@ -211,9 +211,9 @@ export function CalendarDateRangePicker({
 }
 export function UserNav() {
   const { data: profile } = api.profile.getUserProfile.useQuery(undefined, {
-    onError(err) {
-      toast.error("An error occured. Please try again");
-    },
+    // onError(err) {
+    //   toast.error("An error occured. Please try again");
+    // },
   });
   const router = useRouter();
   const supabase = useSupabaseClient();
