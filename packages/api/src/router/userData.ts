@@ -127,7 +127,7 @@ export const profileRouter = createTRPCRouter({
       phone: user.phone,
       email: user.email ?? user.Profile?.email,
       role: user.userRole,
-      name: `${user.Profile?.firstName}  ${user.Profile?.lastName}`,
+      name: `${user.Profile?.firstName ?? ""}  ${user.Profile?.lastName ?? ""}`,
 
       Transactions: user._count.Transaction,
       recipients: user._count.Recipient,
