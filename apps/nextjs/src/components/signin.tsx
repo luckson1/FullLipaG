@@ -6,12 +6,12 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { supabase } from "~/lib/client";
 import { cn } from "~/lib/utils";
-import { ToastAction } from "./ui/toast";
 
 type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>;
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
 
   const [email, setEmail] = useState("");
 
@@ -45,6 +45,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     if (data) {
       console.log(data);
       setIsLoading(false);
+      setEmailSent(true);
       toast.success("Magic Link sent to your Email.");
     }
   };
@@ -80,6 +81,11 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             )}
             Sign In with Email
           </Button>
+          {emailSent && (
+            <p className="text-sm font-medium">
+              A magic link has been sent to your email. Follow it to login
+            </p>
+          )}
         </div>
       </form>
       <div className="relative">
