@@ -20,7 +20,7 @@ import { format } from "date-fns";
 import { Download } from "lucide-react";
 import { Toaster, toast } from "react-hot-toast";
 
-import { type StatusName, type USERROLES } from "@acme/db";
+import { type USERROLES } from "@acme/db";
 
 import { api } from "~/utils/api";
 import { ModeToggle } from "~/components/mode-toggle";
@@ -143,7 +143,7 @@ export const columns: ColumnDef<Users>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Number of Recipients
+          No. of Recipients
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -159,7 +159,17 @@ export const columns: ColumnDef<Users>[] = [
   },
   {
     accessorKey: "Transactions",
-    header: () => <div className="text-right">Transactions</div>,
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          No. of Transactions
+          <CaretSortIcon className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
     cell: ({ row }) => {
       const rate = parseFloat(row.getValue("Transactions"));
 
@@ -211,11 +221,11 @@ export const columns: ColumnDef<Users>[] = [
             <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(users.id)}
             >
-              Copy payment ID
+              Copy user ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+            <DropdownMenuItem>View user details</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
