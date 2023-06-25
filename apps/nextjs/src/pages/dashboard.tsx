@@ -365,7 +365,7 @@ export default function DashboardPage() {
             <div className="flex items-center space-x-2">
               <CalendarDateRangePicker />
               <Button size="sm">
-                <Download className="mr-2 h-4 w-4" />
+                <Download className="mr-2 h-4 w-4 bg-teal-500 dark:bg-teal-600" />
                 Download
               </Button>
             </div>
