@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { addDays, format } from "date-fns";
 import {
   Calendar as CalendarIcon,
@@ -320,10 +320,6 @@ export function MainNav({
 }
 export default function DashboardPage() {
   const router = useRouter();
-  const session = useSession();
-  React.useEffect(() => {
-    if (session) router.push("/");
-  }, [router, session]);
 
   const { data: transactions } =
     api.transaction.getTransactionsMadeThisMonth.useQuery(undefined, {
