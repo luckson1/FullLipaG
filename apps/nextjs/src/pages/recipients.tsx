@@ -78,11 +78,6 @@ export const columns: ColumnDef<Recipient>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "bank",
-    header: "bank",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("bank")}</div>,
-  },
-  {
     accessorKey: "name",
     header: ({ column }) => {
       return (
@@ -198,15 +193,10 @@ export const columns: ColumnDef<Recipient>[] = [
   },
 
   {
-    accessorKey: "role",
-    header: "Role",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("role")}</div>,
-  },
-  {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const users = row.original;
+      const recipient = row.original;
 
       return (
         <DropdownMenu>
@@ -219,7 +209,7 @@ export const columns: ColumnDef<Recipient>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(users.id)}
+              onClick={() => navigator.clipboard.writeText(recipient.id)}
             >
               Copy user ID
             </DropdownMenuItem>
@@ -265,26 +255,28 @@ export function DataTable({ data }: { data: Recipient[] }) {
     <div className="w-full">
       <div className="flex  w-full flex-row flex-wrap items-center justify-between py-4">
         <Input
-          placeholder="Filter phone numbers..."
-          value={(table.getColumn("phone")?.getFilterValue() as string) ?? ""}
+          placeholder="Filter sender numbers..."
+          value={
+            (table.getColumn("senderPhone")?.getFilterValue() as string) ?? ""
+          }
           onChange={(event) =>
-            table.getColumn("phone")?.setFilterValue(event.target.value)
+            table.getColumn("senderPhone")?.setFilterValue(event.target.value)
           }
           className="mr-4 max-w-xs"
         />
         <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+          placeholder="Filter names..."
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+            table.getColumn("name")?.setFilterValue(event.target.value)
           }
           className="mr-4 max-w-xs"
         />
         <Input
-          placeholder="Filter Gender..."
-          value={(table.getColumn("gender")?.getFilterValue() as string) ?? ""}
+          placeholder="Filter banks..."
+          value={(table.getColumn("bank")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("gender")?.setFilterValue(event.target.value)
+            table.getColumn("bank")?.setFilterValue(event.target.value)
           }
           className="max-w-xs"
         />
