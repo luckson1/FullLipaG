@@ -310,10 +310,10 @@ export function MainNav({
         Transactions
       </Link>
       <Link
-        href="/settings"
+        href="/recipients"
         className="text-muted-foreground hover:text-primary text-sm font-medium transition-colors"
       >
-        Settings
+        Recipients
       </Link>
     </nav>
   );
