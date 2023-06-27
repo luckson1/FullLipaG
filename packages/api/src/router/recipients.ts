@@ -79,9 +79,6 @@ export const recipientROuter = createTRPCRouter({
               },
             },
           },
-          select: {
-            _count: true,
-          },
         },
         user: {
           select: {
@@ -102,7 +99,7 @@ export const recipientROuter = createTRPCRouter({
       method: r.method,
       bank: r.bankName,
       senderPhone: r.user.phone,
-      transactions: r.Transaction.at(0)?._count,
+      transactions: r.Transaction.length,
       id: r.id,
     }));
     return formattedRecipients;

@@ -53,7 +53,7 @@ export type Recipient = {
   method: RecipientPaymentMethod;
   bank: string;
   senderPhone: string | null;
-  transactions: Prisma.TransactionCountOutputType | undefined;
+  transactions: number;
   id: string;
 };
 
