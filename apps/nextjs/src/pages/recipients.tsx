@@ -152,14 +152,7 @@ export const columns: ColumnDef<Recipient>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("transactions"));
-
-      // Format the amount as a dollar amount
-      const formatted = new Intl.NumberFormat("en-US", {}).format(amount);
-
-      return <div className="text-right font-medium">{formatted}</div>;
-    },
+    cell: ({ row }) => <div>{row.getValue("transactions")}</div>,
   },
   {
     accessorKey: "method",
