@@ -284,15 +284,23 @@ model sso_providers {
 }
 
 model Recipient {
-  id          String        @id @default(cuid())
+  id          String                 @id @default(cuid())
   name        String
+  method      RecipientPaymentMethod @default(BANK)
   bankName    String
   bankCountry String
   swiftCode   String
   bankAccount String
-  user        users         @relation(fields: [usersId], references: [id])
-  usersId     String        @db.Uuid
+  user        users                  @relation(fields: [usersId], references: [id])
+  usersId     String                 @db.Uuid
   Transaction Transaction[]
+
+  @@schema("auth")
+}
+
+enum RecipientPaymentMethod {
+  BANK
+  MOBILE
 
   @@schema("auth")
 }
