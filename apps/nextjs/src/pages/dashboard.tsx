@@ -152,7 +152,7 @@ export function Overview() {
           fontSize={12}
           tickLine={false}
           axisLine={false}
-          tickFormatter={(value) => `KES ${value / 1000}`}
+          tickFormatter={(value) => `KES ${value}`}
         />
         <Bar
           dataKey="total in `000"
