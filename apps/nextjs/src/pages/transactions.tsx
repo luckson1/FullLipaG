@@ -23,6 +23,7 @@ import { Toaster, toast } from "react-hot-toast";
 import { type StatusName } from "@acme/db";
 
 import { api } from "~/utils/api";
+import { DataTableColumnHeader } from "~/components/data_table_header";
 import { ModeToggle } from "~/components/mode-toggle";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
@@ -90,15 +91,7 @@ export const columns: ColumnDef<Transaction>[] = [
   {
     accessorKey: "senderEmail",
     header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Sender Email
-          <CaretSortIcon className="ml-2 h-4 w-4" />
-        </Button>
-      );
+      return <DataTableColumnHeader column={column} title="sender Email" />;
     },
     cell: ({ row }) => (
       <div className="lowercase">{row.getValue("senderEmail")}</div>
