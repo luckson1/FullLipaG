@@ -161,7 +161,7 @@ export function Overview() {
           axisLine={false}
           tickFormatter={(value) => `KES ${value / 1000}K`}
         />
-        <Tooltip formatter={(value) => `KES ${value}`} />
+        <Tooltip formatter={(value) => `KES ${value.toLocaleString()}`} />
         <Bar dataKey="total" fill="rgb(20 184 166)" radius={[4, 4, 0, 0]} />
       </BarChart>
     </ResponsiveContainer>
