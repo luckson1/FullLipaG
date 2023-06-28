@@ -22,6 +22,7 @@ import { Toaster, toast } from "react-hot-toast";
 import { type Prisma, type RecipientPaymentMethod } from "@acme/db";
 
 import { api } from "~/utils/api";
+import { DataTableColumnHeader } from "~/components/data_table_header";
 import { ModeToggle } from "~/components/mode-toggle";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
@@ -80,15 +81,7 @@ export const columns: ColumnDef<Recipient>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Name
-          <CaretSortIcon className="ml-2 h-4 w-4" />
-        </Button>
-      );
+      return <DataTableColumnHeader column={column} title="Name" />;
     },
     cell: ({ row }) => <div className="lowercase">{row.getValue("name")}</div>,
   },
@@ -96,13 +89,7 @@ export const columns: ColumnDef<Recipient>[] = [
     accessorKey: "country",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Country
-          <CaretSortIcon className="ml-2 h-4 w-4" />
-        </Button>
+        <DataTableColumnHeader column={column} title="Country" />
       );
     },
     cell: ({ row }) => (
@@ -113,13 +100,7 @@ export const columns: ColumnDef<Recipient>[] = [
     accessorKey: "bank",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Bank
-          <CaretSortIcon className="ml-2 h-4 w-4" />
-        </Button>
+        <DataTableColumnHeader column={column} title="Bank" />
       );
     },
     cell: ({ row }) => <div>{row.getValue("bank")}</div>,
@@ -128,13 +109,7 @@ export const columns: ColumnDef<Recipient>[] = [
     accessorKey: "account",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Account
-          <CaretSortIcon className="ml-2 h-4 w-4" />
-        </Button>
+        <DataTableColumnHeader column={column} title="Account" />
       );
     },
     cell: ({ row }) => <div>{row.getValue("account")}</div>,
@@ -143,13 +118,7 @@ export const columns: ColumnDef<Recipient>[] = [
     accessorKey: "transactions",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          No. of Transactions
-          <CaretSortIcon className="ml-2 h-4 w-4" />
-        </Button>
+        <DataTableColumnHeader column={column} title="No. of Transaction" />
       );
     },
     cell: ({ row }) => {
@@ -164,13 +133,7 @@ export const columns: ColumnDef<Recipient>[] = [
     accessorKey: "method",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Payment Method
-          <CaretSortIcon className="ml-2 h-4 w-4" />
-        </Button>
+        <DataTableColumnHeader column={column} title="Payment Method" />
       );
     },
     cell: ({ row }) => <div>{row.getValue("method")}</div>,
@@ -179,13 +142,7 @@ export const columns: ColumnDef<Recipient>[] = [
     accessorKey: "senderPhone",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Sender Phone
-          <CaretSortIcon className="ml-2 h-4 w-4" />
-        </Button>
+        <DataTableColumnHeader column={column} title="Sender Phone" />
       );
     },
     cell: ({ row }) => <div>{row.getValue("senderPhone")}</div>,

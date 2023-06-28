@@ -23,6 +23,7 @@ import { Toaster, toast } from "react-hot-toast";
 import { type Gender, type USERROLES } from "@acme/db";
 
 import { api } from "~/utils/api";
+import { DataTableColumnHeader } from "~/components/data_table_header";
 import { ModeToggle } from "~/components/mode-toggle";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
@@ -90,30 +91,14 @@ export const columns: ColumnDef<Users>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Name
-          <CaretSortIcon className="ml-2 h-4 w-4" />
-        </Button>
-      );
+      return <DataTableColumnHeader column={column} title="Phone" />;
     },
     cell: ({ row }) => <div className="lowercase">{row.getValue("name")}</div>,
   },
   {
     accessorKey: "gender",
     header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Gender
-          <CaretSortIcon className="ml-2 h-4 w-4" />
-        </Button>
-      );
+      return <DataTableColumnHeader column={column} title="Gender" />;
     },
     cell: ({ row }) => (
       <div className="lowercase">{row.getValue("gender")}</div>
@@ -122,30 +107,14 @@ export const columns: ColumnDef<Users>[] = [
   {
     accessorKey: "email",
     header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Email
-          <CaretSortIcon className="ml-2 h-4 w-4" />
-        </Button>
-      );
+      return <DataTableColumnHeader column={column} title="Email" />;
     },
     cell: ({ row }) => <div>{row.getValue("email")}</div>,
   },
   {
     accessorKey: "age",
     header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Age
-          <CaretSortIcon className="ml-2 h-4 w-4" />
-        </Button>
-      );
+      return <DataTableColumnHeader column={column} title="Age" />;
     },
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue("age"));
@@ -160,13 +129,7 @@ export const columns: ColumnDef<Users>[] = [
     accessorKey: "recipients",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          No. of Recipients
-          <CaretSortIcon className="ml-2 h-4 w-4" />
-        </Button>
+        <DataTableColumnHeader column={column} title="No. of Recipients" />
       );
     },
     cell: ({ row }) => {
@@ -182,13 +145,7 @@ export const columns: ColumnDef<Users>[] = [
     accessorKey: "Transactions",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          No. of Transactions
-          <CaretSortIcon className="ml-2 h-4 w-4" />
-        </Button>
+        <DataTableColumnHeader column={column} title="No. of Transaction" />
       );
     },
     cell: ({ row }) => {

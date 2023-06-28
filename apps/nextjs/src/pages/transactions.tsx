@@ -91,7 +91,7 @@ export const columns: ColumnDef<Transaction>[] = [
   {
     accessorKey: "senderEmail",
     header: ({ column }) => {
-      return <DataTableColumnHeader column={column} title="sender Email" />;
+      return <DataTableColumnHeader column={column} title="Sender Email" />;
     },
     cell: ({ row }) => (
       <div className="lowercase">{row.getValue("senderEmail")}</div>
@@ -100,15 +100,7 @@ export const columns: ColumnDef<Transaction>[] = [
   {
     accessorKey: "senderPhone",
     header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Sender Number
-          <CaretSortIcon className="ml-2 h-4 w-4" />
-        </Button>
-      );
+      return <DataTableColumnHeader column={column} title="Sender Phone" />;
     },
     cell: ({ row }) => (
       <div className="lowercase">{row.getValue("senderPhone")}</div>
@@ -117,30 +109,14 @@ export const columns: ColumnDef<Transaction>[] = [
   {
     accessorKey: "currency",
     header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Currency
-          <CaretSortIcon className="ml-2 h-4 w-4" />
-        </Button>
-      );
+      return <DataTableColumnHeader column={column} title="Currency" />;
     },
     cell: ({ row }) => <div>{row.getValue("currency")}</div>,
   },
   {
     accessorKey: "amount",
     header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Amount
-          <CaretSortIcon className="ml-2 h-4 w-4" />
-        </Button>
-      );
+      return <DataTableColumnHeader column={column} title="Amount" />;
     },
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue("amount"));
@@ -164,15 +140,7 @@ export const columns: ColumnDef<Transaction>[] = [
   {
     accessorKey: "recipient",
     header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Recipient
-          <CaretSortIcon className="ml-2 h-4 w-4" />
-        </Button>
-      );
+      return <DataTableColumnHeader column={column} title="Recipient" />;
     },
     cell: ({ row }) => (
       <div className="lowercase">{row.getValue("recipient")}</div>
@@ -181,15 +149,7 @@ export const columns: ColumnDef<Transaction>[] = [
   {
     accessorKey: "time",
     header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Date
-          <CaretSortIcon className="ml-2 h-4 w-4" />
-        </Button>
-      );
+      return <DataTableColumnHeader column={column} title="Date" />;
     },
     cell: ({ row }) => (
       <div className="lowercase">
