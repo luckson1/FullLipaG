@@ -93,7 +93,9 @@ export function RecentSales() {
           <div className="ml-auto font-medium">
             {" "}
             {transaction.payment.ExchangeRate.target}{" "}
-            {transaction.payment.sentAmount}
+            {new Intl.NumberFormat("en-US", {}).format(
+              transaction.payment.sentAmount,
+            )}
           </div>
         </div>
       ))}
@@ -431,7 +433,14 @@ export default function DashboardPage() {
                           key={t.exchangeRateId}
                         >
                           <p> {t.targetCurrency}</p>
-                          <p> {t.sentAmount}</p>
+                          {t.sentAmount && (
+                            <p>
+                              {" "}
+                              {new Intl.NumberFormat("en-US", {}).format(
+                                t.sentAmount,
+                              )}
+                            </p>
+                          )}
                         </div>
                       ))}
                     </CardContent>
