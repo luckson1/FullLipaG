@@ -483,9 +483,7 @@ export const transactionRouter = createTRPCRouter({
 
       data.push({
         name: monthName,
-        total: totalSentAmount._sum.remittedAmount
-          ? totalSentAmount._sum.remittedAmount * 0.001
-          : 0,
+        total: totalSentAmount._sum.remittedAmount || 0,
       });
     }
 
