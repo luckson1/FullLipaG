@@ -154,11 +154,7 @@ export function Overview() {
           axisLine={false}
           tickFormatter={(value) => `KES ${value}`}
         />
-        <Bar
-          dataKey="total in `000"
-          fill="rgb(20 184 166)"
-          radius={[4, 4, 0, 0]}
-        />
+        <Bar dataKey="total" fill="rgb(20 184 166)" radius={[4, 4, 0, 0]} />
       </BarChart>
     </ResponsiveContainer>
   );
