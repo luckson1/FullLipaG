@@ -152,7 +152,7 @@ export function Overview() {
           fontSize={12}
           tickLine={false}
           axisLine={false}
-          tickFormatter={(value) => `KES ${value}`}
+          tickFormatter={(value) => `KES ${value / 1000}K`}
         />
         <Bar dataKey="total" fill="rgb(20 184 166)" radius={[4, 4, 0, 0]} />
       </BarChart>
