@@ -18,7 +18,14 @@ import {
 } from "lucide-react";
 import { type DateRange } from "react-day-picker";
 import { Toaster, toast } from "react-hot-toast";
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
+import {
+  Bar,
+  BarChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 import { api } from "~/utils/api";
 import { ModeToggle } from "~/components/mode-toggle";
@@ -154,6 +161,7 @@ export function Overview() {
           axisLine={false}
           tickFormatter={(value) => `KES ${value / 1000}K`}
         />
+        <Tooltip tickFormatter={(value) => `KES ${value / 1000}K`} />
         <Bar dataKey="total" fill="rgb(20 184 166)" radius={[4, 4, 0, 0]} />
       </BarChart>
     </ResponsiveContainer>
