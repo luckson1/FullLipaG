@@ -62,7 +62,7 @@ import { cn } from "~/lib/utils";
 export function RecentSales() {
   const { data: recentTransactions, isLoading } =
     api.transaction.getRecentTransactions.useQuery(undefined, {
-      onError(err) {
+      onError() {
         toast.error("An error occured. Please try again");
       },
     });
@@ -114,7 +114,7 @@ export function Overview() {
   const { data } = api.transaction.getSuccessfulTransactionsPerMonth.useQuery(
     undefined,
     {
-      onError(err) {
+      onError() {
         toast.error("An error occured. Please try again");
       },
     },
@@ -333,17 +333,17 @@ export default function DashboardPage() {
 
   const { data: transactions } =
     api.transaction.getTransactionsMadeThisMonth.useQuery(undefined, {
-      onError(err) {
+      async onError(err) {
         if (err.data?.code === "UNAUTHORIZED") {
-          router.push("/");
+          await router.push("/");
         }
         toast.error("An error occured. Please try again");
       },
     });
   const { data: totals } = api.payment.getTotalsByCurrency.useQuery(undefined, {
-    onError(err) {
+    async onError(err) {
       if (err.data?.code === "UNAUTHORIZED") {
-        router.push("/");
+        await router.push("/");
       }
       toast.error("An error occured. Please try again");
     },
@@ -351,9 +351,9 @@ export default function DashboardPage() {
   const { data: totalUsers } = api.profile.getNumberOfUsers.useQuery(
     undefined,
     {
-      onError(err) {
+      async onError(err) {
         if (err.data?.code === "UNAUTHORIZED") {
-          router.push("/");
+          await router.push("/");
         }
         toast.error("An error occured. Please try again");
       },
@@ -361,9 +361,9 @@ export default function DashboardPage() {
   );
   const { data: totalActiveUsers } =
     api.profile.getNumberOfActiveUsers.useQuery(undefined, {
-      onError(err) {
+      async onError(err) {
         if (err.data?.code === "UNAUTHORIZED") {
-          router.push("/");
+          await router.push("/");
         }
         toast.error("An error occured. Please try again");
       },
