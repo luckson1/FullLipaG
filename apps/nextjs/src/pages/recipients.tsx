@@ -19,7 +19,7 @@ import {
 import { Download } from "lucide-react";
 import { Toaster, toast } from "react-hot-toast";
 
-import { type Prisma, type RecipientPaymentMethod } from "@acme/db";
+import { type RecipientPaymentMethod } from "@acme/db";
 
 import { api } from "~/utils/api";
 import { DataTableColumnHeader } from "~/components/data_table_header";
@@ -88,9 +88,7 @@ export const columns: ColumnDef<Recipient>[] = [
   {
     accessorKey: "country",
     header: ({ column }) => {
-      return (
-        <DataTableColumnHeader column={column} title="Country" />
-      );
+      return <DataTableColumnHeader column={column} title="Country" />;
     },
     cell: ({ row }) => (
       <div className="lowercase">{row.getValue("country")}</div>
@@ -99,18 +97,14 @@ export const columns: ColumnDef<Recipient>[] = [
   {
     accessorKey: "bank",
     header: ({ column }) => {
-      return (
-        <DataTableColumnHeader column={column} title="Bank" />
-      );
+      return <DataTableColumnHeader column={column} title="Bank" />;
     },
     cell: ({ row }) => <div>{row.getValue("bank")}</div>,
   },
   {
     accessorKey: "account",
     header: ({ column }) => {
-      return (
-        <DataTableColumnHeader column={column} title="Account" />
-      );
+      return <DataTableColumnHeader column={column} title="Account" />;
     },
     cell: ({ row }) => <div>{row.getValue("account")}</div>,
   },
@@ -132,18 +126,14 @@ export const columns: ColumnDef<Recipient>[] = [
   {
     accessorKey: "method",
     header: ({ column }) => {
-      return (
-        <DataTableColumnHeader column={column} title="Payment Method" />
-      );
+      return <DataTableColumnHeader column={column} title="Payment Method" />;
     },
     cell: ({ row }) => <div>{row.getValue("method")}</div>,
   },
   {
     accessorKey: "senderPhone",
     header: ({ column }) => {
-      return (
-        <DataTableColumnHeader column={column} title="Sender Phone" />
-      );
+      return <DataTableColumnHeader column={column} title="Sender Phone" />;
     },
     cell: ({ row }) => <div>{row.getValue("senderPhone")}</div>,
   },
@@ -343,7 +333,7 @@ export function DataTable({ data }: { data: Recipient[] }) {
 
 export default function TransactionsPage() {
   const { data } = api.recipient.getAll.useQuery(undefined, {
-    onError(err) {
+    onError() {
       toast.error("An erro occured. Please try again");
     },
   });
