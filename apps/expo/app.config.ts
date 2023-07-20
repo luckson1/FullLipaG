@@ -1,8 +1,8 @@
 import type { ExpoConfig } from "@expo/config";
 
-const SUPABASE_URL = "https://yowdtkcnjpfigaxbmdee.supabase.co";
+const SUPABASE_URL = "https://ilumelhuwpidacuaztdt.supabase.co";
 const SUPABASE_ANON_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlvd2R0a2NuanBmaWdheGJtZGVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODQ2MTY4NDYsImV4cCI6MjAwMDE5Mjg0Nn0.unx5UbypypelsoJSZWsISK_h-bBJlf83jVGLlZ72_EQ";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlsdW1lbGh1d3BpZGFjdWF6dGR0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODU0MDA0MDMsImV4cCI6MjAwMDk3NjQwM30.PTQM0xqZg5c3zAYNy9VOcdFrJHhvEeXjDW7BA8pO9i4";
 
 if (typeof SUPABASE_URL !== "string" || typeof SUPABASE_ANON_KEY !== "string") {
   throw new Error("Missing Supabase URL or anonymous key");
