@@ -22,6 +22,7 @@
       "ios": {
         "resourceClass": "m-medium"
       },
+      "distribution": "internal",
       "channel": "production"
     }
   },
